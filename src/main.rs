@@ -11,3 +11,6 @@ fn main() {
 
     generate_3d(params);
 }
+
+#[cfg(test)]
+pub mod tests;

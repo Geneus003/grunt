@@ -42,4 +42,3 @@ impl Params3D {
         self.y_ax
     }
 }
-
