@@ -1,3 +1,5 @@
+use rand::Rng;
+
 #[derive(Debug)]
 pub struct Axis {
     start: f32,
@@ -100,8 +102,59 @@ impl DefaultLayersDist {
     }
 
     // function params are named by DefaultLayersDist's first letters, e.g. ln - (l)ayers_(n)um
-    pub fn generate_layers_dist(ln: Option<u32>, max_ls: Option<u32>, min_ls: Option<u32>, ls: Option<u32>) {
-        println!("{:?}, {:?}, {:?}, {:?}", ln, max_ls, min_ls, ls);
-        unimplemented!()
+    pub fn generate_layers_dist(layers_num: u32, min_layer_size: u32, max_layer_size: u32, layers_sum: Option<u32>) -> Option<Vec<u32>> {
+        match DefaultLayersDist::validate_params(layers_num, min_layer_size, max_layer_size, layers_sum) {
+            true => (),
+            false => return None,
+        }
+
+        let mut rng = rand::thread_rng();
+        let mut layers: Vec<u32> = (0..layers_num).map(|_| rng.gen_range(min_layer_size..max_layer_size)).collect();
+
+        if layers_sum.is_none() { return Some(layers); }
+        let layers_sum = layers_sum.unwrap();
+
+        let mut points: i32 = layers_sum - layers.iter().sum();
+        let tries: u32 = 0;
+
+        while points != 0 && tries <= 2000 {
+            let avg_layer_mod = points as u32 / layers_sum;
+
+            for i in (0..layers_num as usize) {
+                if min_layer_size <= layers[i] + points && max_layer_size >= layers[i] + points {
+                    layers[i] = if points > 0 {
+                        layers[i] + points as u32
+                    } else {
+                        layers[i] - points as u32
+                    };
+                    points = 0;
+                    break;
+                }
+
+            }
+
+        }
+        
+
+
+        Some(layers)
+    }
+
+    fn validate_params(ln: u32, min_ls: u32, max_ls: u32, ls: Option<u32>) -> bool {
+        if min_ls > max_ls {
+            return false
+        }
+
+        if max_ls == 0 || ln == 0 || min_ls == 0 {
+            return false;
+        }
+
+        if ls.is_some() {
+            let ls = ls.unwrap();
+            if max_ls * ln < ls || min_ls * ln > ls || ls == 0 {
+                return false;
+            }
+        }
+        true
     }
 }
