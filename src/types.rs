@@ -114,29 +114,58 @@ impl DefaultLayersDist {
         if layers_sum.is_none() { return Some(layers); }
         let layers_sum = layers_sum.unwrap();
 
-        let mut points: i32 = layers_sum - layers.iter().sum();
-        let tries: u32 = 0;
+        let mut points;
+        let mut znak = true;
+        if layers_sum > layers.iter().sum() {
+            points = layers_sum - layers.iter().sum::<u32>();
+        }
+        else {
+            znak = false;
+            points = layers.iter().sum::<u32>() - layers_sum;
+        }
+        let mut tries: u32 = 0;
 
         while points != 0 && tries <= 2000 {
-            let avg_layer_mod = points as u32 / layers_sum;
+            let avg_layer_mod = points as u32 / layers_num;
 
-            for i in (0..layers_num as usize) {
-                if min_layer_size <= layers[i] + points && max_layer_size >= layers[i] + points {
-                    layers[i] = if points > 0 {
-                        layers[i] + points as u32
-                    } else {
-                        layers[i] - points as u32
-                    };
-                    points = 0;
-                    break;
+            for i in 0..layers_num as usize {
+                if znak {
+                    if points + layers[i] <= max_layer_size {
+                        layers[i] += points;
+                        points = 0;
+                        break;
+                    }
+
+                    if avg_layer_mod == 0 { continue; }
+
+                    let now_mod = rng.gen_range(0..avg_layer_mod*2);
+
+                    if layers[i] + now_mod <= max_layer_size {
+                        layers[i] += now_mod;
+                        points -= now_mod;
+                    }
+                } else {
+                    if layers[i].checked_sub(points).unwrap_or(0) >= min_layer_size {
+                        layers[i] -= points;
+                        points = 0;
+                        break;
+                    }
+
+                    if avg_layer_mod == 0 { continue; }
+
+                    let now_mod = rng.gen_range(0..avg_layer_mod*2);
+
+                    if layers[i] - now_mod >= min_layer_size {
+                        layers[i] -= now_mod;
+                        points = points.checked_sub(now_mod).unwrap_or(0);
+                    }
                 }
-
             }
 
+            tries += 1;
         }
-        
 
-
+        if points != 0 { return None }
         Some(layers)
     }
 
