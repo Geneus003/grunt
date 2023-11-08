@@ -1,6 +1,6 @@
 use rand::Rng;
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct Axis {
     start: f32,
     end: f32,
@@ -8,7 +8,7 @@ pub struct Axis {
     axis: Vec<f32>,
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct DefaultLayersDist {
     layers_num: u32,
     max_layer_size: u32,
@@ -55,7 +55,8 @@ impl Axis {
     }
 
     fn calculate_axis(start: f32, end: f32, step: f32) -> Vec<f32> {
-        (0..(((end-start)/step * 1000.0).round() / 1000.0 + 1.0).floor() as i32).map(|num| ((start + num as f32 * step) * 1000.0).round() / 1000.0).collect()
+        (0..(((end-start)/step * 1000.0).round() / 1000.0 + 1.0).floor() as i32)
+            .map(|num| ((start + num as f32 * step) * 1000.0).round() / 1000.0).collect()
     }
 
     pub fn get_full_axis(self: &Self) -> (f32, f32, Option<f32>, &Vec<f32>) {
@@ -105,22 +106,32 @@ impl DefaultLayersDist {
         })
     }
 
-    pub fn generate_from_params(layers_num: u32, min_layer_size: u32, max_layer_size: u32, layers_sum: Option<u32>) -> Result<DefaultLayersDist, &'static str> {
-        let layers_dist = DefaultLayersDist::generate_layers_dist(layers_num, min_layer_size, max_layer_size, layers_sum);
-        match layers_dist {
+    pub fn generate_from_params(
+        layers_num: u32,
+        min_layer_size: u32,
+        max_layer_size: u32,
+        layers_sum: Option<u32>
+    ) -> Result<DefaultLayersDist, &'static str> {
+        let layers = DefaultLayersDist::generate_layers_dist(layers_num, min_layer_size, max_layer_size, layers_sum);
+        match layers {
             Err(err) => return Err(err),
             Ok(_) => Ok(DefaultLayersDist {
                 layers_num,
                 min_layer_size,
                 max_layer_size,
-                layers_sum: layers_sum.unwrap_or(layers_dist.clone().unwrap().iter().sum()),
-                layers_dist: layers_dist.unwrap(),
+                layers_sum: layers_sum.unwrap_or(layers.clone().unwrap().iter().sum()),
+                layers_dist: layers.unwrap(),
             })
         }
     }
 
     // function params are named by DefaultLayersDist's first letters, e.g. ln - (l)ayers_(n)um
-    pub fn generate_layers_dist(layers_num: u32, min_layer_size: u32, max_layer_size: u32, layers_sum: Option<u32>) -> Result<Vec<u32>, &'static str> {
+    pub fn generate_layers_dist(
+        layers_num: u32,
+        min_layer_size: u32,
+        max_layer_size: u32,
+        layers_sum: Option<u32>
+    ) -> Result<Vec<u32>, &'static str> {
         match DefaultLayersDist::validate_params(layers_num, min_layer_size, max_layer_size, layers_sum) {
             Ok(_) => (),
             Err(err) => return Err(err),
@@ -187,7 +198,9 @@ impl DefaultLayersDist {
             tries += 1;
         }
 
-        if points != 0 { return Err("Something really gone wrong, this is program's fault, just try another arguments") }
+        if points != 0 { 
+            return Err("Something really gone wrong, this is program's fault, just try another arguments") 
+        }
         Ok(layers)
     }
 
@@ -207,11 +220,11 @@ impl DefaultLayersDist {
                 return Err("Any argument must be bigger than zero")
             }
             if max_ls * ln < ls {
-                return Err("Impossible to generate: Your (max layer's size) * (number of layers) must be bigger than (layers sum)");
+                return Err("Impossible: (max layer's size) * (number of layers) must be bigger than (layers sum)");
             }
 
             if min_ls * ln > ls {
-                return Err("Impossible to generate: Your (min layer's size) * (number of layers) must be smaller than (layers sum)");
+                return Err("Impossible: (min layer's size) * (number of layers) must be smaller than (layers sum)");
             }
         }
 
