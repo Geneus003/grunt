@@ -1,7 +1,6 @@
 use rand::Rng;
 
 use crate::types::DefaultLayersDist;
-
 impl DefaultLayersDist {
     pub fn new() -> DefaultLayersDist {
         DefaultLayersDist {
@@ -163,8 +162,12 @@ impl DefaultLayersDist {
 }
 
 impl DefaultLayersDist {
-    pub fn get_full_data(self: Self) -> (u32, u32, u32, u32, Vec<u32>) {
-        (self.layers_num, self.max_layer_size, self.min_layer_size, self.layers_sum, self.layers_dist)
+    pub fn get_full_data(self: &Self) -> (u32, u32, u32, u32, &Vec<u32>) {
+        (self.layers_num, self.max_layer_size, self.min_layer_size, self.layers_sum, &self.layers_dist)
+    }
+
+    pub fn get_data(self: &Self) -> &Vec<u32> {
+        &self.layers_dist
     }
 
     pub fn get_len(self: &Self) -> usize {

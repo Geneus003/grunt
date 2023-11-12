@@ -1,5 +1,6 @@
 use crate::types::Axis;
 use crate::types::DefaultLayersDist;
+use crate::types::LayersBorderGen;
 
 #[derive(Debug)]
 pub struct Params3D {
@@ -10,8 +11,7 @@ pub struct Params3D {
     // Base layers parameters
     layers_dist: DefaultLayersDist,
     // How to modify layers
-    border_divation: f32,
-    border_mod_func: Option<fn()>, // FIX THIS REWRITE IT FOR MULTIPLE ARGUMENTS!!
+    layers_border: LayersBorderGen,
 }
 
 impl Params3D {
@@ -24,8 +24,7 @@ impl Params3D {
             // Base layers parameters
             layers_dist: DefaultLayersDist::new(),
             // How to modify layers
-            border_divation: 0.0,
-            border_mod_func: None,
+            layers_border: LayersBorderGen::new()
         }
     }
 }
@@ -58,23 +57,16 @@ impl Params3D {
     pub fn set_default_dayers_dist(self: &mut Self, layers: DefaultLayersDist) {
         self.layers_dist = layers;
     }
+
     pub fn default_layers_dist(self: &Self) -> &DefaultLayersDist {
         &self.layers_dist
     }
 
-    pub fn set_border_divation(self: &mut Self, border_divation: f32) -> Result<(), &'static str> {
-        if border_divation < 0.0 {
-            return Err("Border divation must be bigger than zero.")
-        }
-        self.border_divation = border_divation;
-        return Ok(())
+    pub fn set_layers_border(self: &mut Self, layers_border: LayersBorderGen) {
+        self.layers_border = layers_border
     }
 
-    pub fn border_divation(self: &Self) -> f32 {
-        return self.border_divation
-    }
-
-    pub fn set_border_mod_func(self: &mut Self, mod_func: Option<fn()>) {
-        self.border_mod_func = mod_func;
+    pub fn layers_border(self: &Self) -> &LayersBorderGen {
+        &self.layers_border
     }
 }
