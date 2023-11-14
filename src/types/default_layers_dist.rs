@@ -54,7 +54,6 @@ impl DefaultLayersDist {
         }
     }
 
-    // function params are named by DefaultLayersDist's first letters, e.g. ln - (l)ayers_(n)um
     pub fn generate_layers_dist(
         layers_num: u32,
         min_layer_size: u32,
@@ -133,6 +132,7 @@ impl DefaultLayersDist {
         Ok(layers)
     }
 
+    // function params are named by DefaultLayersDist's first letters, e.g. ln - (l)ayers_(n)um
     fn validate_params(ln: u32, min_ls: u32, max_ls: u32, ls: Option<u32>) -> Result<(), &'static str> {
         if min_ls > max_ls {
             return Err("Max layer's size must be bigger than min layer's size")

@@ -1,6 +1,6 @@
 use crate::generators::generators_params::Params3D;
 
-use crate::generators::border_3d::random::random_layer_creation_3d;
+use crate::generators::border_3d::random_gen::random_layer_creation_3d;
 
 pub fn create_layers_borders_3d(params: &Params3D) -> () {
     let layers_count = params.default_layers_dist().get_len();
