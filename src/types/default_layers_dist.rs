@@ -1,9 +1,9 @@
 use rand::Rng;
 
-use crate::types::DefaultLayersDist;
-impl DefaultLayersDist {
-    pub fn new() -> DefaultLayersDist {
-        DefaultLayersDist {
+use crate::types::LayersDist;
+impl LayersDist {
+    pub fn new() -> LayersDist {
+        LayersDist {
             layers_num: 3,
             max_layer_size: 100,
             min_layer_size:70,
@@ -12,7 +12,7 @@ impl DefaultLayersDist {
         }
     }
 
-    pub fn create_from_vec(layers_dist: Vec<u32>) -> Result<DefaultLayersDist, &'static str> {
+    pub fn create_from_vec(layers_dist: Vec<u32>) -> Result<LayersDist, &'static str> {
         if layers_dist.is_empty() {
             return Err("Distibution of layers vec must contain at least one value");
         }
@@ -26,7 +26,7 @@ impl DefaultLayersDist {
             layers_sum = layers_sum.checked_add(*el).ok_or("Problem with calculating sum of layers: u32 overflow")?;
         }
 
-        Ok(DefaultLayersDist {
+        Ok(LayersDist {
             layers_num: layers_dist.len() as u32,
             max_layer_size,
             min_layer_size,
@@ -40,11 +40,11 @@ impl DefaultLayersDist {
         min_layer_size: u32,
         max_layer_size: u32,
         layers_sum: Option<u32>
-    ) -> Result<DefaultLayersDist, &'static str> {
-        let layers = DefaultLayersDist::generate_layers_dist(layers_num, min_layer_size, max_layer_size, layers_sum);
+    ) -> Result<LayersDist, &'static str> {
+        let layers = LayersDist::generate_layers_dist(layers_num, min_layer_size, max_layer_size, layers_sum);
         match layers {
             Err(err) => return Err(err),
-            Ok(_) => Ok(DefaultLayersDist {
+            Ok(_) => Ok(LayersDist {
                 layers_num,
                 min_layer_size,
                 max_layer_size,
@@ -60,7 +60,7 @@ impl DefaultLayersDist {
         max_layer_size: u32,
         layers_sum: Option<u32>
     ) -> Result<Vec<u32>, &'static str> {
-        match DefaultLayersDist::validate_params(layers_num, min_layer_size, max_layer_size, layers_sum) {
+        match LayersDist::validate_params(layers_num, min_layer_size, max_layer_size, layers_sum) {
             Ok(_) => (),
             Err(err) => return Err(err),
         }
@@ -132,7 +132,7 @@ impl DefaultLayersDist {
         Ok(layers)
     }
 
-    // function params are named by DefaultLayersDist's first letters, e.g. ln - (l)ayers_(n)um
+    // function params are named by LayersDist's first letters, e.g. ln - (l)ayers_(n)um
     fn validate_params(ln: u32, min_ls: u32, max_ls: u32, ls: Option<u32>) -> Result<(), &'static str> {
         if min_ls > max_ls {
             return Err("Max layer's size must be bigger than min layer's size")
@@ -161,7 +161,7 @@ impl DefaultLayersDist {
     }
 }
 
-impl DefaultLayersDist {
+impl LayersDist {
     pub fn get_full_data(self: &Self) -> (u32, u32, u32, u32, &Vec<u32>) {
         (self.layers_num, self.max_layer_size, self.min_layer_size, self.layers_sum, &self.layers_dist)
     }

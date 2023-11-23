@@ -11,7 +11,7 @@ pub struct Axis {
 }
 
 #[derive(Debug, Clone)]
-pub struct DefaultLayersDist {
+pub struct LayersDist {
     layers_num: u32,
     max_layer_size: u32,
     min_layer_size: u32,
@@ -20,7 +20,7 @@ pub struct DefaultLayersDist {
 }
 
 #[derive(Debug, Clone)]
-pub struct LayersBorderGen {
+pub struct LayersBorder {
     border_divation: f32,
     border_mod_func: Option<fn()>, // FIX THIS, REWRITE IT FOR MULTIPLE ARGUMENTS!!
     border_type: String,

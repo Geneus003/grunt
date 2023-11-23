@@ -1,6 +1,6 @@
 use crate::types::Axis;
-use crate::types::DefaultLayersDist;
-use crate::types::LayersBorderGen;
+use crate::types::LayersDist;
+use crate::types::LayersBorder;
 
 #[derive(Debug)]
 pub struct Params3D {
@@ -9,9 +9,9 @@ pub struct Params3D {
     x_ax: Axis,
     y_ax: Axis,
     // Base layers parameters
-    layers_dist: DefaultLayersDist,
+    layers_dist: LayersDist,
     // How to modify layers
-    layers_border: LayersBorderGen,
+    layers_border: LayersBorder,
 }
 
 impl Params3D {
@@ -22,9 +22,9 @@ impl Params3D {
             x_ax: Axis::new(),
             y_ax: Axis::new(),
             // Base layers parameters
-            layers_dist: DefaultLayersDist::new(),
+            layers_dist: LayersDist::new(),
             // How to modify layers
-            layers_border: LayersBorderGen::new()
+            layers_border: LayersBorder::new()
         }
     }
 }
@@ -54,19 +54,19 @@ impl Params3D {
         &self.y_ax
     }
 
-    pub fn set_default_dayers_dist(self: &mut Self, layers: DefaultLayersDist) {
+    pub fn set_default_dayers_dist(self: &mut Self, layers: LayersDist) {
         self.layers_dist = layers;
     }
 
-    pub fn default_layers_dist(self: &Self) -> &DefaultLayersDist {
+    pub fn default_layers_dist(self: &Self) -> &LayersDist {
         &self.layers_dist
     }
 
-    pub fn set_layers_border(self: &mut Self, layers_border: LayersBorderGen) {
+    pub fn set_layers_border(self: &mut Self, layers_border: LayersBorder) {
         self.layers_border = layers_border
     }
 
-    pub fn layers_border(self: &Self) -> &LayersBorderGen {
+    pub fn layers_border(self: &Self) -> &LayersBorder {
         &self.layers_border
     }
 }

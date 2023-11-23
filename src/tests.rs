@@ -55,7 +55,7 @@ fn gen_layers_dist_tests() {
     let mut answers: Vec<Result<Vec<u32>, &'static str>> = vec![];
 
     for i in 0..gen_count {
-        answers.push(types::DefaultLayersDist::generate_layers_dist(
+        answers.push(types::LayersDist::generate_layers_dist(
             layers_num[i],
             layers_min[i],
             layers_max[i],

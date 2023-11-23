@@ -1,6 +1,6 @@
-use crate::types::LayersBorderGen;
+use crate::types::LayersBorder;
 
-impl LayersBorderGen {
+impl LayersBorder {
     pub fn set_border_divation(self: &mut Self, border_divation: f32) -> Result<(), &'static str> {
         if border_divation < 0.0 {
             return Err("Border divation can't be negative.")
@@ -9,8 +9,8 @@ impl LayersBorderGen {
         return Ok(())
     }
 
-    pub fn new() -> LayersBorderGen {
-        LayersBorderGen {
+    pub fn new() -> LayersBorder {
+        LayersBorder {
             border_divation: 0.0,
             border_mod_func: None,
             border_type: String::from("random"),
