@@ -47,12 +47,12 @@ fn gen_layers_dist_tests() {
     let mut rng = rand::thread_rng();
     
     let layers_num: Vec<u32> = (0..gen_count).map(|_| rng.gen_range(2..20)).collect();
-    let layers_min: Vec<u32> = (0..gen_count).map(|_| rng.gen_range(1..20)).collect();
-    let layers_max: Vec<u32> = (0..gen_count).map(|i| rng.gen_range(layers_min[i]+1..40)).collect();
-    let layers_sum: Vec<Option<u32>> = (0..gen_count)
-        .map(|i| Some(rng.gen_range(layers_min[i]*layers_num[i]..layers_max[i]*layers_num[i]))).collect();
+    let layers_min: Vec<i32> = (0..gen_count).map(|_| rng.gen_range(1..20)).collect();
+    let layers_max: Vec<i32> = (0..gen_count).map(|i| rng.gen_range(layers_min[i]+1..40)).collect();
+    let layers_sum: Vec<Option<i32>> = (0..gen_count)
+        .map(|i| Some(rng.gen_range(layers_min[i]*layers_num[i] as i32..layers_max[i]*layers_num[i] as i32))).collect();
 
-    let mut answers: Vec<Result<Vec<u32>, &'static str>> = vec![];
+    let mut answers: Vec<Result<Vec<i32>, &'static str>> = vec![];
 
     for i in 0..gen_count {
         answers.push(types::LayersDist::generate_layers_dist(
@@ -86,6 +86,5 @@ fn gen_layers_dist_tests() {
             continue;
         }
     }
-
     assert_eq!(errors, 0);
 }

@@ -18,12 +18,9 @@ impl Params3D {
     pub fn new() -> Params3D {
         Params3D {
             model_name: String::from("3D Model"),
-            // Axes parameters 
             x_ax: Axis::new(),
             y_ax: Axis::new(),
-            // Base layers parameters
             layers_dist: LayersDist::new(),
-            // How to modify layers
             layers_border: LayersBorder::new()
         }
     }

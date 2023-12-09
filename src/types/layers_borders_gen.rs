@@ -39,11 +39,11 @@ impl LayersBorder {
         &self.border_type
     }
 
-    pub fn set_border_max_step(self: &mut Self, max_step: Option<u32>) {
+    pub fn set_border_max_step(self: &mut Self, max_step: Option<i32>) {
         self.border_max_step = max_step
     }
 
-    pub fn border_max_step(self: &Self) -> Option<u32> {
+    pub fn border_max_step(self: &Self) -> Option<i32> {
         return self.border_max_step
     }
 

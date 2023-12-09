@@ -12,18 +12,18 @@ impl LayersDist {
         }
     }
 
-    pub fn create_from_vec(layers_dist: Vec<u32>) -> Result<LayersDist, &'static str> {
+    pub fn create_from_vec(layers_dist: Vec<i32>) -> Result<LayersDist, &'static str> {
         if layers_dist.is_empty() {
             return Err("Distibution of layers vec must contain at least one value");
         }
 
-        let (mut min_layer_size, mut max_layer_size, mut layers_sum) = (u32::MAX, 0u32, 0u32);
+        let (mut min_layer_size, mut max_layer_size, mut layers_sum) = (i32::MAX, 0i32, 0i32);
 
         for el in &layers_dist {
             if *el < min_layer_size { min_layer_size = *el }
             if *el > max_layer_size { max_layer_size = *el }
 
-            layers_sum = layers_sum.checked_add(*el).ok_or("Problem with calculating sum of layers: u32 overflow")?;
+            layers_sum = layers_sum.checked_add(*el).ok_or("Problem with calculating sum of layers: i32 overflow")?;
         }
 
         Ok(LayersDist {
@@ -37,9 +37,9 @@ impl LayersDist {
 
     pub fn generate_from_params(
         layers_num: u32,
-        min_layer_size: u32,
-        max_layer_size: u32,
-        layers_sum: Option<u32>
+        min_layer_size: i32,
+        max_layer_size: i32,
+        layers_sum: Option<i32>
     ) -> Result<LayersDist, &'static str> {
         let layers = LayersDist::generate_layers_dist(layers_num, min_layer_size, max_layer_size, layers_sum);
         match layers {
@@ -56,17 +56,17 @@ impl LayersDist {
 
     pub fn generate_layers_dist(
         layers_num: u32,
-        min_layer_size: u32,
-        max_layer_size: u32,
-        layers_sum: Option<u32>
-    ) -> Result<Vec<u32>, &'static str> {
+        min_layer_size: i32,
+        max_layer_size: i32,
+        layers_sum: Option<i32>
+    ) -> Result<Vec<i32>, &'static str> {
         match LayersDist::validate_params(layers_num, min_layer_size, max_layer_size, layers_sum) {
             Ok(_) => (),
             Err(err) => return Err(err),
         }
 
         let mut rng = rand::thread_rng();
-        let mut layers: Vec<u32> = (0..layers_num).map(|_| rng.gen_range(min_layer_size..max_layer_size)).collect();
+        let mut layers: Vec<i32> = (0..layers_num).map(|_| rng.gen_range(min_layer_size..max_layer_size)).collect();
 
         if layers_sum.is_none() { return Ok(layers); }
         let layers_sum = layers_sum.unwrap();
@@ -74,16 +74,16 @@ impl LayersDist {
         let mut points;
         let mut znak = true;
         if layers_sum > layers.iter().sum() {
-            points = layers_sum - layers.iter().sum::<u32>();
+            points = layers_sum - layers.iter().sum::<i32>();
         }
         else {
             znak = false;
-            points = layers.iter().sum::<u32>() - layers_sum;
+            points = layers.iter().sum::<i32>() - layers_sum;
         }
-        let mut tries: u32 = 0;
+        let mut tries: i32 = 0;
 
         while points != 0 && tries <= 2000 {
-            let avg_layer_mod = points as u32 / layers_num;
+            let avg_layer_mod = points / layers_num as i32;
 
             for i in 0..layers_num as usize {
                 if znak {
@@ -94,7 +94,7 @@ impl LayersDist {
                     }
 
                     let now_mod = if avg_layer_mod == 0 {
-                        rng.gen_range(0..layers_num)
+                        rng.gen_range(0..layers_num) as i32
                     } else {
                         rng.gen_range(0..avg_layer_mod*2)
                     };
@@ -111,7 +111,7 @@ impl LayersDist {
                     }
 
                     let now_mod = if avg_layer_mod == 0 {
-                        rng.gen_range(0..layers_num)
+                        rng.gen_range(0..layers_num) as i32
                     } else {
                         rng.gen_range(0..avg_layer_mod*2)
                     };
@@ -133,7 +133,7 @@ impl LayersDist {
     }
 
     // function params are named by LayersDist's first letters, e.g. ln - (l)ayers_(n)um
-    fn validate_params(ln: u32, min_ls: u32, max_ls: u32, ls: Option<u32>) -> Result<(), &'static str> {
+    fn validate_params(ln: u32, min_ls: i32, max_ls: i32, ls: Option<i32>) -> Result<(), &'static str> {
         if min_ls > max_ls {
             return Err("Max layer's size must be bigger than min layer's size")
         }
@@ -148,11 +148,11 @@ impl LayersDist {
             if ls == 0 {
                 return Err("Any argument must be bigger than zero")
             }
-            if max_ls * ln < ls {
+            if max_ls * (ln as i32) < ls {
                 return Err("Impossible: (max layer's size) * (number of layers) must be bigger than (layers sum)");
             }
 
-            if min_ls * ln > ls {
+            if min_ls * (ln as i32) > ls {
                 return Err("Impossible: (min layer's size) * (number of layers) must be smaller than (layers sum)");
             }
         }
@@ -162,11 +162,11 @@ impl LayersDist {
 }
 
 impl LayersDist {
-    pub fn get_full_data(self: &Self) -> (u32, u32, u32, u32, &Vec<u32>) {
+    pub fn get_full_data(self: &Self) -> (u32, i32, i32, i32, &Vec<i32>) {
         (self.layers_num, self.max_layer_size, self.min_layer_size, self.layers_sum, &self.layers_dist)
     }
 
-    pub fn get_data(self: &Self) -> &Vec<u32> {
+    pub fn get_data(self: &Self) -> &Vec<i32> {
         &self.layers_dist
     }
 

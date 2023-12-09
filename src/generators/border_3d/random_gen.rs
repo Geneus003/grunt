@@ -1,65 +1,145 @@
 use crate::Params3D;
 use rand::Rng;
 
-pub fn random_layer_creation_3d(params: &Params3D, layer: &mut Vec<Vec<u32>>, now_layer_id: usize) -> () {
+pub fn random_layer_creation_3d(params: &Params3D, layer: &mut Vec<Vec<i32>>, now_layer_id: usize) -> Result<(), &'static str> {
     let default_value = params.default_layers_dist().get_data()[now_layer_id];
     let mut rng = rand::thread_rng();
     let max_step = params.layers_border().border_max_step();
     let max_step_value = max_step.unwrap_or(0);
 
     const MAX_DEPTH: usize = 50;
-    let upper_limit: u32 = if params.layers_border().border_divation() >= 1.0 {
-        default_value + params.layers_border().border_divation() as u32
+    let upper_limit: i32 = if params.layers_border().border_divation() >= 1.0 {
+        default_value + params.layers_border().border_divation() as i32
     } else {
         let model_size_value = *params.default_layers_dist().get_data().last().unwrap_or(&0);
-        default_value + (params.layers_border().border_divation() * model_size_value as f32) as u32
+        default_value + (params.layers_border().border_divation() * model_size_value as f32) as i32
     };
-    let lower_limit: u32 = if params.layers_border().border_divation() >= 1.0 {
-        default_value.checked_sub(params.layers_border().border_divation() as u32).unwrap_or(0)
+    let lower_limit: i32 = if params.layers_border().border_divation() >= 1.0 {
+        default_value.checked_sub(params.layers_border().border_divation() as i32).unwrap_or(0)
     } else {
         let model_size_value = *params.default_layers_dist().get_data().last().unwrap_or(&0);
-        default_value.checked_sub((params.layers_border().border_divation() * model_size_value as f32) as u32).unwrap_or(0)
+        default_value
+            .checked_sub((params.layers_border().border_divation() * model_size_value as f32) as i32).unwrap_or(0)
     };
 
     for layer_line in 0..layer.len() {
         for layer_el in 0..layer[layer_line].len() {
-            if max_step.is_none() {
-                layer[layer_line][layer_el] = rng.gen_range(lower_limit..upper_limit);
+            if max_step.is_none() || (layer_line == 0 && layer_el == 0) {
+                if upper_limit == lower_limit {
+                    layer[layer_line][layer_el] = upper_limit;
+                } else {
+                    layer[layer_line][layer_el] = rng.gen_range(lower_limit..upper_limit);
+                }
                 continue;
             }
 
-            let mut now_element_ref = &layer[layer_line][layer_el];
+            let max_step = max_step.unwrap();
+
             let mut now_line = layer_line;
-            let mut reserved_el = layer_el;
+            let mut now_el = layer_el;
 
-            for i in 0..MAX_DEPTH {
-                let upper_value = if now_line != 0 {
-                    Some(layer[now_line-1][reserved_el])
+            let mut is_solved = false;
+
+            for i in 0..layer_el+1 {
+                now_el = layer_el - i;
+
+                let upper_el = if now_line != 0 {
+                    Some(layer[layer_line-1][now_el])
                 } else {
                     None
                 };
 
-                let left_value = if reserved_el != 0 {
-                    Some(layer[now_line][reserved_el-1])
+                let left_el = if now_el != 0 {
+                    Some(layer[layer_line][now_el-1])
                 } else {
                     None
                 };
 
-                if upper_value.is_some() && left_value.is_some() {
-                    let upper_value = upper_value.unwrap();
-                    let left_value = left_value.unwrap();
+                let right_el = if now_el != layer[now_line].len() && i != 0 {
+                    Some(layer[layer_line][now_el+1])
+                } else {
+                    None
+                };
 
-                    let (up_lim, down_lim) = if upper_value > left_value {
-                        (left_value + max_step, upper_value - max_step) 
-                    } else {
-                        (upper_value + max_step, left_value - max_step) 
-                    };
-
-                    if up_lim >= down_lim {
-                        now_element_ref = rng.gen_range(down_lim..up_lim)
+                let (max_limit, min_limit) = {
+                    let (mut t_max, mut t_min) = (0, i32::MAX);
+                    if upper_el.is_some() {
+                        (t_max, t_min) = (upper_el.unwrap(), upper_el.unwrap())
                     }
+                    if right_el.is_some() {
+                        if t_max < right_el.unwrap() {
+                            t_max = right_el.unwrap()
+                        }
+                        if t_min > right_el.unwrap() {
+                            t_min = right_el.unwrap()
+                        }
+                    }
+                    if left_el.is_some() {
+                        if t_max < left_el.unwrap() {
+                            t_max = left_el.unwrap()
+                        }
+                        if t_min > left_el.unwrap() {
+                            t_min = left_el.unwrap()
+                        }
+                    }
+
+                    (t_min, t_max) = (t_max - max_step, t_min + max_step);
+
+                    if t_min < lower_limit {
+                        t_min = lower_limit
+                    }
+                    if t_max > upper_limit {
+                        t_max = upper_limit
+                    }
+                    (t_max, t_min)
+                };
+
+                if max_limit >= min_limit {
+                    layer[now_line][now_el] = if max_limit == min_limit {
+                        max_limit
+                    } else {
+                        rng.gen_range(min_limit..max_limit)
+                    };
+                    is_solved = true;
+                    break;
                 }
+
+                if upper_el.is_some() {
+                    if right_el.is_none() {
+                        layer[now_line][now_el] = rng.gen_range(upper_el.unwrap()-max_step..upper_el.unwrap()+max_step)
+                    } else {
+                        if right_el.unwrap() > upper_el.unwrap() {
+                            let min_v = right_el.unwrap() - max_step;
+                            let max_v = upper_el.unwrap() + max_step;
+                            layer[now_line][now_el] = if min_v == max_v {
+                                min_v
+                            } else if max_v > min_v {
+                                rng.gen_range(min_v..max_v)
+                            } else {
+                                break;
+                            };
+                        }
+                    }
+                } else if right_el.is_some() {
+                    if left_el.is_some() {
+                        if left_el.unwrap() > right_el.unwrap() {
+                            layer[now_line][now_el] = rng.gen_range(right_el.unwrap()..right_el.unwrap()+max_step);
+                        } else {
+                            layer[now_line][now_el] = rng.gen_range(right_el.unwrap()-max_step..right_el.unwrap());
+                        }
+                    } else {
+                        layer[now_line][now_el] = rng.gen_range(right_el.unwrap()-max_step..right_el.unwrap()+max_step)
+                    }
+                } else {
+                    break;
+                }
+            }
+
+            if !is_solved {
+                return Err("Could not find solution")
             }
         }
     }
+
+    Ok(())
 }
