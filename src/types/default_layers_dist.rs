@@ -1,6 +1,7 @@
 use rand::Rng;
 
 use crate::types::LayersDist;
+
 impl LayersDist {
     pub fn new() -> LayersDist {
         LayersDist {
@@ -9,6 +10,7 @@ impl LayersDist {
             min_layer_size:70,
             layers_sum: 230,
             layers_dist: vec![70, 90, 80],
+            layers_dist_summed: vec![70, 160, 240],
         }
     }
 
@@ -18,12 +20,14 @@ impl LayersDist {
         }
 
         let (mut min_layer_size, mut max_layer_size, mut layers_sum) = (i32::MAX, 0i32, 0i32);
+        let mut layers_dist_summed: Vec<i32> = vec![];
 
         for el in &layers_dist {
             if *el < min_layer_size { min_layer_size = *el }
             if *el > max_layer_size { max_layer_size = *el }
 
             layers_sum = layers_sum.checked_add(*el).ok_or("Problem with calculating sum of layers: i32 overflow")?;
+            layers_dist_summed.push(layers_sum);
         }
 
         Ok(LayersDist {
@@ -31,7 +35,8 @@ impl LayersDist {
             max_layer_size,
             min_layer_size,
             layers_sum,
-            layers_dist
+            layers_dist,
+            layers_dist_summed,
         })
     }
 
@@ -44,13 +49,25 @@ impl LayersDist {
         let layers = LayersDist::generate_layers_dist(layers_num, min_layer_size, max_layer_size, layers_sum);
         match layers {
             Err(err) => return Err(err),
-            Ok(_) => Ok(LayersDist {
-                layers_num,
-                min_layer_size,
-                max_layer_size,
-                layers_sum: layers_sum.unwrap_or(layers.clone().unwrap().iter().sum()),
-                layers_dist: layers.unwrap(),
-            })
+            Ok(layers) => {
+                let mut layers_summed:Vec<i32> = Vec::with_capacity(layers.len());
+                for (i, e) in layers.iter().enumerate(){
+                    if i != 0 {
+                        layers_summed.push(layers_summed[i-1] + *e)
+                    } else {
+                        layers_summed.push(*e)
+                    }
+                }
+                let layers_summed = (0..layers.len()).map(|i| if i > 0 {layers[i-1]} else {0}).collect();
+                Ok(LayersDist {
+                    layers_num,
+                    min_layer_size,
+                    max_layer_size,
+                    layers_sum: layers_sum.unwrap_or(layers.clone().iter().sum()),
+                    layers_dist: layers,
+                    layers_dist_summed: layers_summed,
+                })
+            }
         }
     }
 
@@ -166,11 +183,15 @@ impl LayersDist {
         (self.layers_num, self.max_layer_size, self.min_layer_size, self.layers_sum, &self.layers_dist)
     }
 
-    pub fn get_data(self: &Self) -> &Vec<i32> {
+    pub fn get_layers_dist(self: &Self) -> &Vec<i32> {
         &self.layers_dist
     }
 
-    pub fn get_len(self: &Self) -> usize {
+    pub fn get_layers_dist_summed(self: &Self) -> &Vec<i32> {
+        &self.layers_dist_summed
+    }
+
+    pub fn get_layers_count(self: &Self) -> usize {
         self.layers_dist.len()
     }
 }

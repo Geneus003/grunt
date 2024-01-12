@@ -44,7 +44,7 @@ impl Axis {
 }
 
 impl Axis {
-    pub fn get_full_axis(self: &Self) -> (f32, f32, Option<f32>, &Vec<f32>) {
+    pub fn get_full_axis_data(self: &Self) -> (f32, f32, Option<f32>, &Vec<f32>) {
         (self.start, self.end, self.step, &self.axis)
     }
 
@@ -52,7 +52,7 @@ impl Axis {
         &self.axis
     }
 
-    pub fn get_len(self: &Self) -> usize {
+    pub fn get_axis_len(self: &Self) -> usize {
         self.axis.len()
     }
 }

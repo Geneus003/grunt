@@ -1,26 +1,37 @@
-use crate::Params3D;
+use crate::types::generation_params::Params3D;
 use rand::Rng;
 
 pub fn random_layer_creation_3d(params: &Params3D, layer: &mut Vec<Vec<i32>>, now_layer_id: usize) -> Result<(), &'static str> {
-    let default_value = params.default_layers_dist().get_data()[now_layer_id];
-    let mut rng = rand::thread_rng();
+    let default_value = params.layers_dist().get_layers_dist_summed()[now_layer_id];
     let max_step = params.layers_border().border_max_step();
-    let max_step_value = max_step.unwrap_or(0);
+    let mut rng = rand::thread_rng();
 
-    const MAX_DEPTH: usize = 50;
     let upper_limit: i32 = if params.layers_border().border_divation() >= 1.0 {
         default_value + params.layers_border().border_divation() as i32
     } else {
-        let model_size_value = *params.default_layers_dist().get_data().last().unwrap_or(&0);
+        let model_size_value = *params.layers_dist().get_layers_dist().last().unwrap_or(&0);
         default_value + (params.layers_border().border_divation() * model_size_value as f32) as i32
     };
+
     let lower_limit: i32 = if params.layers_border().border_divation() >= 1.0 {
         default_value.checked_sub(params.layers_border().border_divation() as i32).unwrap_or(0)
     } else {
-        let model_size_value = *params.default_layers_dist().get_data().last().unwrap_or(&0);
+        let model_size_value =*params.layers_dist().get_layers_dist().last().unwrap_or(&0);
         default_value
             .checked_sub((params.layers_border().border_divation() * model_size_value as f32) as i32).unwrap_or(0)
     };
+
+    if max_step.is_none() {
+        for layer_line in 0..layer.len() {
+            for layer_el in 0..layer[layer_line].len() {
+                layer[layer_line][layer_el] = if upper_limit == lower_limit {
+                    upper_limit
+                } else {
+                    rng.gen_range(lower_limit..upper_limit)
+                };
+            }
+        }
+    }
 
     for layer_line in 0..layer.len() {
         for layer_el in 0..layer[layer_line].len() {
@@ -35,13 +46,12 @@ pub fn random_layer_creation_3d(params: &Params3D, layer: &mut Vec<Vec<i32>>, no
 
             let max_step = max_step.unwrap();
 
-            let mut now_line = layer_line;
-            let mut now_el = layer_el;
+            let now_line = layer_line;
 
             let mut is_solved = false;
 
             for i in 0..layer_el+1 {
-                now_el = layer_el - i;
+                let now_el = layer_el - i;
 
                 let upper_el = if now_line != 0 {
                     Some(layer[layer_line-1][now_el])

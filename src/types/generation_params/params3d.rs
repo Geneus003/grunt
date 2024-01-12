@@ -1,18 +1,7 @@
-use crate::types::Axis;
+use crate::types::generation_params::Params3D;
 use crate::types::LayersDist;
 use crate::types::LayersBorder;
-
-#[derive(Debug)]
-pub struct Params3D {
-    model_name: String,
-    // Axes parameters 
-    x_ax: Axis,
-    y_ax: Axis,
-    // Base layers parameters
-    layers_dist: LayersDist,
-    // How to modify layers
-    layers_border: LayersBorder,
-}
+use crate::types::Axis;
 
 impl Params3D {
     pub fn new() -> Params3D {
@@ -51,11 +40,11 @@ impl Params3D {
         &self.y_ax
     }
 
-    pub fn set_default_dayers_dist(self: &mut Self, layers: LayersDist) {
+    pub fn set_layers_dist(self: &mut Self, layers: LayersDist) {
         self.layers_dist = layers;
     }
 
-    pub fn default_layers_dist(self: &Self) -> &LayersDist {
+    pub fn layers_dist(self: &Self) -> &LayersDist {
         &self.layers_dist
     }
 

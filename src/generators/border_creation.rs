@@ -1,11 +1,10 @@
-use crate::generators::generators_params::Params3D;
-
+use crate::types::generation_params::Params3D;
 use crate::generators::border_3d::random_gen::random_layer_creation_3d;
 
 pub fn create_layers_borders_3d(params: &Params3D) -> Option<Vec<Vec<Vec<i32>>>> {
-    let layers_count = params.default_layers_dist().get_len();
-    let x_size = params.x_axis().get_len();
-    let y_size = params.y_axis().get_len();
+    let layers_count = params.layers_dist().get_layers_count();
+    let x_size = params.x_axis().get_axis_len();
+    let y_size = params.y_axis().get_axis_len();
 
     let mut layers_borders = vec![vec![vec![0i32; x_size]; y_size]; layers_count];
 

@@ -1,6 +1,7 @@
 pub mod default_layers_dist;
 pub mod axis;
 pub mod layers_borders_gen;
+pub mod generation_params;
 
 #[derive(Debug, Clone)]
 pub struct Axis {
@@ -17,6 +18,7 @@ pub struct LayersDist {
     min_layer_size: i32,
     layers_sum: i32,
     layers_dist: Vec<i32>,
+    layers_dist_summed: Vec<i32>,
 }
 
 #[derive(Debug, Clone)]
