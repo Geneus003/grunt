@@ -1,7 +1,8 @@
-mod params3d;
 use crate::types::LayersDist;
 use crate::types::LayersBorder;
 use crate::types::Axis;
+
+mod params3d;
 
 #[derive(Debug)]
 pub struct Params3D {

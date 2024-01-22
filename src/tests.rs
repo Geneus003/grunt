@@ -1,6 +1,6 @@
-use super::*;
-
 use rand::Rng;
+
+use super::*;
 
 #[test]
 fn gen_axis_tests() {

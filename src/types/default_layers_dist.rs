@@ -1,4 +1,4 @@
-use rand::Rng;
+use rand::Rng; 
 
 use crate::types::LayersDist;
 
@@ -8,7 +8,7 @@ impl LayersDist {
             layers_num: 3,
             max_layer_size: 100,
             min_layer_size:70,
-            layers_sum: 230,
+            layers_sum: 240,
             layers_dist: vec![70, 90, 80],
             layers_dist_summed: vec![70, 160, 240],
         }
@@ -80,6 +80,10 @@ impl LayersDist {
         match LayersDist::validate_params(layers_num, min_layer_size, max_layer_size, layers_sum) {
             Ok(_) => (),
             Err(err) => return Err(err),
+        }
+
+        if min_layer_size == max_layer_size {
+            return Ok((0..layers_num).map(|_| max_layer_size).collect());
         }
 
         let mut rng = rand::thread_rng();
