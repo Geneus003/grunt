@@ -24,9 +24,9 @@ pub fn create_layers_borders_3d(params: &Params3D) -> Option<Vec<Vec<Vec<i32>>>>
 
         #[cfg(debug_assertions)]
         if let Err(err) = crate::generators::border_3d::validate_model(params, &layers_borders[i], i) {
-            error!("Validating FAILED: {err}")
+            error!("Validating for layer {i} FAILED: {err}")
         } else {
-            trace!("Validating completed succesfully")
+            trace!("Validating for layer {i} completed succesfully")
         }
 
         match res {
