@@ -1,14 +1,6 @@
 use crate::types::LayersBorder;
 
 impl LayersBorder {
-    pub fn set_border_divation(self: &mut Self, border_divation: f32) -> Result<(), &'static str> {
-        if border_divation < 0.0 {
-            return Err("Border divation can't be negative.")
-        }
-        self.border_divation = border_divation;
-        return Ok(())
-    }
-
     pub fn new() -> LayersBorder {
         LayersBorder {
             border_divation: 0.0,
@@ -17,6 +9,14 @@ impl LayersBorder {
             border_max_step: None,
             layers_same_divation: false,
         }
+    }
+
+    pub fn set_border_divation(self: &mut Self, border_divation: f32) -> Result<(), &'static str> {
+        if border_divation < 0.0 {
+            return Err("Border divation can't be negative.")
+        }
+        self.border_divation = border_divation;
+        return Ok(())
     }
 
     pub fn border_divation(self: &Self) -> f32 {

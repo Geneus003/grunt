@@ -4,7 +4,7 @@ use crate::types::generation_params::Params3D;
 
 pub mod random_gen;
 
-pub fn validate_model(params: &Params3D, layer: &Vec<Vec<i32>>, now_layer_id: usize) -> Result<(), &'static str> {
+pub fn validate_layer(params: &Params3D, layer: &Vec<Vec<i32>>, now_layer_id: usize) -> Result<(), &'static str> {
     let default_value = params.layers_dist().get_layers_dist_summed()[now_layer_id];
     let max_step = params.layers_border().border_max_step();
 

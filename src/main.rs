@@ -1,6 +1,5 @@
 use generators::generate_3d;
-use types::Axis;
-use types::LayersDist;
+use types::{Axis, LayersDist, LayersBorder};
 
 pub mod generators;
 pub mod types;
@@ -16,13 +15,13 @@ fn main() {
 
     params.set_layers_dist(LayersDist::create_from_vec([70, 80, 90].to_vec()).unwrap_or(LayersDist::new()));
 
-    let mut borders = types::LayersBorder::new();
+    let mut borders = LayersBorder::new();
     let _ = borders.set_border_divation(10.0);
     let _ = borders.set_border_max_step(Some(5));
-
     params.set_layers_border(borders);
+
     println!("{:?}", params);
-    generate_3d(params);
+    let _ = generate_3d(params);
 }
 
 #[cfg(test)]

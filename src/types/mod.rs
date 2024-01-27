@@ -2,6 +2,7 @@ pub mod default_layers_dist;
 pub mod axis;
 pub mod layers_borders_gen;
 pub mod generation_params;
+pub mod layers_filling_gen;
 
 #[derive(Debug, Clone)]
 pub struct Axis {
@@ -28,4 +29,13 @@ pub struct LayersBorder {
     border_type: String,
     border_max_step: Option<i32>,
     layers_same_divation: bool,
+}
+
+#[derive(Debug, Clone)]
+pub struct LayersFill {
+    values_preset: Vec<Vec<i32>>,
+    is_preset_ordered: bool,
+    values_divation: Option<f32>,
+    values_smooth: Option<u32>,
+    values_offset: Option<u32>,
 }

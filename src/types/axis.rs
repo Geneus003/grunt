@@ -17,11 +17,13 @@ impl Axis {
             None => None,
         };
 
+        let new_step = step.unwrap_or(if start < end {1.0} else {-1.0});
+
         Axis {
             start,
             end,
             step,
-            axis: Axis::calculate_axis(start, end, step.unwrap_or(1.0))
+            axis: Axis::calculate_axis(start, end, new_step)
         }
     }
 

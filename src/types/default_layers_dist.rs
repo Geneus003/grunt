@@ -46,7 +46,7 @@ impl LayersDist {
         max_layer_size: i32,
         layers_sum: Option<i32>
     ) -> Result<LayersDist, &'static str> {
-        let layers = LayersDist::generate_layers_dist(layers_num, min_layer_size, max_layer_size, layers_sum);
+        let layers = LayersDist::generate_layers_dist_vec(layers_num, min_layer_size, max_layer_size, layers_sum);
         match layers {
             Err(err) => return Err(err),
             Ok(layers) => {
@@ -71,7 +71,7 @@ impl LayersDist {
         }
     }
 
-    pub fn generate_layers_dist(
+    pub fn generate_layers_dist_vec(
         layers_num: u32,
         min_layer_size: i32,
         max_layer_size: i32,
