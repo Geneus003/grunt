@@ -1,29 +1,19 @@
+use crate::types::{Axis, LayersDist, LayersBorder, LayersFill};
 use crate::types::generation_params::Params3D;
-use crate::types::LayersDist;
-use crate::types::LayersBorder;
-use crate::types::Axis;
 
 impl Params3D {
     pub fn new() -> Params3D {
         Params3D {
-            model_name: String::from("3D Model"),
             x_ax: Axis::new(),
             y_ax: Axis::new(),
             layers_dist: LayersDist::new(),
-            layers_border: LayersBorder::new()
+            layers_border: LayersBorder::new(),
+            layers_fill: LayersFill::new(),
         }
     }
 }
 
 impl Params3D {
-    pub fn set_model_name(self: &mut Self, name: String) {
-        self.model_name = name;
-    }
-
-    pub fn model_name(self: &Self) -> &String {
-        &self.model_name
-    }
-
     pub fn set_x_axis(self: &mut Self, axis: Axis) {
         self.x_ax = axis;
     }
@@ -54,5 +44,13 @@ impl Params3D {
 
     pub fn layers_border(self: &Self) -> &LayersBorder {
         &self.layers_border
+    }
+
+    pub fn set_layers_fill(self: &mut Self, layers_fill: LayersFill) {
+        self.layers_fill = layers_fill
+    }
+
+    pub fn layers_fill(self: &Self) -> &LayersFill {
+        &self.layers_fill
     }
 }

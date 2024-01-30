@@ -1,12 +1,9 @@
-use crate::types::LayersDist;
-use crate::types::LayersBorder;
-use crate::types::Axis;
+use crate::types::{Axis, LayersDist, LayersBorder, LayersFill};
 
 mod params3d;
 
 #[derive(Debug)]
 pub struct Params3D {
-    model_name: String,
     // Axes parameters 
     x_ax: Axis,
     y_ax: Axis,
@@ -14,4 +11,6 @@ pub struct Params3D {
     layers_dist: LayersDist,
     // How to modify layers
     layers_border: LayersBorder,
+    // How to fill layers
+    layers_fill: LayersFill
 }
