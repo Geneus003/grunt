@@ -34,6 +34,5 @@ pub fn create_layers_borders_3d(params: &Params3D) -> Result<Vec<Vec<Vec<i32>>>,
     #[cfg(debug_assertions)]
     trace!("3D borders were generated succesfully");
 
-
 	return Ok(layers_borders)
 }

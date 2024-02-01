@@ -9,10 +9,10 @@ fn main() {
 
     let mut params = types::generation_params::Params3D::new();
 
-    params.set_x_axis(Axis::generate_axis(0.0, 10.0, None));
-    params.set_y_axis(Axis::generate_axis(0.0, 10.0, None));
+    params.set_x_axis(Axis::generate_axis(0.0, 100.0, None));
+    params.set_y_axis(Axis::generate_axis(0.0, 100.0, None));
 
-    params.set_layers_dist(LayersDist::create_from_vec([70, 80, 90].to_vec()).unwrap_or(LayersDist::new()));
+    params.set_layers_dist(LayersDist::create_from_vec([20, 30, 40].to_vec()).unwrap_or(LayersDist::new()));
 
     let mut borders = LayersBorder::new();
     let _ = borders.set_border_divation(10.0);
