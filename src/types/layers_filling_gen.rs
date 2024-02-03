@@ -14,6 +14,7 @@ impl LayersFill {
 
 impl LayersFill {
     pub fn set_values_preset(self: &mut Self, values: Vec<Vec<i32>>) -> Result<(), &'static str> {
+        if values.len() < 1 { return Err("Vector must contain at least one element")}
         for value in &values {
             if value.len() > 2 { return Err("Every sub vector can contain only 1 or 2 elements")}
         }

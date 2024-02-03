@@ -12,19 +12,20 @@ pub fn generate_3d(params: Params3D) -> Result<(), &'static str> {
 
     let borders = border_creation::create_layers_borders_3d(&params)?;
 
-    // if !(cfg!(test)) {
-    //     for i in &borders {
-    //         println!("\n\n");
-    //         for j in i {
-    //             println!("{:?}", j)
-    //         }
-    //     }
-    // }
+    if !(cfg!(test)) {
+        for i in &borders {
+            println!("\n\n");
+            for j in i {
+                println!("{:?}", j)
+            }
+        }
+    }
 
     use std::time::Instant;
     let now = Instant::now();
 
-    let model = fill::fill_3d::create_raw_model(&params, borders);
+    let (model, model_mask) = fill::only_fill_3d::create_full_model(&params, borders).expect("here");
+    //println!("{:?}", model);
 
     let elapsed = now.elapsed();
     println!("Elapsed: {:.2?}", elapsed);
