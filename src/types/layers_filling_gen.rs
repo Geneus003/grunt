@@ -3,9 +3,9 @@ use crate::types::LayersFill;
 impl LayersFill {
     pub fn new() -> LayersFill {
         LayersFill {
-            values_preset: vec![vec![100], vec![200], vec![300, 320]],
+            values_preset: vec![vec![100], vec![200], vec![300, 330]],
             is_preset_ordered: true,
-            values_divation: Some(10.0),
+            values_deviation: Some(10.0),
             values_smooth: None,
             values_offset: None,
         }
@@ -34,14 +34,14 @@ impl LayersFill {
         return self.is_preset_ordered
     }
 
-    pub fn set_values_divation(self: &mut Self, divation: Option<f32>) -> Result<(), &'static str> {
-        if divation.unwrap_or(1.0) <= 0.0 { return Err("divation must be positive") };
-        self.values_divation = divation;
+    pub fn set_values_deviation(self: &mut Self, deviation: Option<f32>) -> Result<(), &'static str> {
+        if deviation.unwrap_or(1.0) <= 0.0 { return Err("deviation must be positive") };
+        self.values_deviation = deviation;
         Ok(())
     }
 
-    pub fn values_divation(self: &Self) -> Option<f32> {
-        return self.values_divation
+    pub fn values_deviation(self: &Self) -> Option<f32> {
+        return self.values_deviation
     }
 
     pub fn set_values_smooth(self: &mut Self, smooth: Option<u32>) {

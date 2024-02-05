@@ -24,18 +24,18 @@ pub struct LayersDist {
 
 #[derive(Debug, Clone)]
 pub struct LayersBorder {
-    border_divation: f32,
+    border_deviation: f32,
     border_mod_func: Option<fn()>, // FIX THIS, REWRITE IT FOR MULTIPLE ARGUMENTS!!
     border_type: String,
     border_max_step: Option<i32>,
-    layers_same_divation: bool,
+    layers_same_deviation: bool,
 }
 
 #[derive(Debug, Clone)]
 pub struct LayersFill {
     values_preset: Vec<Vec<i32>>,
     is_preset_ordered: bool,
-    values_divation: Option<f32>,
+    values_deviation: Option<f32>,
     values_smooth: Option<u32>,
     values_offset: Option<u32>,
 }

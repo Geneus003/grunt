@@ -3,24 +3,24 @@ use crate::types::LayersBorder;
 impl LayersBorder {
     pub fn new() -> LayersBorder {
         LayersBorder {
-            border_divation: 0.0,
+            border_deviation: 0.0,
             border_mod_func: None,
             border_type: String::from("random"),
             border_max_step: None,
-            layers_same_divation: false,
+            layers_same_deviation: false,
         }
     }
 
-    pub fn set_border_divation(self: &mut Self, border_divation: f32) -> Result<(), &'static str> {
-        if border_divation < 0.0 {
-            return Err("Border divation can't be negative.")
+    pub fn set_border_deviation(self: &mut Self, border_deviation: f32) -> Result<(), &'static str> {
+        if border_deviation < 0.0 {
+            return Err("Border deviation can't be negative.")
         }
-        self.border_divation = border_divation;
+        self.border_deviation = border_deviation;
         return Ok(())
     }
 
-    pub fn border_divation(self: &Self) -> f32 {
-        return self.border_divation
+    pub fn border_deviation(self: &Self) -> f32 {
+        return self.border_deviation
     }
 
     pub fn set_border_mod_func(self: &mut Self, mod_func: Option<fn()>) {
@@ -47,11 +47,11 @@ impl LayersBorder {
         return self.border_max_step
     }
 
-    pub fn set_layers_same_divation(self: &mut Self, same_divation: bool) {
-        self.layers_same_divation = same_divation
+    pub fn set_layers_same_deviation(self: &mut Self, same_deviation: bool) {
+        self.layers_same_deviation = same_deviation
     } 
 
-    pub fn layers_same_divation(self: &Self) -> bool {
-        return self.layers_same_divation
+    pub fn layers_same_deviation(self: &Self) -> bool {
+        return self.layers_same_deviation
     } 
 }

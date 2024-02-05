@@ -24,7 +24,7 @@ pub fn generate_3d(params: Params3D) -> Result<(), &'static str> {
     use std::time::Instant;
     let now = Instant::now();
 
-    let (model, model_mask) = fill::only_fill_3d::create_full_model(&params, borders).expect("here");
+    let (model, model_mask) = fill::fill_3d(&params, borders).expect("here");
     //println!("{:?}", model);
 
     let elapsed = now.elapsed();

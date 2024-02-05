@@ -8,19 +8,19 @@ pub fn validate_layer(params: &Params3D, layer: &Vec<Vec<i32>>, now_layer_id: us
     let default_value = params.layers_dist().get_layers_dist_summed()[now_layer_id];
     let max_step = params.layers_border().border_max_step();
 
-    let upper_limit: i32 = if params.layers_border().border_divation() >= 1.0 {
-        default_value + params.layers_border().border_divation() as i32
+    let upper_limit: i32 = if params.layers_border().border_deviation() >= 1.0 {
+        default_value + params.layers_border().border_deviation() as i32
     } else {
         let model_size_value = *params.layers_dist().get_layers_dist().last().unwrap_or(&0);
-        default_value + (params.layers_border().border_divation() * model_size_value as f32) as i32
+        default_value + (params.layers_border().border_deviation() * model_size_value as f32) as i32
     };
 
-    let lower_limit: i32 = if params.layers_border().border_divation() >= 1.0 {
-        default_value.checked_sub(params.layers_border().border_divation() as i32).unwrap_or(0)
+    let lower_limit: i32 = if params.layers_border().border_deviation() >= 1.0 {
+        default_value.checked_sub(params.layers_border().border_deviation() as i32).unwrap_or(0)
     } else {
         let model_size_value =*params.layers_dist().get_layers_dist().last().unwrap_or(&0);
         default_value
-            .checked_sub((params.layers_border().border_divation() * model_size_value as f32) as i32).unwrap_or(0)
+            .checked_sub((params.layers_border().border_deviation() * model_size_value as f32) as i32).unwrap_or(0)
     };
 
     #[cfg(debug_assertions)]

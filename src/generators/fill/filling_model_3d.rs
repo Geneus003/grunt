@@ -23,16 +23,6 @@ pub fn create_full_model(params: &Params3D, borders: Vec<Vec<Vec<i32>>>) -> Resu
 
     let mut rng = rand::thread_rng();
 
-    let fill_values: Vec<Vec<i32>> = if params.layers_fill().is_preset_ordered() == true || fill_values.len() == 1{
-        (0..layers_count).map(|i| fill_values[i % layers_count]).collect()
-    } else {
-        let values: Vec<Vec<i32>> = Vec::with_capacity(layers_count);
-        for i in 0..layers_count {
-            values.push(fill_values[i].clone())
-        }
-        values
-    };
-
     let mut model: Vec<Vec<Vec<i32>>> = Vec::with_capacity(max_elem.try_into().expect("Capacity overfill"));
     let mut model_mask: Vec<Vec<Vec<usize>>> = Vec::with_capacity(max_elem.try_into().expect("Capacity overfill"));
 
@@ -60,9 +50,6 @@ pub fn create_full_model(params: &Params3D, borders: Vec<Vec<Vec<i32>>>) -> Resu
 
                 now_y_line.push(now_next_depth[y_cord][x_cord]);
 
-                if fill_values[now_index].len() {
-
-                }
                 now_y_line_mask.push(now_next_index[y_cord][x_cord]);
             }
 
