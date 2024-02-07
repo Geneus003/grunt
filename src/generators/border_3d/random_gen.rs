@@ -1,4 +1,5 @@
 use rand::Rng;
+use log::{trace, error};
 
 use crate::types::generation_params::Params3D;
 
@@ -113,10 +114,14 @@ pub fn random_layer_creation_3d(params: &Params3D, layer: &mut Vec<Vec<i32>>, no
             }
 
             if !is_solved {
+                #[cfg(debug_assertions)]
+                error!("Solution wasn't found in {REGENERATE_TRIES} backups");
                 return Err("Could not find solution")
             }
         }
     }
+    #[cfg(debug_assertions)]
+    trace!("Solution found with {failed_generation_count} backups");
     Ok(())
 }
 

@@ -2,7 +2,7 @@ use crate::types::{Axis, LayersDist, LayersBorder, LayersFill};
 
 mod params3d;
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct Params3D {
     // Axes parameters 
     x_ax: Axis,

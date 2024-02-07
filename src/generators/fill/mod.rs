@@ -1,11 +1,13 @@
+use rand::Rng;
+use log::trace;
+
 use crate::types::generation_params::Params3D;
 
 pub mod filling_model_3d;
 
 pub fn fill_3d(params: &Params3D, borders: Vec<Vec<Vec<i32>>>) -> Result<(Vec<Vec<Vec<i32>>>, Vec<Vec<Vec<usize>>>), &'static str>  {
-
-    // TODO: Second reorder fill_values using is_preset_ordered
-    // TODO: pass it to only_fill_3d as argument
+    #[cfg(debug_assertions)]
+    trace!("Preparing for model fill");
 
     let mut fill_values = params.layers_fill().values_preset().clone();
     let deviation = params.layers_fill().values_deviation();
@@ -33,17 +35,35 @@ pub fn fill_3d(params: &Params3D, borders: Vec<Vec<Vec<i32>>>) -> Result<(Vec<Ve
         }
     }
 
-    println!("{:?}", fill_values);
+    #[cfg(debug_assertions)]
+    trace!("Filling values for layers were recalculated, using deviation: {:?}", fill_values);
 
-    // let fill_values: Vec<Vec<i32>> = if params.layers_fill().is_preset_ordered() == true || fill_values.len() == 1{
-    //     (0..layers_count).map(|i| fill_values[i % layers_count]).collect()
-    // } else {
-    //     let values: Vec<Vec<i32>> = Vec::with_capacity(layers_count);
-    //     for i in 0..layers_count {
-    //         values.push(fill_values[i].clone())
-    //     }
-    //     values
-    // };
+    // Reodering and adding values to Vec for making generation after easier
+    let mut new_fill_values: Vec<Vec<i32>> = Vec::with_capacity(borders.len());
 
-    return Err("fdafasdf");
+    if params.layers_fill().is_preset_ordered() {
+        for i in 0..borders.len() {
+            new_fill_values.push(fill_values[i % fill_values.len()].clone())
+        }
+    } else {
+        let mut ran = rand::thread_rng();
+
+        let mut last_index = ran.gen_range(0..fill_values.len());
+        let mut new_index = ran.gen_range(0..fill_values.len());
+
+        while new_fill_values.len() != borders.len() {
+            if last_index != new_index {
+                new_fill_values.push(fill_values[new_index].clone());
+                last_index = new_index;
+            }
+            new_index = ran.gen_range(0..fill_values.len());
+        }
+    }
+
+    #[cfg(debug_assertions)]
+    trace!("Filling values for model: {:?}", new_fill_values);
+
+    let _ = filling_model_3d::create_full_model(params, borders, new_fill_values);
+
+    return Err("Create it")
 }

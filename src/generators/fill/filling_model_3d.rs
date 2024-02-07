@@ -1,7 +1,7 @@
-use log::{trace, error};
+use log::trace;
 use crate::types::generation_params::Params3D;
 
-pub fn create_full_model(params: &Params3D, borders: Vec<Vec<Vec<i32>>>) -> Result<(Vec<Vec<Vec<i32>>>, Vec<Vec<Vec<usize>>>), &'static str> {
+pub fn create_full_model(_params: &Params3D, borders: Vec<Vec<Vec<i32>>>, _fill_values: Vec<Vec<i32>>) -> Result<(Vec<Vec<Vec<i32>>>, Vec<Vec<Vec<usize>>>), &'static str> {
     #[cfg(debug_assertions)]
     trace!("Starting filling model");
 
@@ -16,12 +16,9 @@ pub fn create_full_model(params: &Params3D, borders: Vec<Vec<Vec<i32>>>) -> Resu
         } 
     }
 
-    let fill_values = params.layers_fill().values_preset().clone();
     let layers_count = borders.len();
     let y_size = borders[0].len();
     let x_size = borders[0][0].len();
-
-    let mut rng = rand::thread_rng();
 
     let mut model: Vec<Vec<Vec<i32>>> = Vec::with_capacity(max_elem.try_into().expect("Capacity overfill"));
     let mut model_mask: Vec<Vec<Vec<usize>>> = Vec::with_capacity(max_elem.try_into().expect("Capacity overfill"));
@@ -46,7 +43,7 @@ pub fn create_full_model(params: &Params3D, borders: Vec<Vec<Vec<i32>>>) -> Resu
                     now_next_depth[y_cord][x_cord] = borders[now_next_index[y_cord][x_cord]][y_cord][x_cord]
                 }
 
-                let now_index = now_next_index[y_cord][x_cord];
+                let _now_index = now_next_index[y_cord][x_cord];
 
                 now_y_line.push(now_next_depth[y_cord][x_cord]);
 

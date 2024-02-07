@@ -8,6 +8,7 @@ impl LayersFill {
             values_deviation: Some(10.0),
             values_smooth: None,
             values_offset: None,
+            is_mask_needed: false
         }
     }
 }
@@ -58,6 +59,14 @@ impl LayersFill {
 
     pub fn values_offset(self: &Self) -> Option<u32> {
         return self.values_offset
+    }
+
+    pub fn set_is_mask_needed(self: &mut Self, mask_status: bool) {
+        self.is_mask_needed = mask_status;
+    }
+
+    pub fn is_mask_needed(self: Self) -> bool {
+        return self.is_mask_needed
     }
 }
 

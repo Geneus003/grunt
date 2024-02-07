@@ -1,8 +1,11 @@
-pub mod default_layers_dist;
 pub mod axis;
 pub mod layers_borders_gen;
-pub mod generation_params;
 pub mod layers_filling_gen;
+pub mod default_layers_dist;
+
+pub mod models;
+pub mod slices;
+pub mod generation_params;
 
 #[derive(Debug, Clone)]
 pub struct Axis {
@@ -38,4 +41,5 @@ pub struct LayersFill {
     values_deviation: Option<f32>,
     values_smooth: Option<u32>,
     values_offset: Option<u32>,
+    is_mask_needed: bool,
 }

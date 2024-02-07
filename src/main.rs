@@ -5,6 +5,7 @@ pub mod generators;
 pub mod types;
 
 fn main() {
+    #[cfg(debug_assertions)]
     env_logger::init();
 
     let mut params = types::generation_params::Params3D::new();
@@ -19,7 +20,8 @@ fn main() {
     let _ = borders.set_border_max_step(Some(5));
     params.set_layers_border(borders);
 
-    let fill = LayersFill::new();
+    let mut fill = LayersFill::new();
+    fill.set_is_preset_odreder(false);
     params.set_layers_fill(fill);
 
     println!("{:?}", params);
