@@ -1,4 +1,5 @@
 use crate::types::{Axis, LayersDist, LayersBorder, LayersFill};
+use crate::types::slices::Slice3D;
 use crate::types::generation_params::Params3D;
 
 impl Params3D {
@@ -9,6 +10,7 @@ impl Params3D {
             layers_dist: LayersDist::new(),
             layers_border: LayersBorder::new(),
             layers_fill: LayersFill::new(),
+            slices: Vec::new(),
         }
     }
 }
@@ -52,5 +54,13 @@ impl Params3D {
 
     pub fn layers_fill(self: &Self) -> &LayersFill {
         &self.layers_fill
+    }
+
+    pub fn add_slice(self: &mut Self, slice: Slice3D) {
+        self.slices.push(slice)
+    }
+
+    pub fn slices(self: &Self) -> &Vec<Slice3D> {
+        &self.slices
     }
 }

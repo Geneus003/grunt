@@ -8,6 +8,10 @@ fn main() {
     #[cfg(debug_assertions)]
     env_logger::init();
 
+    fn test_function(x_cord: i32, y_cord: i32, z_value: i32, layers_num: i32) -> i32 {
+        return 0
+    }
+
     let mut params = types::generation_params::Params3D::new();
 
     params.set_x_axis(Axis::generate_axis(0.0, 10.0, None));
@@ -18,6 +22,7 @@ fn main() {
     let mut borders = LayersBorder::new();
     let _ = borders.set_border_deviation(10.0);
     let _ = borders.set_border_max_step(Some(5));
+    borders.set_border_mod_func(Some(test_function));
     params.set_layers_border(borders);
 
     let mut fill = LayersFill::new();

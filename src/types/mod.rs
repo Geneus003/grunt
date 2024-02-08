@@ -28,7 +28,7 @@ pub struct LayersDist {
 #[derive(Debug, Clone)]
 pub struct LayersBorder {
     border_deviation: f32,
-    border_mod_func: Option<fn()>, // FIX THIS, REWRITE IT FOR MULTIPLE ARGUMENTS!!
+    border_mod_func: Option<fn(i32, i32, i32, i32) -> i32>, // xcord, ycord, zvalue, layer_num
     border_type: String,
     border_max_step: Option<i32>,
     layers_same_deviation: bool,

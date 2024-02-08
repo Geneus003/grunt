@@ -12,6 +12,13 @@ pub fn generate_3d(params: Params3D) -> Result<(), &'static str> {
 
     let borders = border_creation::create_layers_borders_3d(&params)?;
 
+    if params.slices().len() > 0 {
+        #[cfg(debug_assertions)]
+        trace!("{} slices found", params.slices().len());
+
+        unimplemented!("ADD SLICES SUPPORT")
+    }
+
     if !(cfg!(test)) {
         for i in &borders {
             println!("\n\n");
