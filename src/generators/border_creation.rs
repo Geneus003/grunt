@@ -31,6 +31,21 @@ pub fn create_layers_borders_3d(params: &Params3D) -> Result<Vec<Vec<Vec<i32>>>,
         }
     }
 
+    if params.layers_border().border_mod_func().is_some() {
+        #[cfg(debug_assertions)]
+        trace!("Border's mod function found");
+
+        let mod_func = params.layers_border().border_mod_func().unwrap();
+        for layer in 0..layers_borders.len() {
+            for y in 0..layers_borders[layer].len() {
+                for x in 0..layers_borders[layer][y].len() {
+                    layers_borders[layer][y][x] += mod_func(x, y, layer, layers_borders[layer][y][x])
+                }
+            }
+        }
+
+    }
+
     #[cfg(debug_assertions)]
     trace!("3D borders were generated succesfully");
 

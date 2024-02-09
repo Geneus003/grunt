@@ -23,11 +23,11 @@ impl LayersBorder {
         return self.border_deviation
     }
 
-    pub fn set_border_mod_func(self: &mut Self, mod_func: Option<fn(i32, i32, i32, i32) -> i32>) {
+    pub fn set_border_mod_func(self: &mut Self, mod_func: Option<fn(usize, usize, usize, i32) -> i32>) {
         self.border_mod_func = mod_func;
     }
 
-    pub fn border_mod_func(self: &Self) -> Option<fn(i32, i32, i32, i32) -> i32> {
+    pub fn border_mod_func(self: &Self) -> Option<fn(usize, usize, usize, i32) -> i32> {
         self.border_mod_func
     }
 

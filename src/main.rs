@@ -8,8 +8,8 @@ fn main() {
     #[cfg(debug_assertions)]
     env_logger::init();
 
-    fn test_function(x_cord: i32, y_cord: i32, z_value: i32, layers_num: i32) -> i32 {
-        return 0
+    fn test_function(_x_cord: usize, _y_cord: usize, _z_value: usize, _layers_num: i32) -> i32 {
+        return 10
     }
 
     let mut params = types::generation_params::Params3D::new();
