@@ -1,18 +1,20 @@
 use log::trace;
 
 use crate::types::generation_params::Params3D;
+use crate::types::models::Model3D;
 
 pub mod border_creation;
 pub mod border_3d;
 pub mod fill;
 pub mod add_slice;
 
-pub fn generate_3d(params: Params3D) -> Result<(), &'static str> {
+pub fn generate_3d(params: Params3D) -> Result<Model3D, &'static str> {
     #[cfg(debug_assertions)]
     trace!("Starting generating 3D model");
 
     let borders = border_creation::create_layers_borders_3d(&params)?;
 
+    #[cfg(debug_assertions)]
     if !(cfg!(test)) {
         for i in &borders {
             println!("\n\n");
@@ -33,11 +35,16 @@ pub fn generate_3d(params: Params3D) -> Result<(), &'static str> {
     use std::time::Instant;
     let now = Instant::now();
 
-    let (_model, _model_mask) = fill::fill_3d(&params, borders).expect("here");
-    //println!("{:?}", model);
+    let (model, model_mask) = if params.create_full_model() {
+        fill::fill_3d(&params, &borders).expect("here")
+    } else {
+        (Vec::new(), Vec::new())
+    };
+
+    let final_model = Model3D::new(model, model_mask, borders, Vec::new(), params);
 
     let elapsed = now.elapsed();
     println!("Elapsed: {:.2?}", elapsed);
 
-    return Ok(())
+    return Ok(final_model)
 }

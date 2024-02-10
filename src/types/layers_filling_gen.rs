@@ -5,7 +5,7 @@ impl LayersFill {
         LayersFill {
             values_preset: vec![vec![100], vec![200], vec![300, 330]],
             is_preset_ordered: true,
-            values_deviation: Some(10.0),
+            values_deviation: None,
             values_smooth: None,
             values_offset: None,
             is_mask_needed: false

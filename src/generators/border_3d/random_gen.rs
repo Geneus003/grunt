@@ -5,7 +5,11 @@ use crate::types::generation_params::Params3D;
 
 const REGENERATE_TRIES:i32 = 500;
 
-pub fn random_layer_creation_3d(params: &Params3D, layer: &mut Vec<Vec<i32>>, now_layer_id: usize) -> Result<(), &'static str> {
+pub fn random_layer_creation_3d(
+    params: &Params3D,
+    layer: &mut Vec<Vec<i32>>,
+    now_layer_id: usize)
+-> Result<(), &'static str> {
     let default_value = params.layers_dist().get_layers_dist_summed()[now_layer_id];
     let max_step = params.layers_border().border_max_step();
     let mut failed_generation_count = 0;
@@ -34,6 +38,7 @@ pub fn random_layer_creation_3d(params: &Params3D, layer: &mut Vec<Vec<i32>>, no
                 layer[layer_line][layer_el] = rng.gen_range(lower_limit..upper_limit+1);
             }
         }
+        return Ok(())
     }
     let max_step = max_step.unwrap();
 
@@ -69,7 +74,8 @@ pub fn random_layer_creation_3d(params: &Params3D, layer: &mut Vec<Vec<i32>>, no
                         None
                     };
 
-                    let (max_limit, min_limit) = get_limits(&upper_el, &right_el, &left_el, upper_limit, lower_limit, max_step);
+                    let (max_limit, min_limit) = 
+                        get_limits(&upper_el, &right_el, &left_el, upper_limit, lower_limit, max_step);
 
                     if max_limit >= min_limit {
                         layer[now_line][now_el] = rng.gen_range(min_limit..max_limit+1);
@@ -79,7 +85,8 @@ pub fn random_layer_creation_3d(params: &Params3D, layer: &mut Vec<Vec<i32>>, no
 
                     if upper_el.is_some() {
                         if right_el.is_none() {
-                            layer[now_line][now_el] = rng.gen_range(upper_el.unwrap()-max_step..upper_el.unwrap()+max_step+1)
+                            layer[now_line][now_el] = 
+                                rng.gen_range(upper_el.unwrap()-max_step..upper_el.unwrap()+max_step+1)
                         } else {
                             let right_el = right_el.unwrap();
                             let upper_el = upper_el.unwrap();
@@ -101,13 +108,14 @@ pub fn random_layer_creation_3d(params: &Params3D, layer: &mut Vec<Vec<i32>>, no
                         }
                     } else if right_el.is_some() {
                         if left_el.is_some() {
-                            if left_el.unwrap() > right_el.unwrap() {
-                                layer[now_line][now_el] = rng.gen_range(right_el.unwrap()..right_el.unwrap()+max_step+1);
+                            layer[now_line][now_el] = if left_el.unwrap() > right_el.unwrap() {
+                                rng.gen_range(right_el.unwrap()..right_el.unwrap()+max_step+1)
                             } else {
-                                layer[now_line][now_el] = rng.gen_range(right_el.unwrap()-max_step..right_el.unwrap()+1);
-                            }
+                                rng.gen_range(right_el.unwrap()-max_step..right_el.unwrap()+1)
+                            };
                         } else {
-                            layer[now_line][now_el] = rng.gen_range(right_el.unwrap()-max_step..right_el.unwrap()+max_step+1)
+                            layer[now_line][now_el] = 
+                                rng.gen_range(right_el.unwrap()-max_step..right_el.unwrap()+max_step+1)
                         }
                     } else { break; }
                 }
@@ -128,7 +136,14 @@ pub fn random_layer_creation_3d(params: &Params3D, layer: &mut Vec<Vec<i32>>, no
 // This limits represents range of possile solutions for this element (layer_el-i).
 // To do this block finds min and max values between 3 neighbours and applying
 // max_step on them.
-fn get_limits(upper_el: &Option<i32>, right_el: &Option<i32>, left_el: &Option<i32>, up_limit: i32, lo_limit: i32, ms: i32) -> (i32, i32) {
+fn get_limits(
+    upper_el: &Option<i32>,
+    right_el: &Option<i32>,
+    left_el: &Option<i32>,
+    up_limit: i32,
+    lo_limit: i32,
+    ms: i32)
+-> (i32, i32) {
     let (mut t_max, mut t_min) = (0, i32::MAX);
     if upper_el.is_some() {
         (t_max, t_min) = (upper_el.unwrap(), upper_el.unwrap())

@@ -5,7 +5,10 @@ use crate::types::generation_params::Params3D;
 
 pub mod filling_model_3d;
 
-pub fn fill_3d(params: &Params3D, borders: Vec<Vec<Vec<i32>>>) -> Result<(Vec<Vec<Vec<i32>>>, Vec<Vec<Vec<usize>>>), &'static str>  {
+pub fn fill_3d(
+    params: &Params3D,
+    borders: &Vec<Vec<Vec<i32>>>
+) -> Result<(Vec<Vec<Vec<i32>>>, Vec<Vec<Vec<usize>>>), &'static str>  {
     #[cfg(debug_assertions)]
     trace!("Preparing for model fill");
 
@@ -16,8 +19,7 @@ pub fn fill_3d(params: &Params3D, borders: Vec<Vec<Vec<i32>>>) -> Result<(Vec<Ve
     // Recalculating fill_values using deviation
     for fill_value in &mut fill_values {
         if fill_value.len() == 2 {
-            continue;
-        }
+            continue; }
         if deviation.is_some() {
             let mut deviation = deviation.unwrap();
             if deviation < 1.0 {
@@ -63,7 +65,11 @@ pub fn fill_3d(params: &Params3D, borders: Vec<Vec<Vec<i32>>>) -> Result<(Vec<Ve
     #[cfg(debug_assertions)]
     trace!("Filling values for model: {:?}", new_fill_values);
 
-    let _ = filling_model_3d::create_full_model(params, borders, new_fill_values);
+    let (model, model_mask) = if params.mask_needed() {
+        filling_model_3d::create_full_model_with_mask(borders, new_fill_values)
+    } else {
+        unimplemented!();
+    };
 
-    return Err("Create it")
+    return Ok((model, model_mask))
 }

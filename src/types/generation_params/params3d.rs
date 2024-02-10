@@ -11,6 +11,8 @@ impl Params3D {
             layers_border: LayersBorder::new(),
             layers_fill: LayersFill::new(),
             slices: Vec::new(),
+            create_full_model: true,
+            mask_needed: true,
         }
     }
 }
@@ -62,5 +64,21 @@ impl Params3D {
 
     pub fn slices(self: &Self) -> &Vec<Slice3D> {
         &self.slices
+    }
+
+    pub fn set_create_full_model(self: &mut Self, is_full_model: bool) {
+        self.create_full_model = is_full_model;
+    }
+
+    pub fn create_full_model(self: &Self) -> bool {
+        self.create_full_model
+    }
+
+    pub fn set_mask_needed(self: &mut Self, is_musk: bool) {
+        self.mask_needed = is_musk;
+    }
+
+    pub fn mask_needed(self: &Self) -> bool {
+        self.mask_needed
     }
 }
