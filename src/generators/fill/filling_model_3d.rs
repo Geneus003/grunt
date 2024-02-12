@@ -1,6 +1,5 @@
 use log::trace;
 use rand::Rng;
-use crate::types::generation_params::Params3D;
 
 pub fn create_full_model_with_mask(
     borders: &Vec<Vec<Vec<i32>>>,

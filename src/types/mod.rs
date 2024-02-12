@@ -1,3 +1,5 @@
+use pyo3::prelude::pyclass;
+
 pub mod axis;
 pub mod layers_borders_gen;
 pub mod layers_filling_gen;
@@ -8,6 +10,7 @@ pub mod slices;
 pub mod generation_params;
 
 #[derive(Debug, Clone)]
+#[pyclass]
 pub struct Axis {
     start: f32,
     end: f32,

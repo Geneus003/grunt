@@ -8,7 +8,7 @@ pub mod filling_model_3d;
 pub fn fill_3d(
     params: &Params3D,
     borders: &Vec<Vec<Vec<i32>>>
-) -> Result<(Vec<Vec<Vec<i32>>>, Vec<Vec<Vec<usize>>>), &'static str>  {
+) -> Result<(Vec<Vec<Vec<i32>>>, Vec<Vec<Vec<usize>>>, Vec<Vec<i32>>), &'static str>  {
     #[cfg(debug_assertions)]
     trace!("Preparing for model fill");
 
@@ -71,5 +71,5 @@ pub fn fill_3d(
         unimplemented!();
     };
 
-    return Ok((model, model_mask))
+    return Ok((model, model_mask, fill_values))
 }

@@ -14,15 +14,15 @@ pub fn generate_3d(params: Params3D) -> Result<Model3D, &'static str> {
 
     let borders = border_creation::create_layers_borders_3d(&params)?;
 
-    #[cfg(debug_assertions)]
-    if !(cfg!(test)) {
-        for i in &borders {
-            println!("\n\n");
-            for j in i {
-                println!("{:?}", j)
-            }
-        }
-    }
+    // #[cfg(debug_assertions)]
+    // if !(cfg!(test)) {
+    //     for i in &borders {
+    //         println!("\n\n");
+    //         for j in i {
+    //             println!("{:?}", j)
+    //         }
+    //     }
+    // }
 
     if params.slices().len() > 0 {
         #[cfg(debug_assertions)]
@@ -35,13 +35,13 @@ pub fn generate_3d(params: Params3D) -> Result<Model3D, &'static str> {
     use std::time::Instant;
     let now = Instant::now();
 
-    let (model, model_mask) = if params.create_full_model() {
+    let (model, model_mask, fill_values) = if params.create_full_model() {
         fill::fill_3d(&params, &borders).expect("here")
     } else {
-        (Vec::new(), Vec::new())
+        (Vec::new(), Vec::new(), Vec::new())
     };
 
-    let final_model = Model3D::new(model, model_mask, borders, Vec::new(), params);
+    let final_model = Model3D::new(model, model_mask, borders, fill_values, params);
 
     let elapsed = now.elapsed();
     println!("Elapsed: {:.2?}", elapsed);
