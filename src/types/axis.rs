@@ -33,7 +33,7 @@ impl Axis {
         }
         Ok(Axis{
             start: axis[0],
-            end: axis[axis.len()],
+            end: axis[axis.len() - 1],
             step: None,
             axis,
         })

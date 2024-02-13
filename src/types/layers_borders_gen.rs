@@ -10,7 +10,9 @@ impl LayersBorder {
             layers_same_deviation: false,
         }
     }
+}
 
+impl LayersBorder {
     pub fn set_border_deviation(self: &mut Self, border_deviation: f32) -> Result<(), &'static str> {
         if border_deviation < 0.0 {
             return Err("Border deviation can't be negative.")

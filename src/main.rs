@@ -63,5 +63,3 @@ fn main() {
 
 #[cfg(test)]
 mod tests;
-
-// TODO: Check generation of layers dist with only one layers (it should be allowed and work)

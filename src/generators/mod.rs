@@ -44,7 +44,10 @@ pub fn generate_3d(params: Params3D) -> Result<Model3D, &'static str> {
     let final_model = Model3D::new(model, model_mask, borders, fill_values, params);
 
     let elapsed = now.elapsed();
-    println!("Elapsed: {:.2?}", elapsed);
+
+    if !(cfg!(test)) {
+        println!("Elapsed: {:.2?}", elapsed);
+    }
 
     return Ok(final_model)
 }

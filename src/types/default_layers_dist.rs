@@ -18,13 +18,13 @@ impl LayersDist {
         if layers_dist.is_empty() {
             return Err("Distibution of layers vec must contain at least one value");
         }
-
         let (mut min_layer_size, mut max_layer_size, mut layers_sum) = (i32::MAX, 0i32, 0i32);
         let mut layers_dist_summed: Vec<i32> = vec![];
 
         for el in &layers_dist {
             if *el < min_layer_size { min_layer_size = *el }
             if *el > max_layer_size { max_layer_size = *el }
+            if *el <= 0 { return Err("Elements should be bigger than zero") }
 
             layers_sum = layers_sum.checked_add(*el).ok_or("Problem with calculating sum of layers: i32 overflow")?;
             layers_dist_summed.push(layers_sum);
@@ -103,7 +103,7 @@ impl LayersDist {
         }
         let mut tries: i32 = 0;
 
-        while points != 0 && tries <= 2000 {
+        while points != 0 && tries <= 10000 {
             let avg_layer_mod = points / layers_num as i32;
 
             for i in 0..layers_num as usize {
@@ -115,7 +115,7 @@ impl LayersDist {
                     }
 
                     let now_mod = if avg_layer_mod == 0 {
-                        rng.gen_range(0..layers_num) as i32
+                        1
                     } else {
                         rng.gen_range(0..avg_layer_mod*2)
                     };
@@ -132,7 +132,7 @@ impl LayersDist {
                     }
 
                     let now_mod = if avg_layer_mod == 0 {
-                        rng.gen_range(0..layers_num) as i32
+                        1
                     } else {
                         rng.gen_range(0..avg_layer_mod*2)
                     };
