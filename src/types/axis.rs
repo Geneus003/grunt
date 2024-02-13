@@ -39,7 +39,7 @@ impl Axis {
         })
     }
 
-    fn calculate_axis(start: f32, end: f32, step: f32) -> Vec<f32> {
+    pub fn calculate_axis(start: f32, end: f32, step: f32) -> Vec<f32> {
         (0..(((end-start)/step * 1000.0).round() / 1000.0 + 1.0).floor() as i32)
             .map(|num| ((start + num as f32 * step) * 1000.0).round() / 1000.0).collect()
     }
