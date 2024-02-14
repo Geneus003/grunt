@@ -1,13 +1,7 @@
 use log::trace;
 use rand::Rng;
 
-pub fn create_full_model_with_mask(
-    borders: &Vec<Vec<Vec<i32>>>,
-    fill_values: Vec<Vec<i32>>
-) -> (Vec<Vec<Vec<i32>>>, Vec<Vec<Vec<usize>>>) {
-    #[cfg(debug_assertions)]
-    trace!("Starting filling model");
-
+fn generate_consts(borders: &Vec<Vec<Vec<i32>>>) -> (i32, usize, usize, usize) {
     let mut max_elem = 0;
     for y_cord in borders {
         for x_cord in y_cord {
@@ -19,9 +13,17 @@ pub fn create_full_model_with_mask(
         } 
     }
 
-    let layers_count = borders.len();
-    let y_size = borders[0].len();
-    let x_size = borders[0][0].len();
+    return (max_elem, borders.len(), borders[0].len(), borders[0][0].len())
+}
+
+pub fn create_full_model_with_mask(
+    borders: &Vec<Vec<Vec<i32>>>,
+    fill_values: Vec<Vec<i32>>
+) -> (Vec<Vec<Vec<i32>>>, Vec<Vec<Vec<usize>>>) {
+    #[cfg(debug_assertions)]
+    trace!("Starting filling model");
+
+    let (max_elem, layers_count, y_size, x_size) = generate_consts(borders);
 
     let mut model: Vec<Vec<Vec<i32>>> = Vec::with_capacity(max_elem.try_into().expect("Capacity overfill"));
     let mut model_mask: Vec<Vec<Vec<usize>>> = Vec::with_capacity(max_elem.try_into().expect("Capacity overfill"));

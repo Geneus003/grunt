@@ -16,6 +16,6 @@ pub struct Params3D {
     layers_fill: LayersFill,
     slices: Vec<Slice3D>,
     // Optional params to reduce generation time
-    create_full_model: bool,
+    model_needed: bool,
     mask_needed: bool,
 }
