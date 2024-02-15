@@ -1,6 +1,7 @@
-use std::error::Error;
+use std::fs::File;
+use std::io::Write;
 
-use csv::Writer;
+use numtoa::NumToA;
 
 use crate::types::models::Model3D;
 use crate::types::generation_params::Params3D;
@@ -45,31 +46,24 @@ impl Model3D {
 }
 
 impl Model3D {
-    pub fn save_model_as_csv(self: &Self, name: &str, save_model: bool, save_mask: bool, save_borders: bool) -> Result<(), Box<dyn Error>> {
-        if save_model {
-            if self.model.is_empty() {
-                eprintln!("Model not found: skipping")
-            } else {
-                let _wrt = Writer::from_path(format!("{name}.csv"))?;
-                // wrt.write_record()
+    pub fn export_model(self: &Self, name: &str, _save_model: bool, _save_mask: bool, _save_borders: bool) {
+        let mut result = String::from("{\"model\":[");
+        let mut buf = [0u8; 20];
+        for depth in &self.model {
+            result += "{\"depth\"}:[";
+            for y_axis in depth {
+                result += "{\"y_line\":[";
+                for x in y_axis {
+                    result.push_str(x.numtoa_str(10, &mut buf));
+                    result.push(',');
+                }
+                result += "]},"
             }
+            result += "]},";
         }
 
-        if save_mask {
-            if self.model_mask.is_empty() {
-                eprintln!("Mask not found: skipping")
-            }
-
-        }
-
-        if save_borders {
-            if self.borders().is_empty() {
-                eprintln!("Borders not found: skipping")
-            }
-
-        }
-
-        unimplemented!();
+        let mut file = File::create("model.json").expect("model");
+        file.write_all(result.as_bytes()).expect("gdsgsdg");
 
     }
 }

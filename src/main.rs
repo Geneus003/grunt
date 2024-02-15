@@ -40,7 +40,18 @@ fn main() {
     params.set_layers_fill(fill);
 
     println!("{:?}", params);
-    let _model = generate_3d(params).unwrap();
+    let model = generate_3d(params).unwrap();
+
+    use std::time::Instant;
+    let now = Instant::now();
+
+    model.export_model("my_model", false, false, false);
+
+    let elapsed = now.elapsed();
+
+    if !(cfg!(test)) {
+        println!("Elapsed export: {:.2?}", elapsed);
+    }
 
     // if !(cfg!(test)) {
     //     for i in model.model() {
