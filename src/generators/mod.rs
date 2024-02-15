@@ -6,7 +6,7 @@ use crate::types::models::Model3D;
 pub mod border_creation;
 pub mod border_3d;
 pub mod fill;
-pub mod add_slice;
+pub mod add_shift;
 
 pub fn generate_3d(params: Params3D) -> Result<Model3D, &'static str> {
     #[cfg(debug_assertions)]
@@ -14,12 +14,12 @@ pub fn generate_3d(params: Params3D) -> Result<Model3D, &'static str> {
 
     let borders = border_creation::create_layers_borders_3d(&params)?;
 
-    if params.slices().len() > 0 {
+    if params.shifts().len() > 0 {
         #[cfg(debug_assertions)]
-        trace!("{} slices found", params.slices().len());
+        trace!("{} shifts found", params.shifts().len());
 
-        add_slice::add_slice_3d::add_3d(&params, borders);
-        unimplemented!("ADD SLICES SUPPORT")
+        add_shift::add_shift_3d::add_3d(&params, borders);
+        unimplemented!("ADD SHIFTS SUPPORT")
     }
 
     use std::time::Instant;

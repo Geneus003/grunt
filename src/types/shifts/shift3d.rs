@@ -1,8 +1,8 @@
-use crate::types::slices::{Slice3D, ShiftTypes};
+use crate::types::shifts::{Shift3D, ShiftTypes};
 
-impl Slice3D {
-    pub fn new() -> Slice3D {
-        Slice3D {
+impl Shift3D {
+    pub fn new() -> Shift3D {
+        Shift3D {
             pos_x: 5.0,
             pos_y: 5.0,
             angle_x: 90.0,
@@ -15,7 +15,7 @@ impl Slice3D {
     }
 }
 
-impl Slice3D {
+impl Shift3D {
     pub fn set_pos_x(self: &mut Self, pos_x: f32) {
         self.pos_x = pos_x
     }

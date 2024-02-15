@@ -4,7 +4,7 @@ pub mod layers_filling_gen;
 pub mod default_layers_dist;
 
 pub mod models;
-pub mod slices;
+pub mod shifts;
 pub mod generation_params;
 
 #[derive(Debug, Clone)]

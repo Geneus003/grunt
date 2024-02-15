@@ -1,5 +1,5 @@
 use crate::types::{Axis, LayersDist, LayersBorder, LayersFill};
-use crate::types::slices::Slice3D;
+use crate::types::shifts::Shift3D;
 
 mod params3d;
 
@@ -14,7 +14,7 @@ pub struct Params3D {
     layers_border: LayersBorder,
     // How to fill layers
     layers_fill: LayersFill,
-    slices: Vec<Slice3D>,
+    shifts: Vec<Shift3D>,
     // Optional params to reduce generation time
     model_needed: bool,
     mask_needed: bool,

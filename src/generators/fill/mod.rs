@@ -65,10 +65,12 @@ pub fn fill_3d(
     #[cfg(debug_assertions)]
     trace!("Filling values for model: {:?}", new_fill_values);
 
-    let (model, model_mask) = if params.mask_needed() {
+    let (model, model_mask) = if params.mask_needed() && params.model_needed() {
         filling_model_3d::create_full_model_with_mask(borders, new_fill_values)
+    } else if params.model_needed() {
+        (filling_model_3d::create_full_model_without_mask(borders, new_fill_values), Vec::new())
     } else {
-        unimplemented!();
+        (Vec::new(), filling_model_3d::create_only_mask(borders))
     };
 
     return Ok((model, model_mask, fill_values))

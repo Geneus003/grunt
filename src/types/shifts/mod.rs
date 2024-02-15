@@ -1,4 +1,4 @@
-pub mod slice3d;
+pub mod shift3d;
 
 #[derive(Debug, Clone)]
 pub enum ShiftTypes {
@@ -9,7 +9,7 @@ pub enum ShiftTypes {
 }
 
 #[derive(Debug, Clone)]
-pub struct Slice3D {
+pub struct Shift3D {
     pos_x: f32,
     pos_y: f32,
     angle_x: f32,

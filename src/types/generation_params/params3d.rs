@@ -1,5 +1,5 @@
 use crate::types::{Axis, LayersDist, LayersBorder, LayersFill};
-use crate::types::slices::Slice3D;
+use crate::types::shifts::Shift3D;
 use crate::types::generation_params::Params3D;
 
 impl Params3D {
@@ -10,7 +10,7 @@ impl Params3D {
             layers_dist: LayersDist::new(),
             layers_border: LayersBorder::new(),
             layers_fill: LayersFill::new(),
-            slices: Vec::new(),
+            shifts: Vec::new(),
             model_needed: true,
             mask_needed: true,
         }
@@ -58,12 +58,12 @@ impl Params3D {
         &self.layers_fill
     }
 
-    pub fn add_slice(self: &mut Self, slice: Slice3D) {
-        self.slices.push(slice)
+    pub fn add_shift(self: &mut Self, shift: Shift3D) {
+        self.shifts.push(shift)
     }
 
-    pub fn slices(self: &Self) -> &Vec<Slice3D> {
-        &self.slices
+    pub fn shifts(self: &Self) -> &Vec<Shift3D> {
+        &self.shifts
     }
 
     pub fn set_model_needed(self: &mut Self, is_full_model: bool) {
