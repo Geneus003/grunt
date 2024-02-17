@@ -45,7 +45,7 @@ fn main() {
     use std::time::Instant;
     let now = Instant::now();
 
-    model.export_model("my_model", false, false, false);
+    model.export_model_num("my_model", true, true, true);
 
     let elapsed = now.elapsed();
 
