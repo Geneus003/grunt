@@ -9,7 +9,10 @@ fn main() {
     env_logger::init();
 
     fn _test_function(_x_cord: usize, _y_cord: usize, _z_value: usize, _layers_num: i32) -> i32 {
-        return 10
+        if _x_cord >= 40 && _x_cord <= 60 && _y_cord >= 40 && _y_cord <= 60 {
+            return -20
+        }
+        return 0
     }
 
     let mut params = types::generation_params::Params3D::new();
@@ -25,14 +28,15 @@ fn main() {
     // borders.set_border_mod_func(Some(test_function));
     // params.set_layers_border(borders);
 
-    params.set_x_axis(Axis::generate_axis(0.0, 100.0, None));
-    params.set_y_axis(Axis::generate_axis(0.0, 100.0, None));
+    params.set_x_axis(Axis::generate_axis(0.0, 10.0, None));
+    params.set_y_axis(Axis::generate_axis(0.0, 10.0, None));
 
-    params.set_layers_dist(LayersDist::create_from_vec([20, 30, 50].to_vec()).unwrap_or(LayersDist::new()));
+    params.set_layers_dist(LayersDist::create_from_vec([2, 3, 5].to_vec()).unwrap_or(LayersDist::new()));
 
     let mut borders = LayersBorder::new();
     let _ = borders.set_border_deviation(10.0);
     let _ = borders.set_border_max_step(Some(5));
+    borders.set_border_mod_func(Some(_test_function));
     params.set_layers_border(borders);
 
     let mut fill = LayersFill::new();
@@ -45,7 +49,7 @@ fn main() {
     use std::time::Instant;
     let now = Instant::now();
 
-    model.export_model_num("my_model", true, true, true);
+    model.export_model_num("my_model", true, true, true).unwrap();
 
     let elapsed = now.elapsed();
 

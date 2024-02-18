@@ -6,7 +6,7 @@ use numtoa::NumToA;
 use crate::types::models::Model3D;
 
 impl Model3D {
-    pub fn export_model_num(self: &Self, name: &str, save_model: bool, save_mask: bool, save_borders: bool) {
+    pub fn export_model_num(self: &Self, name: &str, save_model: bool, save_mask: bool, save_borders: bool) -> Result<(), std::io::Error> {
         let mut result = String::from("");
 
         result += "{\"model\":";
@@ -25,8 +25,9 @@ impl Model3D {
         } else { result += "null"}
         result += "}";
 
-        let mut file = File::create(format!("{name}.json")).expect("model");
-        file.write_all(result.as_bytes()).expect("gdsgsdg");
+        let mut file = File::create(format!("{name}.json"))?;
+        file.write_all(result.as_bytes())?;
+        Ok(())
     }
 }
 

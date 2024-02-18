@@ -43,7 +43,6 @@ pub fn create_layers_borders_3d(params: &Params3D) -> Result<Vec<Vec<Vec<i32>>>,
                 }
             }
         }
-
     }
 
     #[cfg(debug_assertions)]
