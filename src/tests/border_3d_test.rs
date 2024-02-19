@@ -35,8 +35,8 @@ fn random_gen_layers_borders_tests(){
 
 #[test]
 fn check_border_mod_function() {
-    fn test_function(x_cord: usize, y_cord: usize, z_value: usize, layers_num: i32) -> i32 {
-        return (x_cord * y_cord * z_value) as i32 * layers_num
+    fn test_function(x_cord: usize, y_cord: usize, layers_num: usize, z_value: i32) -> i32 {
+        return (x_cord * y_cord * layers_num) as i32 * z_value
     }
 
     let mut params = Params3D::new();
@@ -50,5 +50,5 @@ fn check_border_mod_function() {
     params.set_layers_border(borders);
 
     let res = create_layers_borders_3d(&params).unwrap();
-    assert_eq!(res, vec![vec![vec![1, 1], vec![1, 1]], vec![vec![2, 2], vec![2, 4]], vec![vec![3, 3], vec![3, 9]]])
+    assert_eq!(res, vec![vec![vec![1, 1], vec![1, 1]], vec![vec![2, 2], vec![2, 0]], vec![vec![3, 3], vec![3, -3]]])
 }

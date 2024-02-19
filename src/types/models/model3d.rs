@@ -2,6 +2,7 @@ use crate::types::models::Model3D;
 use crate::types::generation_params::Params3D;
 
 pub mod export;
+pub mod get_data;
 
 impl Model3D {
     pub fn new(

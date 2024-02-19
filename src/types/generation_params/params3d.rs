@@ -74,8 +74,8 @@ impl Params3D {
         self.model_needed
     }
 
-    pub fn set_mask_needed(self: &mut Self, is_musk: bool) {
-        self.mask_needed = is_musk;
+    pub fn set_mask_needed(self: &mut Self, is_mask: bool) {
+        self.mask_needed = is_mask;
     }
 
     pub fn mask_needed(self: &Self) -> bool {

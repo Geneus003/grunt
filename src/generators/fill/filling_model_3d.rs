@@ -10,15 +10,14 @@ fn generate_consts(borders: &Vec<Vec<Vec<i32>>>) -> (i32, usize, usize, usize) {
                     max_elem = *depth;
                 } 
             }
-        } 
-    }
+        } }
 
     return (max_elem, borders.len(), borders[0].len(), borders[0][0].len())
 }
 
 pub fn create_full_model_with_mask(
     borders: &Vec<Vec<Vec<i32>>>,
-    fill_values: Vec<Vec<i32>>
+    fill_values: &Vec<Vec<i32>>
 ) -> (Vec<Vec<Vec<i32>>>, Vec<Vec<Vec<usize>>>) {
     #[cfg(debug_assertions)]
     trace!("Starting filling model: model and mask");

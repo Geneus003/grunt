@@ -25,7 +25,11 @@ def main():
     colors = plt.cm.plasma(model)
     norm = matplotlib.colors.Normalize(vmin=0, vmax=16)
 
-    ax.voxels(x, y, z, model, facecolors=colors, alpha=0.6)
+    ax.voxels(x, y, z, model, facecolors=colors, alpha=1)
+    ax.invert_zaxis()
+    ax.set_xlabel("X_axis")
+    ax.set_ylabel("Y_axis")
+    ax.set_zlabel("Z_axis(depth)")
     # m = cm.ScalarMappable(cmap=plt.cm.plasma, norm=norm)
     # plt.colorbar(m)
     plt.show()

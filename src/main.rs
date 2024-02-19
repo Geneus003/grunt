@@ -8,9 +8,9 @@ fn main() {
     #[cfg(debug_assertions)]
     env_logger::init();
 
-    fn _test_function(_x_cord: usize, _y_cord: usize, _z_value: usize, _layers_num: i32) -> i32 {
-        if _x_cord >= 40 && _x_cord <= 60 && _y_cord >= 40 && _y_cord <= 60 {
-            return -20
+    fn _test_function(x_cord: usize, y_cord: usize, layers_num: usize, _z_value: i32) -> i32 {
+        if x_cord >= 4 && x_cord <= 6 && y_cord >= 4 && y_cord <= 6 && layers_num < 2 {
+            return -4
         }
         return 0
     }
@@ -34,8 +34,8 @@ fn main() {
     params.set_layers_dist(LayersDist::create_from_vec([2, 3, 5].to_vec()).unwrap_or(LayersDist::new()));
 
     let mut borders = LayersBorder::new();
-    let _ = borders.set_border_deviation(10.0);
-    let _ = borders.set_border_max_step(Some(5));
+    let _ = borders.set_border_deviation(0.0);
+    let _ = borders.set_border_max_step(None);
     borders.set_border_mod_func(Some(_test_function));
     params.set_layers_border(borders);
 
@@ -50,6 +50,8 @@ fn main() {
     let now = Instant::now();
 
     model.export_model_num("my_model", true, true, true).unwrap();
+
+    println!("{:?}", model.get_by_num(0, 0));
 
     let elapsed = now.elapsed();
 
