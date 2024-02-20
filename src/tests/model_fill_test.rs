@@ -7,7 +7,7 @@ fn fill_model_and_mask_tests() {
     let mut rnd = rand::thread_rng();
     let mut errors = 0;
 
-    'a: for _ in 0..1000 {
+    'a: for _ in 0..10000 {
         let model_size = rnd.gen_range(1..10);
         let model_x = rnd.gen_range(1..10);
         let model_y = rnd.gen_range(1..10);
@@ -34,6 +34,14 @@ fn fill_model_and_mask_tests() {
 
         let (model, model_mask) = create_full_model_with_mask(&borders, &filling_values);
 
+        let model_x = create_full_model_without_mask(&borders, &filling_values);
+        let mask_x = create_only_mask(&borders);
+
+        if model_x != model || mask_x != model_mask {
+            errors += 1;
+            break 'a
+        }
+
         for i in 0..model.len() {
             for j in 0..model[0].len() {
                 for k in 0..model[0][0].len() {
@@ -41,12 +49,16 @@ fn fill_model_and_mask_tests() {
                     
                     if (model_value - 1) as usize != model_mask[i][j][k] { errors += 1 }
 
-                    if borders[(model_value-1) as usize][j][k] < i as i32 + 1 {
-                        println!("{:?}", borders);
-                        println!("{:?}", model);
-
-                        errors += 1;
-                        break 'a
+                    if model_mask[i][j][k] == model_size - 1{
+                        continue;
+                    } else {
+                        if borders[(model_value - 1) as usize][j][k] < i as i32 {
+                            println!("{:?}", borders);
+                            println!("{:?}", model);
+                            println!("{i}, {j}, {k}, {model_value}, {}", borders[(model_value - 1) as usize][j][k]);
+                            errors += 1;
+                            break 'a
+                        }
                     }
                 }
             }

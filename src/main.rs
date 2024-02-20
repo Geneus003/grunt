@@ -3,7 +3,6 @@ use types::{Axis, LayersDist, LayersBorder, LayersFill};
 
 pub mod generators;
 pub mod types;
-
 fn main() {
     #[cfg(debug_assertions)]
     env_logger::init();

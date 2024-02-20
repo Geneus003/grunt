@@ -68,7 +68,7 @@ pub fn fill_3d(
     let (model, model_mask) = if params.mask_needed() && params.model_needed() {
         filling_model_3d::create_full_model_with_mask(borders, &new_fill_values)
     } else if params.model_needed() {
-        (filling_model_3d::create_full_model_without_mask(borders, new_fill_values), Vec::new())
+        (filling_model_3d::create_full_model_without_mask(borders, &new_fill_values), Vec::new())
     } else {
         (Vec::new(), filling_model_3d::create_only_mask(borders))
     };

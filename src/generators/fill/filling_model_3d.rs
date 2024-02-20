@@ -43,10 +43,15 @@ pub fn create_full_model_with_mask(
 
             for x_cord in 0..x_size {
                 let mut now_index = now_next_index[y_cord][x_cord];
-                if depth > now_next_depth[y_cord][x_cord] && now_index < layers_count - 1 {
-                    now_next_index[y_cord][x_cord] += 1;
-                    now_index += 1;
-                    now_next_depth[y_cord][x_cord] = borders[now_index][y_cord][x_cord]
+                if depth >= now_next_depth[y_cord][x_cord] && now_index < layers_count - 1 {
+                    loop {
+                        now_next_index[y_cord][x_cord] += 1;
+                        now_index += 1;
+                        now_next_depth[y_cord][x_cord] = borders[now_index][y_cord][x_cord];
+                        if now_next_depth[y_cord][x_cord] > depth || now_index == layers_count - 1 {
+                            break;
+                        }
+                    }
                 }
 
                 now_y_line.push(rng.gen_range(fill_values[now_index][0]..fill_values[now_index][1] + 1));
@@ -69,7 +74,7 @@ pub fn create_full_model_with_mask(
 
 pub fn create_full_model_without_mask(
     borders: &Vec<Vec<Vec<i32>>>,
-    fill_values: Vec<Vec<i32>>
+    fill_values: &Vec<Vec<i32>>
 ) -> Vec<Vec<Vec<i32>>> {
     #[cfg(debug_assertions)]
     trace!("Starting filling only model");
@@ -92,12 +97,16 @@ pub fn create_full_model_without_mask(
 
             for x_cord in 0..x_size {
                 let mut now_index = now_next_index[y_cord][x_cord];
-                if depth > now_next_depth[y_cord][x_cord] && now_index < layers_count - 1 {
-                    now_next_index[y_cord][x_cord] += 1;
-                    now_index += 1;
-                    now_next_depth[y_cord][x_cord] = borders[now_index][y_cord][x_cord]
+                if depth >= now_next_depth[y_cord][x_cord] && now_index < layers_count - 1 {
+                    loop {
+                        now_next_index[y_cord][x_cord] += 1;
+                        now_index += 1;
+                        now_next_depth[y_cord][x_cord] = borders[now_index][y_cord][x_cord];
+                        if now_next_depth[y_cord][x_cord] > depth || now_index == layers_count - 1 {
+                            break;
+                        }
+                    }
                 }
-
                 now_y_line.push(rng.gen_range(fill_values[now_index][0]..fill_values[now_index][1] + 1));
             }
 
@@ -136,12 +145,16 @@ pub fn create_only_mask(
 
             for x_cord in 0..x_size {
                 let mut now_index = now_next_index[y_cord][x_cord];
-                if depth > now_next_depth[y_cord][x_cord] && now_index < layers_count - 1 {
-                    now_next_index[y_cord][x_cord] += 1;
-                    now_index += 1;
-                    now_next_depth[y_cord][x_cord] = borders[now_index][y_cord][x_cord]
+                if depth >= now_next_depth[y_cord][x_cord] && now_index < layers_count - 1 {
+                    loop {
+                        now_next_index[y_cord][x_cord] += 1;
+                        now_index += 1;
+                        now_next_depth[y_cord][x_cord] = borders[now_index][y_cord][x_cord];
+                        if now_next_depth[y_cord][x_cord] > depth || now_index == layers_count - 1 {
+                            break;
+                        }
+                    }
                 }
-
                 now_y_line_mask.push(now_index);
             }
 
