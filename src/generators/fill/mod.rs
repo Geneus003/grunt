@@ -8,7 +8,7 @@ pub mod filling_model_3d;
 pub fn fill_3d(
     params: &Params3D,
     borders: &Vec<Vec<Vec<i32>>>
-) -> Result<(Vec<Vec<Vec<i32>>>, Vec<Vec<Vec<usize>>>, Vec<Vec<i32>>), &'static str>  {
+) -> (Vec<Vec<Vec<i32>>>, Vec<Vec<Vec<usize>>>, Vec<Vec<i32>>) {
     #[cfg(debug_assertions)]
     trace!("Preparing for model fill");
 
@@ -73,5 +73,5 @@ pub fn fill_3d(
         (Vec::new(), filling_model_3d::create_only_mask(borders))
     };
 
-    return Ok((model, model_mask, fill_values))
+    return (model, model_mask, fill_values)
 }

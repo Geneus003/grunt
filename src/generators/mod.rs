@@ -26,7 +26,7 @@ pub fn generate_3d(params: Params3D) -> Result<Model3D, &'static str> {
     let now = Instant::now();
 
     let (model, model_mask, fill_values) = if params.model_needed() || params.mask_needed() {
-        fill::fill_3d(&params, &borders).expect("here")
+        fill::fill_3d(&params, &borders)
     } else {
         (Vec::new(), Vec::new(), Vec::new())
     };
