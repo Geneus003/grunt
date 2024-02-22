@@ -30,7 +30,7 @@ fn main() {
     params.set_x_axis(Axis::generate_axis(0.0, 10.0, None));
     params.set_y_axis(Axis::generate_axis(0.0, 10.0, None));
 
-    params.set_layers_dist(LayersDist::create_from_vec([2, 3, 5].to_vec()).unwrap_or(LayersDist::new()));
+    params.set_layers_dist(LayersDist::create_from_vec([20, 30, 50].to_vec()).unwrap_or(LayersDist::new()));
 
     let mut borders = LayersBorder::new();
     let _ = borders.set_border_deviation(2.0);

@@ -53,9 +53,6 @@ fn fill_model_and_mask_tests() {
                         continue;
                     } else {
                         if borders[(model_value - 1) as usize][j][k] < i as i32 {
-                            println!("{:?}", borders);
-                            println!("{:?}", model);
-                            println!("{i}, {j}, {k}, {model_value}, {}", borders[(model_value - 1) as usize][j][k]);
                             errors += 1;
                             break 'a
                         }
