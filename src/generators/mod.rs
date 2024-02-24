@@ -18,8 +18,9 @@ pub fn generate_3d(params: Params3D) -> Result<Model3D, &'static str> {
         #[cfg(debug_assertions)]
         trace!("{} shifts found", params.shifts().len());
 
-        add_shift::add_shift_3d::add_3d(&params, borders);
-        unimplemented!("ADD SHIFTS SUPPORT")
+        for i in 0..params.shifts().len() {
+            add_shift::add_shift_3d::add_3d(&params, &borders, i);
+        }
     }
 
     use std::time::Instant;

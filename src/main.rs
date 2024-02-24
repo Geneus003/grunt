@@ -27,7 +27,7 @@ fn main() {
     // borders.set_border_mod_func(Some(test_function));
     // params.set_layers_border(borders);
 
-    params.set_x_axis(Axis::generate_axis(0.0, 10.0, None));
+    params.set_x_axis(Axis::generate_axis(0.0, 5.0, None));
     params.set_y_axis(Axis::generate_axis(0.0, 10.0, None));
 
     params.set_layers_dist(LayersDist::create_from_vec([20, 30, 50].to_vec()).unwrap_or(LayersDist::new()));
@@ -75,6 +75,7 @@ fn main() {
     //         }
     //     }
     // }
+    //
 }
 
 #[cfg(test)]
