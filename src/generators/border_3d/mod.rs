@@ -62,5 +62,5 @@ pub fn validate_layer(params: &Params3D, layer: &Vec<Vec<i32>>, now_layer_id: us
         return Err("Errors while model validatiion");
     }
 
-    return Ok(());
+    Ok(())
 }

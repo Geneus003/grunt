@@ -12,14 +12,14 @@ pub fn generate_3d(params: Params3D) -> Result<Model3D, &'static str> {
     #[cfg(debug_assertions)]
     trace!("Starting generating 3D model");
 
-    let borders = border_creation::create_layers_borders_3d(&params)?;
+    let mut borders = border_creation::create_layers_borders_3d(&params)?;
 
     if params.shifts().len() > 0 {
         #[cfg(debug_assertions)]
         trace!("{} shifts found", params.shifts().len());
 
         for i in 0..params.shifts().len() {
-            add_shift::add_shift_3d::add_3d(&params, &borders, i);
+            add_shift::add_shift_3d::add_3d(&params, &mut borders, i);
         }
     }
 

@@ -12,7 +12,7 @@ fn generate_consts(borders: &Vec<Vec<Vec<i32>>>) -> (i32, usize, usize, usize) {
             }
         } }
 
-    return (max_elem, borders.len(), borders[0].len(), borders[0][0].len())
+    (max_elem, borders.len(), borders[0].len(), borders[0][0].len())
 }
 
 pub fn create_full_model_with_mask(
@@ -31,7 +31,7 @@ pub fn create_full_model_with_mask(
     let mut now_next_depth: Vec<Vec<i32>> = borders[0].clone();
     let mut now_next_index: Vec<Vec<usize>> = vec![vec![0; x_size]; y_size];
 
-    for depth in 1..max_elem+1 {
+    for depth in 0..max_elem {
 
         let mut now_depth: Vec<Vec<i32>> = Vec::with_capacity(y_size);
         let mut now_depth_mask: Vec<Vec<usize>> = Vec::with_capacity(y_size);
@@ -69,7 +69,7 @@ pub fn create_full_model_with_mask(
     #[cfg(debug_assertions)]
     trace!("Model and mask ware filled succesfully");
     
-    return (model, model_mask)
+    (model, model_mask)
 }
 
 pub fn create_full_model_without_mask(
@@ -87,7 +87,7 @@ pub fn create_full_model_without_mask(
     let mut now_next_depth: Vec<Vec<i32>> = borders[0].clone();
     let mut now_next_index: Vec<Vec<usize>> = vec![vec![0; x_size]; y_size];
 
-    for depth in 1..max_elem+1 {
+    for depth in 0..max_elem {
 
         let mut now_depth: Vec<Vec<i32>> = Vec::with_capacity(y_size);
 
@@ -119,7 +119,7 @@ pub fn create_full_model_without_mask(
     #[cfg(debug_assertions)]
     trace!("Model was filled succesfully");
     
-    return model
+    model
 }
 
 pub fn create_only_mask(
@@ -135,7 +135,7 @@ pub fn create_only_mask(
     let mut now_next_depth: Vec<Vec<i32>> = borders[0].clone();
     let mut now_next_index: Vec<Vec<usize>> = vec![vec![0; x_size]; y_size];
 
-    for depth in 1..max_elem+1 {
+    for depth in 0..max_elem {
 
         let mut now_depth_mask: Vec<Vec<usize>> = Vec::with_capacity(y_size);
 
@@ -167,5 +167,5 @@ pub fn create_only_mask(
     #[cfg(debug_assertions)]
     trace!("Model and mask ware filled succesfully");
     
-    return model_mask
+    model_mask
 }
