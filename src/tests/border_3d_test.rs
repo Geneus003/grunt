@@ -15,7 +15,7 @@ fn random_gen_layers_borders_tests(){
         params.set_x_axis(Axis::generate_axis(0i16, rng.gen_range(0..25) as i16, None));
         params.set_y_axis(Axis::generate_axis(0i16, rng.gen_range(0..25) as i16, None));
 
-        let layer_num: u32 = rng.gen_range(2..20);
+        let layer_num: u8 = rng.gen_range(2..20);
         let layer_min: i32 = rng.gen_range(1..20);
         let layer_max: i32 = rng.gen_range(layer_min..layer_min+20);
         let layer_sum: Option<i32> = Some(rng.gen_range(layer_min*layer_num as i32..layer_max*layer_num as i32 + 1));

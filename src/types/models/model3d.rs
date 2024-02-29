@@ -7,7 +7,7 @@ pub mod get_data;
 impl Model3D {
     pub fn new(
         model: Vec<Vec<Vec<i32>>>,
-        model_mask: Vec<Vec<Vec<usize>>>,
+        model_mask: Vec<Vec<Vec<u8>>>,
         borders: Vec<Vec<Vec<i32>>>,
         layers_filling_values: Vec<Vec<i32>>,
         params: Params3D) -> Model3D {
@@ -26,7 +26,7 @@ impl Model3D {
         &self.model
     }
 
-    pub fn model_mask(self: &Self) -> &Vec<Vec<Vec<usize>>> {
+    pub fn model_mask(self: &Self) -> &Vec<Vec<Vec<u8>>> {
         &self.model_mask
     }
     

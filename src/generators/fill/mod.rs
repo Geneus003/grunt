@@ -8,7 +8,7 @@ pub mod filling_model_3d;
 pub fn fill_3d(
     params: &Params3D,
     borders: &Vec<Vec<Vec<i32>>>
-) -> (Vec<Vec<Vec<i32>>>, Vec<Vec<Vec<usize>>>, Vec<Vec<i32>>) {
+) -> (Vec<Vec<Vec<i32>>>, Vec<Vec<Vec<u8>>>, Vec<Vec<i32>>) {
     #[cfg(debug_assertions)]
     trace!("Preparing for model fill");
 

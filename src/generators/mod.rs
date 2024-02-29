@@ -40,7 +40,7 @@ pub fn generate_3d(params: Params3D) -> Result<Model3D, &'static str> {
         println!("Elapsed: {:.2?}", elapsed);
     }
 
-    return Ok(final_model)
+    Ok(final_model)
 }
 
 // borders print

@@ -18,14 +18,14 @@ fn generate_consts(borders: &Vec<Vec<Vec<i32>>>) -> (i32, usize, usize, usize) {
 pub fn create_full_model_with_mask(
     borders: &Vec<Vec<Vec<i32>>>,
     fill_values: &Vec<Vec<i32>>
-) -> (Vec<Vec<Vec<i32>>>, Vec<Vec<Vec<usize>>>) {
+) -> (Vec<Vec<Vec<i32>>>, Vec<Vec<Vec<u8>>>) {
     #[cfg(debug_assertions)]
     trace!("Starting filling model: model and mask");
 
     let (max_elem, layers_count, y_size, x_size) = generate_consts(borders);
 
     let mut model: Vec<Vec<Vec<i32>>> = Vec::with_capacity(max_elem.try_into().expect("Capacity overfill"));
-    let mut model_mask: Vec<Vec<Vec<usize>>> = Vec::with_capacity(max_elem.try_into().expect("Capacity overfill"));
+    let mut model_mask: Vec<Vec<Vec<u8>>> = Vec::with_capacity(max_elem.try_into().expect("Capacity overfill"));
     let mut rng = rand::thread_rng();
 
     let mut now_next_depth: Vec<Vec<i32>> = borders[0].clone();
@@ -34,12 +34,12 @@ pub fn create_full_model_with_mask(
     for depth in 0..max_elem {
 
         let mut now_depth: Vec<Vec<i32>> = Vec::with_capacity(y_size);
-        let mut now_depth_mask: Vec<Vec<usize>> = Vec::with_capacity(y_size);
+        let mut now_depth_mask: Vec<Vec<u8>> = Vec::with_capacity(y_size);
 
         for y_cord in 0..y_size {
             
             let mut now_y_line: Vec<i32> = Vec::with_capacity(x_size);
-            let mut now_y_line_mask: Vec<usize> = Vec::with_capacity(x_size);
+            let mut now_y_line_mask: Vec<u8> = Vec::with_capacity(x_size);
 
             for x_cord in 0..x_size {
                 let mut now_index = now_next_index[y_cord][x_cord];
@@ -55,7 +55,7 @@ pub fn create_full_model_with_mask(
                 }
 
                 now_y_line.push(rng.gen_range(fill_values[now_index][0]..fill_values[now_index][1] + 1));
-                now_y_line_mask.push(now_index);
+                now_y_line_mask.push(now_index as u8);
             }
 
             now_depth.push(now_y_line);
@@ -124,24 +124,24 @@ pub fn create_full_model_without_mask(
 
 pub fn create_only_mask(
     borders: &Vec<Vec<Vec<i32>>>,
-) -> Vec<Vec<Vec<usize>>> {
+) -> Vec<Vec<Vec<u8>>> {
     #[cfg(debug_assertions)]
     trace!("Starting filling model: model and mask");
 
     let (max_elem, layers_count, y_size, x_size) = generate_consts(borders);
 
-    let mut model_mask: Vec<Vec<Vec<usize>>> = Vec::with_capacity(max_elem.try_into().expect("Capacity overfill"));
+    let mut model_mask: Vec<Vec<Vec<u8>>> = Vec::with_capacity(max_elem.try_into().expect("Capacity overfill"));
 
     let mut now_next_depth: Vec<Vec<i32>> = borders[0].clone();
     let mut now_next_index: Vec<Vec<usize>> = vec![vec![0; x_size]; y_size];
 
     for depth in 0..max_elem {
 
-        let mut now_depth_mask: Vec<Vec<usize>> = Vec::with_capacity(y_size);
+        let mut now_depth_mask: Vec<Vec<u8>> = Vec::with_capacity(y_size);
 
         for y_cord in 0..y_size {
             
-            let mut now_y_line_mask: Vec<usize> = Vec::with_capacity(x_size);
+            let mut now_y_line_mask: Vec<u8> = Vec::with_capacity(x_size);
 
             for x_cord in 0..x_size {
                 let mut now_index = now_next_index[y_cord][x_cord];
@@ -155,7 +155,7 @@ pub fn create_only_mask(
                         }
                     }
                 }
-                now_y_line_mask.push(now_index);
+                now_y_line_mask.push(now_index as u8);
             }
 
             now_depth_mask.push(now_y_line_mask);

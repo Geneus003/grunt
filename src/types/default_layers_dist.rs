@@ -18,6 +18,11 @@ impl LayersDist {
         if layers_dist.is_empty() {
             return Err("Distibution of layers vec must contain at least one value");
         }
+
+        if layers_dist.len() >= 255 {
+            return Err("Program do not support models with more than 255 layers")
+        }
+
         let (mut min_layer_size, mut max_layer_size, mut layers_sum) = (i32::MAX, 0i32, 0i32);
         let mut layers_dist_summed: Vec<i32> = vec![];
 
@@ -31,7 +36,7 @@ impl LayersDist {
         }
 
         Ok(LayersDist {
-            layers_num: layers_dist.len() as u32,
+            layers_num: layers_dist.len() as u8,
             max_layer_size,
             min_layer_size,
             layers_sum,
@@ -41,7 +46,7 @@ impl LayersDist {
     }
 
     pub fn generate_from_params(
-        layers_num: u32,
+        layers_num: u8,
         min_layer_size: i32,
         max_layer_size: i32,
         layers_sum: Option<i32>
@@ -72,7 +77,7 @@ impl LayersDist {
     }
 
     pub fn generate_layers_dist_vec(
-        layers_num: u32,
+        layers_num: u8,
         min_layer_size: i32,
         max_layer_size: i32,
         layers_sum: Option<i32>
@@ -154,7 +159,7 @@ impl LayersDist {
     }
 
     // function params are named by LayersDist's first letters, e.g. ln - (l)ayers_(n)um
-    fn validate_params(ln: u32, min_ls: i32, max_ls: i32, ls: Option<i32>) -> Result<(), &'static str> {
+    fn validate_params(ln: u8, min_ls: i32, max_ls: i32, ls: Option<i32>) -> Result<(), &'static str> {
         if min_ls > max_ls {
             return Err("Max layer's size must be bigger than min layer's size")
         }
@@ -183,7 +188,7 @@ impl LayersDist {
 }
 
 impl LayersDist {
-    pub fn get_full_data(self: &Self) -> (u32, i32, i32, i32, &Vec<i32>) {
+    pub fn get_full_data(self: &Self) -> (u8, i32, i32, i32, &Vec<i32>) {
         (self.layers_num, self.max_layer_size, self.min_layer_size, self.layers_sum, &self.layers_dist)
     }
 

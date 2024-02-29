@@ -47,9 +47,9 @@ fn fill_model_and_mask_tests() {
                 for k in 0..model[0][0].len() {
                     let model_value = model[i][j][k];
                     
-                    if (model_value - 1) as usize != model_mask[i][j][k] { errors += 1 }
+                    if (model_value - 1) as u8 != model_mask[i][j][k] { errors += 1 }
 
-                    if model_mask[i][j][k] == model_size - 1 { continue; }
+                    if model_mask[i][j][k] as usize == model_size - 1 { continue; }
 
                     if borders[(model_value - 1) as usize][j][k] < i as i32 {
                         errors += 1;

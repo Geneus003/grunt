@@ -17,7 +17,7 @@ pub struct Axis {
 
 #[derive(Debug, Clone)]
 pub struct LayersDist {
-    layers_num: u32,
+    layers_num: u8,
     max_layer_size: i32,
     min_layer_size: i32,
     layers_sum: i32,

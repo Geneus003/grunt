@@ -75,8 +75,8 @@ fn add_model_num(result: &mut String, model: &Vec<Vec<Vec<i32>>>, is_border: boo
     *result += "]";
 }
 
-fn add_mask_num(result: &mut String, model: &Vec<Vec<Vec<usize>>>) {
-    let mut buf = [0u8; 21];
+fn add_mask_num(result: &mut String, model: &Vec<Vec<Vec<u8>>>) {
+    let mut buf = [0u8; 12];
     *result += "[";
 
     for (depth_num, depth) in model.iter().enumerate() {
