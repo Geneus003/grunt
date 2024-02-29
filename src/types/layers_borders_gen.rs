@@ -18,11 +18,11 @@ impl LayersBorder {
             return Err("Border deviation can't be negative.")
         }
         self.border_deviation = border_deviation;
-        return Ok(())
+        Ok(())
     }
 
     pub fn border_deviation(self: &Self) -> f32 {
-        return self.border_deviation
+        self.border_deviation
     }
 
     pub fn set_border_mod_func(self: &mut Self, mod_func: Option<fn(usize, usize, usize, i32) -> i32>) {
@@ -38,7 +38,7 @@ impl LayersBorder {
             "random" => (),
             _ => return Err("border_type can be next: random"),
         }
-        return Ok(())
+        Ok(())
     }
 
     pub fn border_type(self: &Self) -> &String {
@@ -50,7 +50,7 @@ impl LayersBorder {
     }
 
     pub fn border_max_step(self: &Self) -> Option<i32> {
-        return self.border_max_step
+        self.border_max_step
     }
 
     pub fn set_layers_same_deviation(self: &mut Self, same_deviation: bool) {
@@ -58,6 +58,6 @@ impl LayersBorder {
     } 
 
     pub fn layers_same_deviation(self: &Self) -> bool {
-        return self.layers_same_deviation
+        self.layers_same_deviation
     } 
 }

@@ -26,9 +26,10 @@ pub fn create_layers_borders_3d(params: &Params3D) -> Result<Vec<Vec<Vec<i32>>>,
         if let Err(err) = crate::generators::border_3d::validate_layer(params, &layers_borders[i], i) {
             error!("Validating for layer {i} FAILED: {err}");
             return Err("Model is not valid");
-        } else {
-            trace!("Validating for layer {i} completed succesfully");
         }
+
+        #[cfg(debug_assertions)]
+        trace!("Validating for layer {i} completed succesfully");
     }
 
     if params.layers_border().border_mod_func().is_some() {

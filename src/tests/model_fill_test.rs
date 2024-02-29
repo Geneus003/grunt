@@ -49,13 +49,11 @@ fn fill_model_and_mask_tests() {
                     
                     if (model_value - 1) as usize != model_mask[i][j][k] { errors += 1 }
 
-                    if model_mask[i][j][k] == model_size - 1{
-                        continue;
-                    } else {
-                        if borders[(model_value - 1) as usize][j][k] < i as i32 {
-                            errors += 1;
-                            break 'a
-                        }
+                    if model_mask[i][j][k] == model_size - 1 { continue; }
+
+                    if borders[(model_value - 1) as usize][j][k] < i as i32 {
+                        errors += 1;
+                        break 'a
                     }
                 }
             }

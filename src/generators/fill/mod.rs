@@ -73,5 +73,5 @@ pub fn fill_3d(
         (Vec::new(), filling_model_3d::create_only_mask(borders))
     };
 
-    return (model, model_mask, fill_values)
+    (model, model_mask, fill_values)
 }

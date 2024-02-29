@@ -36,7 +36,7 @@ fn random_gen_layers_borders_tests(){
 #[test]
 fn check_border_mod_function() {
     fn test_function(x_cord: usize, y_cord: usize, layers_num: usize, z_value: i32) -> i32 {
-        return (x_cord * y_cord * layers_num) as i32 * z_value
+        (x_cord * y_cord * layers_num) as i32 * z_value
     }
 
     let mut params = Params3D::new();

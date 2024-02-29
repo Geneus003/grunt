@@ -23,22 +23,22 @@ impl Model3D {
 
 impl Model3D {
     pub fn model(self: &Self) -> &Vec<Vec<Vec<i32>>> {
-        return &self.model;
+        &self.model
     }
 
     pub fn model_mask(self: &Self) -> &Vec<Vec<Vec<usize>>> {
-        return &self.model_mask;
+        &self.model_mask
     }
     
     pub fn borders(self: &Self) -> &Vec<Vec<Vec<i32>>> {
-        return &self.borders
+        &self.borders
     }
 
     pub fn layers_filling_values(self: &Self) -> &Vec<Vec<i32>> {
-        return &self.layers_filling_values;
+        &self.layers_filling_values
     }
 
     pub fn params(self: &Self) -> &Params3D {
-        return &self.params
+        &self.params
     }
 }

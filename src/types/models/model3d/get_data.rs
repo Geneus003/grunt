@@ -9,7 +9,6 @@ impl Model3D {
         for i in 0..self.model.len() {
             output_vec.push(self.model[i][x][y]);
         }
-
         Ok(output_vec)
     }
 }

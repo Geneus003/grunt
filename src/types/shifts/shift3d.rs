@@ -21,7 +21,7 @@ impl Shift3D {
     }
 
     pub fn pos_x(self: &Self) -> f32 {
-        return self.pos_x
+        self.pos_x
     }
 
     pub fn set_pos_y(self: &mut Self, pos_y: f32) {
@@ -29,7 +29,7 @@ impl Shift3D {
     }
 
     pub fn pos_y(self: &Self) -> f32 {
-        return self.pos_y
+        self.pos_y
     }
 
     pub fn set_angle_x(self: &mut Self, angle_x: f32) -> Result<(), &'static str> {
@@ -41,7 +41,7 @@ impl Shift3D {
     }
 
     pub fn angle_x(self: &Self) -> f32 {
-        return self.angle_x
+        self.angle_x
     }
 
     pub fn set_angle_y(self: &mut Self, angle_y: f32) -> Result<(), &'static str> {
@@ -53,7 +53,7 @@ impl Shift3D {
     }
 
     pub fn angle_y(self: &Self) -> f32 {
-        return self.angle_y
+        self.angle_y
     }
 
     pub fn set_main_region(self: &mut Self, region: i32) -> Result<(), &'static str> {
@@ -65,7 +65,7 @@ impl Shift3D {
     }
 
     pub fn main_region(self: &Self) -> i32 {
-        return self.main_region
+        self.main_region
     }
 
     pub fn set_angle_z(self: &mut Self, angle_z: f32) -> Result<(), &'static str> {
@@ -77,7 +77,7 @@ impl Shift3D {
     }
 
     pub fn angle_z(self: &Self) -> f32 {
-        return self.angle_z
+        self.angle_z
     }
 
     pub fn set_shift_force(self: &mut Self, shift_force: i32) {
@@ -85,7 +85,7 @@ impl Shift3D {
     }
 
     pub fn shift_force(self: &Self) -> i32 {
-        return self.shift_force
+        self.shift_force
     }
 
     pub fn set_shift_type(self: &mut Self, shift_type: ShiftTypes) {
@@ -93,6 +93,6 @@ impl Shift3D {
     }
 
     pub fn shift_type(self: &Self) -> ShiftTypes {
-        return self.shift_type.clone()
+        self.shift_type.clone()
     }
 }

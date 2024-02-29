@@ -24,7 +24,7 @@ impl LayersFill {
     }
 
     pub fn values_preset(self: &Self) -> &Vec<Vec<i32>> {
-        return &self.values_preset
+        &self.values_preset
     }
 
     pub fn set_is_preset_odreder(self: &mut Self, state: bool) {
@@ -32,7 +32,7 @@ impl LayersFill {
     }
 
     pub fn is_preset_ordered(self: &Self) -> bool {
-        return self.is_preset_ordered
+        self.is_preset_ordered
     }
 
     pub fn set_values_deviation(self: &mut Self, deviation: Option<f32>) -> Result<(), &'static str> {
@@ -42,7 +42,7 @@ impl LayersFill {
     }
 
     pub fn values_deviation(self: &Self) -> Option<f32> {
-        return self.values_deviation
+        self.values_deviation
     }
 
     pub fn set_values_smooth(self: &mut Self, smooth: Option<u32>) {
@@ -50,7 +50,7 @@ impl LayersFill {
     }
 
     pub fn values_smooth(self: &Self) -> Option<u32> {
-        return self.values_smooth
+        self.values_smooth
     }
     
     pub fn set_values_offset(self: &mut Self, offset: Option<u32>) {
@@ -58,7 +58,7 @@ impl LayersFill {
     }
 
     pub fn values_offset(self: &Self) -> Option<u32> {
-        return self.values_offset
+        self.values_offset
     }
 
     pub fn set_is_mask_needed(self: &mut Self, mask_status: bool) {
@@ -66,7 +66,7 @@ impl LayersFill {
     }
 
     pub fn is_mask_needed(self: Self) -> bool {
-        return self.is_mask_needed
+        self.is_mask_needed
     }
 }
 

@@ -48,7 +48,7 @@ impl LayersDist {
     ) -> Result<LayersDist, &'static str> {
         let layers = LayersDist::generate_layers_dist_vec(layers_num, min_layer_size, max_layer_size, layers_sum);
         match layers {
-            Err(err) => return Err(err),
+            Err(err) => Err(err),
             Ok(layers) => {
                 let mut layers_summed:Vec<i32> = Vec::with_capacity(layers.len());
                 for (i, e) in layers.iter().enumerate(){

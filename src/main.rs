@@ -46,10 +46,10 @@ fn main() {
 
     let mut shift = Shift3D::new();
     shift.set_pos_y(5.0);
-    shift.set_angle_y(90.0).unwrap();
+    shift.set_angle_y(60.0).unwrap();
     shift.set_pos_x(5.0);
-    shift.set_angle_x(90.0).unwrap();
-    shift.set_main_region(1).unwrap();
+    shift.set_angle_x(135.0).unwrap();
+    shift.set_main_region(2).unwrap();
     shift.set_shift_force(-2);
     params.add_shift(shift);
 

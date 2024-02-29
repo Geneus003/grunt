@@ -27,8 +27,7 @@ pub fn random_layer_creation_3d(
         default_value - (params.layers_border().border_deviation() as i32)
     } else {
         let model_size_value = *params.layers_dist().get_layers_dist().last().unwrap_or(&0);
-        default_value - (params.layers_border().border_deviation() * model_size_value as f32) as i32
-    };
+        default_value - (params.layers_border().border_deviation() * model_size_value as f32) as i32 };
     
     if lower_limit < 0 { lower_limit = 0; }
 
