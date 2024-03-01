@@ -69,8 +69,8 @@ impl Shift3D {
     }
 
     pub fn set_angle_z(self: &mut Self, angle_z: f32) -> Result<(), &'static str> {
-        if angle_z < 0.0 || angle_z > 180.0 {
-            return Err("Angle_z should be between 0 and 180.0");
+        if angle_z < 0.0 || angle_z > 90.0 {
+            return Err("Angle_z should be between 0 and 90.0");
         }
         self.angle_z = angle_z;
         Ok(())

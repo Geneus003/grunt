@@ -23,9 +23,8 @@ def main():
 
     ax = plt.figure().add_subplot(111,projection ='3d')
     colors = plt.cm.plasma(model)
-    norm = matplotlib.colors.Normalize(vmin=0, vmax=16)
 
-    ax.voxels(x, y, z, model, facecolors=colors, alpha=1)
+    ax.voxels(x, y, z, model, facecolors=colors, alpha=0.8)
     ax.invert_zaxis()
     ax.set_xlabel("X_axis")
     ax.set_ylabel("Y_axis")
