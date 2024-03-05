@@ -53,7 +53,7 @@ fn main() {
     shift.set_shift_force(-2);
     shift.set_angle_z(60.0).unwrap();
     shift.set_shift_force(3);
-    params.add_shift(shift);
+    // params.add_shift(shift);
 
     println!("{:?}", params);
     let model = generate_3d(params).unwrap();
