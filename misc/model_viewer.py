@@ -50,6 +50,7 @@ class ViewerEngine:
 
 def main():
     model_file = open("../my_model.json")
+    # model_file = open("../target/release/my_model.json")
     model_file = json.load(model_file)
 
     model = []

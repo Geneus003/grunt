@@ -29,8 +29,8 @@ fn main() {
     // borders.set_border_mod_func(Some(test_function));
     // params.set_layers_border(borders);
 
-    params.set_x_axis(Axis::generate_axis(1.0, 10.0, None));
-    params.set_y_axis(Axis::generate_axis(1.0, 10.0, None));
+    params.set_x_axis(Axis::generate_axis(1.0, 100.0, None));
+    params.set_y_axis(Axis::generate_axis(1.0, 100.0, None));
 
     params.set_layers_dist(LayersDist::create_from_vec([4, 6, 5].to_vec()).unwrap_or(LayersDist::new()));
 
@@ -49,11 +49,10 @@ fn main() {
     shift.set_angle_y(90.0).unwrap();
     shift.set_pos_x(5.0);
     shift.set_angle_x(90.0).unwrap();
-    shift.set_main_region(2).unwrap();
-    shift.set_shift_force(-2);
-    shift.set_angle_z(60.0).unwrap();
-    shift.set_shift_force(3);
-    // params.add_shift(shift);
+    shift.set_main_region(1).unwrap();
+    shift.set_angle_z(90.0).unwrap();
+    shift.set_shift_force(-5);
+    params.add_shift(shift);
 
     println!("{:?}", params);
     let model = generate_3d(params).unwrap();

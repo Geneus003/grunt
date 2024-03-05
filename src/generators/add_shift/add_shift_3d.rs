@@ -1,3 +1,5 @@
+use log::trace;
+
 use crate::types::generation_params::Params3D;
 use crate::types::shifts::ShiftTypes;
 
@@ -18,6 +20,10 @@ pub fn add_3d(params: &Params3D, borders: &mut Vec<Vec<Vec<i32>>>, shift_num: us
         
         (x_cross.round() as i32, y_cross.round() as i32)
     };
+    
+    #[cfg(debug_assertions)]
+    trace!("Crossing point for shift -> x: {}, y: {}", crossed_point_x, crossed_point_y);
+
 
     for y in 0..borders[0].len() {
         for x in 0..borders[0][0].len() {
@@ -43,7 +49,7 @@ pub fn add_3d(params: &Params3D, borders: &mut Vec<Vec<Vec<i32>>>, shift_num: us
 
                 let shift_z = (now_shift_angle_z.to_radians().tan() * surface_lengts).round() as i32;
 
-                if shift_z < *now_border { break; }
+                if now_shift_angle_z < 90.0 && shift_z < *now_border { break; }
 
                 match shift_type {
                     ShiftTypes::InnerLift | ShiftTypes::OuterLift => {
