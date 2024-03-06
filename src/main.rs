@@ -45,9 +45,9 @@ fn main() {
     params.set_layers_fill(fill);
 
     let mut shift = Shift3D::new();
-    shift.set_pos_y(5.0);
-    shift.set_angle_y(90.0).unwrap();
-    shift.set_pos_x(5.0);
+    shift.set_pos_y(0.0);
+    shift.set_angle_y(135.0).unwrap();
+    shift.set_pos_x(50.0);
     shift.set_angle_x(90.0).unwrap();
     shift.set_main_region(1).unwrap();
     shift.set_angle_z(90.0).unwrap();

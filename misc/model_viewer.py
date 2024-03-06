@@ -67,7 +67,6 @@ def main():
     mesh.dimensions = np.array((len(model[0][0]),len(model[0]), len(model))) + 1
     mesh.origin = (0, 0, 0)
     mesh.spacing = (1, 1, 1)
-
     mesh.cell_data["values"] = model.flatten()
 
     p = pv.Plotter()
@@ -103,6 +102,7 @@ def main():
         pointb=(0.31, 0.3),
         style="modern"
     )
+
     p.show()
 
 
