@@ -32,7 +32,7 @@ fn main() {
     params.set_x_axis(Axis::generate_axis(1.0, 100.0, None));
     params.set_y_axis(Axis::generate_axis(1.0, 100.0, None));
 
-    params.set_layers_dist(LayersDist::create_from_vec([4, 6, 5].to_vec()).unwrap_or(LayersDist::new()));
+    params.set_layers_dist(LayersDist::create_from_vec([10, 6, 5].to_vec()).unwrap_or(LayersDist::new()));
 
     let mut borders = LayersBorder::new();
     let _ = borders.set_border_deviation(0.0);
@@ -45,14 +45,38 @@ fn main() {
     params.set_layers_fill(fill);
 
     let mut shift = Shift3D::new();
-    shift.set_pos_y(0.0);
-    shift.set_angle_y(135.0).unwrap();
-    shift.set_pos_x(50.0);
-    shift.set_angle_x(90.0).unwrap();
+    shift.set_pos_y(50.0);
+    shift.set_angle_y(130.0).unwrap();
+    shift.set_pos_x(-30.0);
+    shift.set_angle_x(135.0).unwrap();
+    shift.set_angle_z(80.0).unwrap();
+    shift.set_shift_force(5);
+    shift.set_shift_type(types::shifts::ShiftTypes::InnerDescent);
     shift.set_main_region(1).unwrap();
-    shift.set_angle_z(90.0).unwrap();
-    shift.set_shift_force(-5);
     params.add_shift(shift);
+
+    let mut shift = Shift3D::new();
+    shift.set_pos_y(20.0);
+    shift.set_angle_y(134.0).unwrap();
+    shift.set_pos_x(-1.0);
+    shift.set_angle_x(135.0).unwrap();
+    shift.set_angle_z(45.0).unwrap();
+    shift.set_shift_force(5);
+    shift.set_shift_type(types::shifts::ShiftTypes::InnerDescent);
+    shift.set_main_region(1).unwrap();
+    params.add_shift(shift);
+
+    let mut shift = Shift3D::new();
+    shift.set_pos_y(80.0);
+    shift.set_angle_y(110.0).unwrap();
+    shift.set_pos_x(6.0);
+    shift.set_angle_x(90.0).unwrap();
+    shift.set_angle_z(90.0).unwrap();
+    shift.set_shift_force(5);
+    shift.set_shift_type(types::shifts::ShiftTypes::InnerLift);
+    shift.set_main_region(3).unwrap();
+    params.add_shift(shift);
+
 
     println!("{:?}", params);
     let model = generate_3d(params).unwrap();

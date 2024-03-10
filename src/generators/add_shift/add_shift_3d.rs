@@ -4,6 +4,9 @@ use crate::types::generation_params::Params3D;
 use crate::types::shifts::ShiftTypes;
 
 pub fn add_3d(params: &Params3D, borders: &mut Vec<Vec<Vec<i32>>>, shift_num: usize) {
+    #[cfg(debug_assertions)]
+    trace!("Starting generating slice");
+
     let now_shift = params.shifts()[shift_num].clone();
 
     let now_shift_angle_y = now_shift.angle_y();
@@ -38,10 +41,10 @@ pub fn add_3d(params: &Params3D, borders: &mut Vec<Vec<Vec<i32>>>, shift_num: us
         180.0 - now_shift_angle_x
     }).to_radians().tan();
 
-    
+    let now_shift_angle_z_tan = now_shift_angle_z.to_radians().tan();
+
     #[cfg(debug_assertions)]
     trace!("Crossing point for shift -> x: {}, y: {}", crossed_point_x, crossed_point_y);
-
 
     for y in 0..borders[0].len() {
         for x in 0..borders[0][0].len() {
@@ -74,26 +77,41 @@ pub fn add_3d(params: &Params3D, borders: &mut Vec<Vec<Vec<i32>>>, shift_num: us
                 ShiftTypes::OuterLift | ShiftTypes::OuterDescent => if state == target_state { continue; },
             }
 
+            let minimal_len = if (x as f32 - x_line_x_point).abs() < (y as f32 - y_line_y_point).abs() {
+                (x as f32 - x_line_x_point).abs()
+            } else {
+                (y as f32 - y_line_y_point).abs()
+            };
+
+            let slice_depth = now_shift_angle_y.to_radians().tan() * minimal_len;
+
+            let surface_lengts =
+                (((x as i32 - crossed_point_x).pow(2) + (y as i32 - crossed_point_y).pow(2)) as f32).sqrt();
+
             for z in 0..borders.len() {
                 let now_border = &mut borders[z][y][x];
 
-                let surface_lengts =
-                    (((x as i32 - crossed_point_x).pow(2) + (y as i32 - crossed_point_y).pow(2)) as f32).sqrt();
+                if *now_border < slice_depth.round() as i32 {
+                    continue
+                }
 
-                let shift_z = (now_shift_angle_z.to_radians().tan() * surface_lengts).round() as i32;
-
-                if now_shift_angle_z < 90.0 && shift_z < *now_border { break; }
+                let mut now_shift_force = shift_force ;
+                if shift_force as f32 > shift_force as f32 * (minimal_len / shift_force as f32) {
+                    now_shift_force = (shift_force as f32 * (minimal_len / shift_force as f32)).round() as i32
+                };
 
                 match shift_type {
                     ShiftTypes::InnerLift | ShiftTypes::OuterLift => {
-                        *now_border -= shift_force;
+                        *now_border -= now_shift_force;
                     }
                     ShiftTypes::InnerDescent | ShiftTypes::OuterDescent => {
-                        *now_border += shift_force;
+                        *now_border += now_shift_force;
                     }
                 }
             }
         }
     }
 
+    #[cfg(debug_assertions)]
+    trace!("Slice generation has finished");
 }
