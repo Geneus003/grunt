@@ -83,10 +83,7 @@ pub fn add_3d(params: &Params3D, borders: &mut Vec<Vec<Vec<i32>>>, shift_num: us
                 (y as f32 - y_line_y_point).abs()
             };
 
-            let slice_depth = now_shift_angle_y.to_radians().tan() * minimal_len;
-
-            let surface_lengts =
-                (((x as i32 - crossed_point_x).pow(2) + (y as i32 - crossed_point_y).pow(2)) as f32).sqrt();
+            let slice_depth = now_shift_angle_z_tan * minimal_len;
 
             for z in 0..borders.len() {
                 let now_border = &mut borders[z][y][x];
@@ -95,10 +92,10 @@ pub fn add_3d(params: &Params3D, borders: &mut Vec<Vec<Vec<i32>>>, shift_num: us
                     continue
                 }
 
-                let mut now_shift_force = shift_force ;
-                if shift_force as f32 > shift_force as f32 * (minimal_len / shift_force as f32) {
-                    now_shift_force = (shift_force as f32 * (minimal_len / shift_force as f32)).round() as i32
-                };
+                let mut now_shift_force = shift_force;
+                if (slice_depth.round() as i32).abs() < now_shift_force {
+                    now_shift_force = slice_depth as i32;
+                } 
 
                 match shift_type {
                     ShiftTypes::InnerLift | ShiftTypes::OuterLift => {

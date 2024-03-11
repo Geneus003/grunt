@@ -49,9 +49,9 @@ fn main() {
     shift.set_angle_y(130.0).unwrap();
     shift.set_pos_x(-30.0);
     shift.set_angle_x(135.0).unwrap();
-    shift.set_angle_z(80.0).unwrap();
+    shift.set_angle_z(45.0).unwrap();
     shift.set_shift_force(5);
-    shift.set_shift_type(types::shifts::ShiftTypes::InnerDescent);
+    shift.set_shift_type(types::shifts::ShiftTypes::InnerLift);
     shift.set_main_region(1).unwrap();
     params.add_shift(shift);
 
@@ -69,7 +69,7 @@ fn main() {
     let mut shift = Shift3D::new();
     shift.set_pos_y(80.0);
     shift.set_angle_y(110.0).unwrap();
-    shift.set_pos_x(6.0);
+    shift.set_pos_x(40.0);
     shift.set_angle_x(90.0).unwrap();
     shift.set_angle_z(90.0).unwrap();
     shift.set_shift_force(5);
@@ -93,25 +93,6 @@ fn main() {
     if !(cfg!(test)) {
         println!("Elapsed export: {:.2?}", elapsed);
     }
-
-    // if !(cfg!(test)) {
-    //     for i in model.model() {
-    //         println!("\n\n");
-    //         for j in i {
-    //             println!("{:?}", j)
-    //         }
-    //     }
-    // }
-    //
-    // if !(cfg!(test)) {
-    //     for i in model.model_mask() {
-    //         println!("\n");
-    //         for j in i {
-    //             println!("{:?}", j)
-    //         }
-    //     }
-    // }
-    //
 }
 
 #[cfg(test)]
