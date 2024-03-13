@@ -46,6 +46,26 @@ pub fn add_3d(params: &Params3D, borders: &mut Vec<Vec<Vec<i32>>>, shift_num: us
     #[cfg(debug_assertions)]
     trace!("Crossing point for shift -> x: {}, y: {}", crossed_point_x, crossed_point_y);
 
+    let mut x_line_x_points: Vec<f32> = Vec::with_capacity(borders[0].len());
+    for y in 0..borders[0].len() {
+        let x_line_x_delt = ((y as f32 / new_angle_x_tan) * 10.0).round() / 10.0;
+        x_line_x_points.push(if now_shift_angle_x <= 90.0 {
+            ((x_line_x_pos - x_line_x_delt) * 10.0).round() / 10.0
+        } else {
+            ((x_line_x_pos + x_line_x_delt) * 10.0).round() / 10.0
+        });
+    }
+
+    let mut y_line_y_points: Vec<f32> = Vec::with_capacity(borders[0][0].len());
+    for x in 0..borders[0][0].len() {
+        let y_line_y_delt = ((x as f32 / new_angle_y_tan) * 10.0).round() / 10.0;
+        y_line_y_points.push(if now_shift_angle_y <= 90.0 {
+            ((y_line_y_pos - y_line_y_delt) * 10.0).round() / 10.0
+        } else {
+            ((y_line_y_pos + y_line_y_delt) * 10.0).round() / 10.0
+        });
+
+    }
     for y in 0..borders[0].len() {
         for x in 0..borders[0][0].len() {
             // State 1 - left lower part
@@ -54,20 +74,8 @@ pub fn add_3d(params: &Params3D, borders: &mut Vec<Vec<Vec<i32>>>, shift_num: us
             // State 4 - right upper part
             let mut state = 0;
 
-            let y_line_y_delt = ((x as f32 / new_angle_y_tan) * 10.0).round() / 10.0;
-            let x_line_x_delt = ((y as f32 / new_angle_x_tan) * 10.0).round() / 10.0;
-
-            let y_line_y_point = if now_shift_angle_y <= 90.0 {
-                ((y_line_y_pos - y_line_y_delt) * 10.0).round() / 10.0
-            } else {
-                ((y_line_y_pos + y_line_y_delt) * 10.0).round() / 10.0
-            };
-
-            let x_line_x_point = if now_shift_angle_x <= 90.0 {
-                ((x_line_x_pos - x_line_x_delt) * 10.0).round() / 10.0
-            } else {
-                ((x_line_x_pos + x_line_x_delt) * 10.0).round() / 10.0
-            };
+            let y_line_y_point = y_line_y_points[x];
+            let x_line_x_point = x_line_x_points[y];
 
             state += if (y as f32) <= y_line_y_point { 1 } else { 3 };
             state += if (x as f32) <= x_line_x_point { 0 } else { 1 };
@@ -83,18 +91,18 @@ pub fn add_3d(params: &Params3D, borders: &mut Vec<Vec<Vec<i32>>>, shift_num: us
                 (y as f32 - y_line_y_point).abs()
             };
 
-            let slice_depth = now_shift_angle_z_tan * minimal_len;
+            let slice_depth = (now_shift_angle_z_tan * minimal_len).round().abs() as i32;
 
             for z in 0..borders.len() {
                 let now_border = &mut borders[z][y][x];
 
-                if *now_border < slice_depth.round() as i32 {
+                if *now_border > slice_depth {
                     continue
                 }
 
                 let mut now_shift_force = shift_force;
-                if (slice_depth.round() as i32).abs() < now_shift_force {
-                    now_shift_force = slice_depth as i32;
+                if slice_depth - *now_border < shift_force {
+                    now_shift_force = ((slice_depth - *now_border as i32) as f32 * now_shift_angle_z_tan) as i32;
                 } 
 
                 match shift_type {
@@ -105,6 +113,8 @@ pub fn add_3d(params: &Params3D, borders: &mut Vec<Vec<Vec<i32>>>, shift_num: us
                         *now_border += now_shift_force;
                     }
                 }
+
+                break;
             }
         }
     }

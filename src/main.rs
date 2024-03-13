@@ -49,7 +49,7 @@ fn main() {
     shift.set_angle_y(130.0).unwrap();
     shift.set_pos_x(-30.0);
     shift.set_angle_x(135.0).unwrap();
-    shift.set_angle_z(45.0).unwrap();
+    shift.set_angle_z(70.0).unwrap();
     shift.set_shift_force(5);
     shift.set_shift_type(types::shifts::ShiftTypes::InnerLift);
     shift.set_main_region(1).unwrap();
@@ -60,7 +60,7 @@ fn main() {
     shift.set_angle_y(134.0).unwrap();
     shift.set_pos_x(-1.0);
     shift.set_angle_x(135.0).unwrap();
-    shift.set_angle_z(45.0).unwrap();
+    shift.set_angle_z(70.0).unwrap();
     shift.set_shift_force(5);
     shift.set_shift_type(types::shifts::ShiftTypes::InnerDescent);
     shift.set_main_region(1).unwrap();
