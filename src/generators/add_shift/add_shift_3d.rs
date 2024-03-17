@@ -91,30 +91,33 @@ pub fn add_3d(params: &Params3D, borders: &mut Vec<Vec<Vec<i32>>>, shift_num: us
                 (y as f32 - y_line_y_point).abs()
             };
 
-            let slice_depth = (now_shift_angle_z_tan * minimal_len).round().abs() as i32;
+            let slice_depth = ((now_shift_angle_z_tan * minimal_len).round() as i32).abs();
 
             for z in 0..borders.len() {
                 let now_border = &mut borders[z][y][x];
 
-                if *now_border > slice_depth {
-                    continue
-                }
-
-                let mut now_shift_force = shift_force;
-                if slice_depth - *now_border < shift_force {
-                    now_shift_force = ((slice_depth - *now_border as i32) as f32 * now_shift_angle_z_tan) as i32;
-                } 
-
                 match shift_type {
                     ShiftTypes::InnerLift | ShiftTypes::OuterLift => {
+                        if *now_border > slice_depth {
+                            continue;
+                        }
+                        let mut now_shift_force = slice_depth - *now_border;
+                        if slice_depth - *now_border > shift_force {
+                            now_shift_force = shift_force
+                        }
                         *now_border -= now_shift_force;
                     }
                     ShiftTypes::InnerDescent | ShiftTypes::OuterDescent => {
+                        if *now_border > slice_depth {
+                            continue;
+                        }
+                        let mut now_shift_force = slice_depth - *now_border;
+                        if slice_depth - *now_border > shift_force {
+                            now_shift_force = shift_force
+                        }
                         *now_border += now_shift_force;
                     }
                 }
-
-                break;
             }
         }
     }

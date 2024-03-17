@@ -32,11 +32,11 @@ fn main() {
     params.set_x_axis(Axis::generate_axis(1.0, 100.0, None));
     params.set_y_axis(Axis::generate_axis(1.0, 100.0, None));
 
-    params.set_layers_dist(LayersDist::create_from_vec([10, 6, 5].to_vec()).unwrap_or(LayersDist::new()));
+    params.set_layers_dist(LayersDist::create_from_vec([20, 30, 20].to_vec()).unwrap_or(LayersDist::new()));
 
     let mut borders = LayersBorder::new();
-    let _ = borders.set_border_deviation(0.0);
-    let _ = borders.set_border_max_step(None);
+    let _ = borders.set_border_deviation(5.0);
+    let _ = borders.set_border_max_step(Some(1));
     // borders.set_border_mod_func(Some(_test_function));
     params.set_layers_border(borders);
 
@@ -49,9 +49,9 @@ fn main() {
     shift.set_angle_y(130.0).unwrap();
     shift.set_pos_x(-30.0);
     shift.set_angle_x(135.0).unwrap();
-    shift.set_angle_z(70.0).unwrap();
-    shift.set_shift_force(5);
-    shift.set_shift_type(types::shifts::ShiftTypes::InnerLift);
+    shift.set_angle_z(85.0).unwrap();
+    shift.set_shift_force(10);
+    shift.set_shift_type(types::shifts::ShiftTypes::InnerDescent);
     shift.set_main_region(1).unwrap();
     params.add_shift(shift);
 
@@ -60,9 +60,9 @@ fn main() {
     shift.set_angle_y(134.0).unwrap();
     shift.set_pos_x(-1.0);
     shift.set_angle_x(135.0).unwrap();
-    shift.set_angle_z(70.0).unwrap();
-    shift.set_shift_force(5);
-    shift.set_shift_type(types::shifts::ShiftTypes::InnerDescent);
+    shift.set_angle_z(80.0).unwrap();
+    shift.set_shift_force(10);
+    shift.set_shift_type(types::shifts::ShiftTypes::InnerLift);
     shift.set_main_region(1).unwrap();
     params.add_shift(shift);
 
@@ -72,7 +72,7 @@ fn main() {
     shift.set_pos_x(40.0);
     shift.set_angle_x(90.0).unwrap();
     shift.set_angle_z(90.0).unwrap();
-    shift.set_shift_force(5);
+    shift.set_shift_force(8);
     shift.set_shift_type(types::shifts::ShiftTypes::InnerLift);
     shift.set_main_region(3).unwrap();
     params.add_shift(shift);
@@ -84,7 +84,7 @@ fn main() {
     use std::time::Instant;
     let now = Instant::now();
 
-    model.export_model_num("my_model", true, true, true).unwrap();
+    model.export_model_num("my_model", true, true, true, true).unwrap();
 
     println!("{:?}", model.get_by_num(0, 0));
 

@@ -1,3 +1,5 @@
+use serde::{Deserialize, Serialize};
+
 pub mod axis;
 pub mod layers_borders_gen;
 pub mod layers_filling_gen;
@@ -7,7 +9,7 @@ pub mod models;
 pub mod shifts;
 pub mod generation_params;
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Deserialize, Serialize)]
 pub struct Axis {
     start: f32,
     end: f32,
@@ -15,7 +17,7 @@ pub struct Axis {
     axis: Vec<f32>,
 }
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Deserialize, Serialize)]
 pub struct LayersDist {
     layers_num: u8,
     max_layer_size: i32,
@@ -25,16 +27,19 @@ pub struct LayersDist {
     layers_dist_summed: Vec<i32>,
 }
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Deserialize, Serialize)]
 pub struct LayersBorder {
     border_deviation: f32,
+    #[serde(skip_deserializing)]
+    #[serde(skip_serializing)]
     border_mod_func: Option<fn(usize, usize, usize, i32) -> i32>, // xcord, ycord, zvalue, layer_num
     border_type: String,
     border_max_step: Option<i32>,
+    border_step_prob: Option<f32>,
     layers_same_deviation: bool,
 }
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Deserialize, Serialize)]
 pub struct LayersFill {
     values_preset: Vec<Vec<i32>>,
     is_preset_ordered: bool,

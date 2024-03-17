@@ -24,7 +24,8 @@ fn gen_axis_tests() {
     assert_eq!(*ax.get_axis(), vec![-0.2]);
 
     let ax = Axis::generate_axis(-0.2, 0.2, Some(-0.2));
-    assert_eq!(*ax.get_axis(), vec![]);
+    let ans: Vec<f32> = Vec::new();
+    assert_eq!(*ax.get_axis(), ans);
 
     let ax = Axis::generate_axis(0.2, -0.2, Some(-0.2));
     assert_eq!(*ax.get_axis(), vec![0.2, 0.0, -0.2]);

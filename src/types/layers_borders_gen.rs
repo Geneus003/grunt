@@ -7,6 +7,7 @@ impl LayersBorder {
             border_mod_func: None,
             border_type: String::from("random"),
             border_max_step: None,
+            border_step_prob: Some(0.5),
             layers_same_deviation: false,
         }
     }
@@ -51,6 +52,24 @@ impl LayersBorder {
 
     pub fn border_max_step(self: &Self) -> Option<i32> {
         self.border_max_step
+    }
+
+    pub fn set_border_step_prob(self: &mut Self, prob: Option<f32>) -> Result<(), &'static str> {
+        if prob.is_none() {
+            self.border_step_prob = prob
+        } else {
+            let prob = (prob.unwrap() * 1000.0).round() / 1000.0;
+            if 0.0 < prob || prob > 1.0 {
+                return Err("Probability must be between 0.0 and 1.0");
+                
+            }
+            self.border_step_prob = Some(prob)
+        }
+        Ok(())
+    }
+
+    pub fn border_step_prob(self: &Self) -> Option<f32> {
+        self.border_step_prob
     }
 
     pub fn set_layers_same_deviation(self: &mut Self, same_deviation: bool) {

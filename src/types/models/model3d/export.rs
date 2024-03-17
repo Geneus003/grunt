@@ -4,12 +4,18 @@ use std::io::Write;
 use numtoa::NumToA;
 
 use crate::types::models::Model3D;
+use crate::types::generation_params::Params3D;
 
 impl Model3D {
-    pub fn export_model_num(self: &Self, name: &str, save_model: bool, save_mask: bool, save_borders: bool) -> Result<(), std::io::Error> {
+    pub fn export_model_num(self: &Self, name: &str, save_params: bool, save_model: bool, save_mask: bool, save_borders: bool) -> Result<(), std::io::Error> {
         let mut result = String::from("");
 
-        result += "{\"model\":";
+        result += "{\"params3D\":";
+        if save_params == true {
+            export_params(&mut result, &self.params());
+        } else { result += "null"}
+
+        result += ",\"model\":";
         if save_model == true {
             add_model_num(&mut result, &self.model, false);
         } else { result += "null"}
@@ -30,7 +36,6 @@ impl Model3D {
         Ok(())
     }
 }
-
 fn add_model_num(result: &mut String, model: &Vec<Vec<Vec<i32>>>, is_border: bool) {
     let mut buf = [0u8; 12];
     *result += "[";
@@ -112,4 +117,8 @@ fn add_mask_num(result: &mut String, model: &Vec<Vec<Vec<u8>>>) {
         }
     }
     *result += "]";
+}
+
+fn export_params(result: &mut String, params: &Params3D) {
+    result.push_str(serde_json::to_string(params).unwrap().as_str());
 }

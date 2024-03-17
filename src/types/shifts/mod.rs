@@ -1,6 +1,8 @@
+use serde::{Deserialize, Serialize};
+
 pub mod shift3d;
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Deserialize, Serialize)]
 pub enum ShiftTypes {
     InnerDescent,
     OuterDescent,
@@ -8,7 +10,7 @@ pub enum ShiftTypes {
     OuterLift,
 }
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Deserialize, Serialize)]
 pub struct Shift3D {
     pos_x: f32,
     pos_y: f32,

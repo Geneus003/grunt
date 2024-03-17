@@ -1,9 +1,11 @@
+use serde::{Deserialize, Serialize};
+
 use crate::types::{Axis, LayersDist, LayersBorder, LayersFill};
 use crate::types::shifts::Shift3D;
 
 mod params3d;
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Deserialize, Serialize)]
 pub struct Params3D {
     // Axes parameters 
     x_ax: Axis,
