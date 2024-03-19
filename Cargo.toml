@@ -11,6 +11,10 @@ path = "src/main.rs"
 name = "grunt"
 path = "src/lib.rs"
 
+[examples]
+inner_lift_cross = "./examples/inner_lift_cross.rs"
+outer_lift_cross = "./examples/outer_lift_cross.rs"
+
 [dependencies]
 env_logger = "0.11.0"
 log = "0.4.20"

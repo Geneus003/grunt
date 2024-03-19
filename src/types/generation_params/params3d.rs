@@ -13,6 +13,7 @@ impl Params3D {
             shifts: Vec::new(),
             model_needed: true,
             mask_needed: true,
+            depth_scale: 1.0,
         }
     }
 }
@@ -80,5 +81,13 @@ impl Params3D {
 
     pub fn mask_needed(self: &Self) -> bool {
         self.mask_needed
+    }
+
+    pub fn set_depth_scale(self: &mut Self, depth_scale: f32) {
+        self.depth_scale = depth_scale
+    }
+
+    pub fn depth_scale(self: &Self) -> f32 {
+        self.depth_scale
     }
 }

@@ -7,7 +7,14 @@ use crate::types::models::Model3D;
 use crate::types::generation_params::Params3D;
 
 impl Model3D {
-    pub fn export_model_num(self: &Self, name: &str, save_params: bool, save_model: bool, save_mask: bool, save_borders: bool) -> Result<(), std::io::Error> {
+    pub fn export_model_num(
+        self: &Self,
+        name: &str,
+        save_params: bool,
+        save_model: bool,
+        save_mask: bool,
+        save_borders: bool)
+    -> Result<(), std::io::Error> {
         let mut result = String::from("");
 
         result += "{\"params3D\":";
@@ -36,6 +43,7 @@ impl Model3D {
         Ok(())
     }
 }
+
 fn add_model_num(result: &mut String, model: &Vec<Vec<Vec<i32>>>, is_border: bool) {
     let mut buf = [0u8; 12];
     *result += "[";

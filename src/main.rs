@@ -35,8 +35,8 @@ fn main() {
     params.set_layers_dist(LayersDist::create_from_vec([20, 30, 20].to_vec()).unwrap_or(LayersDist::new()));
 
     let mut borders = LayersBorder::new();
-    let _ = borders.set_border_deviation(5.0);
-    let _ = borders.set_border_max_step(Some(1));
+    borders.set_border_deviation(5.0).unwrap();
+    borders.set_border_max_step(Some(1));
     // borders.set_border_mod_func(Some(_test_function));
     params.set_layers_border(borders);
 

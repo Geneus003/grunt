@@ -20,4 +20,6 @@ pub struct Params3D {
     // Optional params to reduce generation time
     model_needed: bool,
     mask_needed: bool,
+    // Depth scaling
+    depth_scale: f32,
 }

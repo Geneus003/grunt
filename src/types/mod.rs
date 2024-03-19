@@ -15,6 +15,7 @@ pub struct Axis {
     end: f32,
     step: Option<f32>,
     axis: Vec<f32>,
+    axis_scale: f32
 }
 
 #[derive(Debug, Clone, Deserialize, Serialize)]

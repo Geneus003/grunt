@@ -49,8 +49,12 @@ class ViewerEngine:
         self.output.copy_from(mesh)
 
 def main():
-    model_file = open("../my_model.json")
+    try:
+        model_file = open("../my_model.json")
+    except FileNotFoundError:
+         model_file = open("./my_model.json")
     # model_file = open("../target/release/my_model.json")
+    print("loading", model_file)
     model_file = json.load(model_file)
 
     model = []
