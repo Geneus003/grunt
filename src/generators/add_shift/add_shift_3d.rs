@@ -80,10 +80,6 @@ pub fn add_3d(params: &Params3D, borders: &mut Vec<Vec<Vec<i32>>>, shift_num: us
             state += if (*y).round() <= y_line_y_point.round() { 1 } else { 3 };
             state += if (*x).round() <= x_line_x_point.round() { 0 } else { 1 };
 
-            // if x_num == 4 || y_num == 4 {
-            //     println!("{y}, {x}, {y_line_y_point}, {x_line_x_point}, {state}")
-            // }
-
             match shift_type {
                 ShiftTypes::InnerLift | ShiftTypes::InnerDescent => if state != target_state { continue; },
                 ShiftTypes::OuterLift | ShiftTypes::OuterDescent => if state == target_state { continue; },
@@ -96,10 +92,6 @@ pub fn add_3d(params: &Params3D, borders: &mut Vec<Vec<Vec<i32>>>, shift_num: us
             };
 
             let slice_depth = ((now_shift_angle_z_tan * minimal_len).round() as i32).abs();
-
-            // if x_num == 3 || y_num == 3 {
-            //     println!("{slice_depth}")
-            // }
 
             for z in 0..borders.len() {
                 let now_border = &mut borders[z][y_num][x_num];

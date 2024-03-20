@@ -28,8 +28,8 @@ fn main() {
     shift.set_angle_x(90.0).unwrap();
     shift.set_angle_z(90.0).unwrap();
     shift.set_shift_force(2);
-    shift.set_shift_type(shifts::ShiftTypes::InnerLift);
-    shift.set_main_region(1).unwrap();
+    shift.set_shift_type(shifts::ShiftTypes::InnerDescent);
+    shift.set_main_region(4).unwrap();
     params.add_shift(shift);
 
     let model = generate_3d(params).unwrap();

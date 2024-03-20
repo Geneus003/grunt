@@ -14,6 +14,8 @@ path = "src/lib.rs"
 [examples]
 inner_lift_cross = "./examples/inner_lift_cross.rs"
 outer_lift_cross = "./examples/outer_lift_cross.rs"
+inner_descent_cross = "./examples/inner_descent_cross.rs"
+outer_descent_cross = "./examples/outer_descent_cross.rs"
 
 [dependencies]
 env_logger = "0.11.0"
