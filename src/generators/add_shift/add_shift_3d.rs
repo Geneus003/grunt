@@ -77,8 +77,8 @@ pub fn add_3d(params: &Params3D, borders: &mut Vec<Vec<Vec<i32>>>, shift_num: us
             let y_line_y_point = y_line_y_points[x_num];
             let x_line_x_point = x_line_x_points[y_num];
 
-            state += if (*y).round() <= y_line_y_point.round() { 1 } else { 3 };
-            state += if (*x).round() <= x_line_x_point.round() { 0 } else { 1 };
+            state += if *y <= y_line_y_point { 1 } else { 3 };
+            state += if *x <= x_line_x_point { 0 } else { 1 };
 
             match shift_type {
                 ShiftTypes::InnerLift | ShiftTypes::InnerDescent => if state != target_state { continue; },
