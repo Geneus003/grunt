@@ -1,5 +1,5 @@
 use generators::generate_3d;
-use types::{Axis, LayersDist, LayersBorder, LayersFill};
+use types::{Axis, LayersDist, LayersBorder, LayersFill, AxisExportType};
 use types::shifts::Shift3D;
 
 pub mod generators;
@@ -84,7 +84,9 @@ fn main() {
     use std::time::Instant;
     let now = Instant::now();
 
-    model.export_model_num("my_model", true, true, true, true).unwrap();
+    let save_state = vec!["params", "borders", "model", "model_mask"];
+    let axis_export = vec![AxisExportType::IsNum, AxisExportType::IsNum, AxisExportType::IsNum];
+    model.export_model("my_model", &save_state, &axis_export).unwrap();
 
     println!("{:?}", model.get_by_num(0, 0));
 

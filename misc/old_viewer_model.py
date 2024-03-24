@@ -9,9 +9,9 @@ def main():
     model = []
     for i, e in enumerate(model_file["model"]):
         model.append([])
-        for j, ee in enumerate(e[f"depth_{i}"]):
+        for j, ee in enumerate(e[f"de{i}"]):
             model[-1].append([])
-            for k in ee[f"y_{j}"]:
+            for k in ee[f"y{j}"]:
                 model[-1][-1].append(int(k))
 
     model = np.array(model)

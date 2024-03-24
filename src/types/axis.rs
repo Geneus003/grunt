@@ -7,7 +7,6 @@ impl Axis {
             end: 100.0,
             step: Some(1.0),
             axis: Axis::calculate_axis(0.0, 100.0, 1.0),
-            axis_scale: 1.0,
         }
     }
 
@@ -25,7 +24,6 @@ impl Axis {
             end,
             step,
             axis: Axis::calculate_axis(start, end, new_step),
-            axis_scale: 1.0,
         }
     }
 
@@ -38,7 +36,6 @@ impl Axis {
             end: axis[axis.len() - 1],
             step: None,
             axis,
-            axis_scale: 1.0,
         })
     }
 
@@ -59,13 +56,5 @@ impl Axis {
 
     pub fn get_axis_len(self: &Self) -> usize {
         self.axis.len()
-    }
-
-    pub fn set_axis_scale(self: &mut Self, axis_scale: f32) {
-        self.axis_scale = axis_scale
-    }
-
-    pub fn axis_scale(self: &mut Self) -> f32 {
-        self.axis_scale
     }
 }

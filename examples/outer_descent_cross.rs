@@ -34,7 +34,9 @@ fn main() {
 
     let model = generate_3d(params).unwrap();
 
-    model.export_model_num("my_model", true, true, true, true).unwrap();
+    let save_state = vec!["params", "borders", "model", "model_mask"];
+    let axis_export = vec![AxisExportType::IsNum, AxisExportType::IsNum, AxisExportType::IsNum];
+    model.export_model("my_model", &save_state, &axis_export).unwrap();
 
     println!("generation succesfull, check my_model.json")
 }

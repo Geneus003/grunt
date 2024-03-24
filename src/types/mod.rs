@@ -9,13 +9,18 @@ pub mod models;
 pub mod shifts;
 pub mod generation_params;
 
+pub enum AxisExportType {
+    IsNum,
+    Scale(f32),
+    CustomAxis(Vec<f32>),
+}
+
 #[derive(Debug, Clone, Deserialize, Serialize)]
 pub struct Axis {
     start: f32,
     end: f32,
     step: Option<f32>,
     axis: Vec<f32>,
-    axis_scale: f32
 }
 
 #[derive(Debug, Clone, Deserialize, Serialize)]
