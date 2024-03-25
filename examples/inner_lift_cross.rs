@@ -10,7 +10,7 @@ fn main() {
     params.set_x_axis(Axis::generate_axis(0.0, 4.5, Some(0.5)));
     params.set_y_axis(Axis::generate_axis(0.0, 4.5, Some(0.5)));
 
-    params.set_layers_dist(LayersDist::create_from_vec([2, 3, 2].to_vec()).unwrap_or(LayersDist::new()));
+    params.set_layers_dist(LayersDist::create_from_vec([2, 3, 4].to_vec()).unwrap_or(LayersDist::new()));
 
     let mut borders = LayersBorder::new();
     borders.set_border_deviation(0.0).unwrap();
@@ -35,7 +35,7 @@ fn main() {
     let model = generate_3d(params).unwrap();
 
     let save_state = vec!["params", "borders", "model", "model_mask"];
-    let axis_export = vec![AxisExportType::IsNum, AxisExportType::IsNum, AxisExportType::IsNum];
+    let axis_export = vec![AxisExportType::Scale(1.0), AxisExportType::Scale(2.0), AxisExportType::CustomAxis(vec![50.0, 100.0])];
     model.export_model("my_model", &save_state, &axis_export).unwrap();
 
     println!("generation succesfull, check my_model.json")

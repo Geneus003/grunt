@@ -31,6 +31,8 @@ impl Model3D {
             axes_size[2] = self.model.len()
         } else if self.model_mask.len() != 0 {
             axes_size[2] = self.model_mask.len()
+        } else {
+            axes_size[2] = get_max_depth(&self.borders) as usize
         }
         export_true_axes(&mut result, &self.params, axes_export, axes_size);
 
@@ -145,6 +147,9 @@ fn export_params(result: &mut String, params: &Params3D) {
 
 fn export_true_axes(result: &mut String, params: &Params3D, axes_export: &Vec<AxisExportType>, model_size: [usize; 3]) {
     let mut now_ax: &Vec<f32>;
+    let z_ax = if matches!(axes_export[2], AxisExportType::Scale(_)) {
+        (0..model_size[2]+1).map(|i| i as f32).collect()
+    } else { vec![] };
     for (export_id, export_type) in axes_export.iter().enumerate() {
         match export_id {
             0 => {
@@ -157,11 +162,10 @@ fn export_true_axes(result: &mut String, params: &Params3D, axes_export: &Vec<Ax
             },
             2 => {
                 *result += "\"z_ax\":[";
-                now_ax = params.x_axis().get_axis();
+                now_ax = &z_ax 
             },
             _ => unreachable!("Error while exporting")
         }
-
 
         match export_type {
             AxisExportType::IsNum => export_num_ax(result, model_size[export_id]),
@@ -202,4 +206,18 @@ fn export_custom_ax(result: &mut String, new_axis: &Vec<f32>) {
         *result += ",";
     }
     *result += &(new_axis[new_axis.len()-1]).to_string();
+}
+
+fn get_max_depth(model: &Vec<Vec<Vec<i32>>>) -> i32 {
+    let mut max_elem = 0;
+    for y_cord in model {
+        for x_cord in y_cord {
+            for depth in x_cord {
+                if *depth > max_elem {
+                    max_elem = *depth;
+                } 
+            }
+        } }
+
+    max_elem
 }

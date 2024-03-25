@@ -3,11 +3,12 @@ import json
 import pyvista as pv
 
 class ViewerEngine:
-    def __init__(self, mesh, model, x_axis, y_axis):
+    def __init__(self, mesh, model, x_axis, y_axis, z_axis):
         self.model = model
         self.output = mesh  # Expected PyVista mesh type
         self.x_axis = x_axis
         self.y_axis = y_axis
+        self.z_axis = z_axis
         self.kwargs = {
             'z_axis': len(model),
             'y_axis': len(model[0]),
@@ -42,11 +43,13 @@ class ViewerEngine:
                 return find_elem(value, self.y_axis)
             case "x_axis":
                 return find_elem(value, self.x_axis)
+            case "z_axis":
+                return find_elem(value, self.z_axis)
         return value
 
 
     def update_z_axis(self, value):
-        new_model = self.model[:int(value)]
+        new_model = self.model[:self.value_to_num(value, "z_axis")]
         mesh = pv.ImageData()
         mesh.dimensions = np.array((len(new_model[0][0]),len(new_model[0]), len(new_model))) + 1
         mesh.origin = (0, 0, 0)
@@ -88,13 +91,10 @@ def main():
             model[-1].append([])
             for k in ee[f"y{j}"]:
                 model[-1][-1].append(int(k))
-    x_axis = []
-    for _, e in enumerate(model_file["params3D"]["x_ax"]["axis"]):
-        x_axis.append(float(e))
 
-    y_axis = []
-    for _, e in enumerate(model_file["params3D"]["y_ax"]["axis"]):
-        y_axis.append(float(e))
+    x_axis = [float(i) for i in model_file["output_axes"]["x_ax"]]
+    y_axis = [float(i) for i in model_file["output_axes"]["y_ax"]]
+    z_axis = [float(i) for i in model_file["output_axes"]["z_ax"]]
 
     model = np.array(model[::-1])
     
@@ -108,9 +108,9 @@ def main():
 
     p = pv.Plotter()
     p.add_mesh(mesh, opacity=1, show_edges=True)
-    p.show_bounds(axes_ranges=[x_axis[0], x_axis[-1], y_axis[0], y_axis[-1], 1.0, 7.0])
+    p.show_bounds(axes_ranges=[x_axis[0], x_axis[-1], y_axis[0], y_axis[-1], z_axis[0], z_axis[-1]])
 
-    engine = ViewerEngine(mesh, model.copy(), x_axis, y_axis)
+    engine = ViewerEngine(mesh, model.copy(), x_axis, y_axis, z_axis)
 
     p.add_slider_widget(
         callback=lambda value: engine('z_axis', value),
