@@ -23,9 +23,6 @@ pub fn generate_3d(params: Params3D) -> Result<Model3D, &'static str> {
         }
     }
 
-    use std::time::Instant;
-    let now = Instant::now();
-
     let (model, model_mask, fill_values) = if params.model_needed() || params.mask_needed() {
         fill::fill_3d(&params, &borders)
     } else {
@@ -33,12 +30,6 @@ pub fn generate_3d(params: Params3D) -> Result<Model3D, &'static str> {
     };
 
     let final_model = Model3D::new(model, model_mask, borders, fill_values, params);
-
-    let elapsed = now.elapsed();
-
-    if !(cfg!(test)) {
-        println!("Elapsed: {:.2?}", elapsed);
-    }
 
     Ok(final_model)
 }

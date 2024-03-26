@@ -1,3 +1,5 @@
+workspace = { members = ["benchmarks"] }
+
 [package]
 name = "grunt"
 version = "0.2.0"
