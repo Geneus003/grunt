@@ -22,7 +22,7 @@ pub fn bench(runs_difficulty: usize, run_tries: usize) -> Duration {
             let now_border_deviation = border_deviation[run % border_deviation.len()];
             let now_max_step = max_step[run % max_step.len()];
 
-            println!("\t\tTest №{}, axis: {now_axis_size}, border_deviation: {now_border_deviation}, max_step: {:?}", run, now_max_step);
+            println!("\t\tTest №{}, axis: {now_axis_size}, border_deviation: {now_border_deviation}, max_step: {:?}", run+1, now_max_step);
 
             let mut params = generation_params::Params3D::new();
 
