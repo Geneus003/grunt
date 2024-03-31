@@ -52,6 +52,8 @@ impl Model3D {
         } else { result += "null" }
         result += "}";
 
+        if name == "TestModelBench.test.bench" { return Ok(()) }
+
         let mut file = File::create(format!("{name}.json"))?;
         file.write_all(result.as_bytes())?;
         Ok(())

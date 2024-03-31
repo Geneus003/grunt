@@ -45,12 +45,13 @@ pub fn bench(runs_difficulty: usize, run_tries: usize) -> (Duration, Duration, D
 
     for run_try in 0..run_tries {
         println!("\tRun №{}", run_try+1);
-        let now = Instant::now();
 
         let mut all_elapsed: Duration = Duration::default();
         let mut all_elapsed_full: Duration = Duration::default();
         let mut all_elapsed_mask: Duration = Duration::default();
         let mut all_elapsed_model: Duration = Duration::default();
+
+        let now = Instant::now();
 
         for run in 0..runs_difficulty {
             let now_params = diff_params[run % diff_params.len()].clone();
@@ -82,7 +83,8 @@ pub fn bench(runs_difficulty: usize, run_tries: usize) -> (Duration, Duration, D
             all_elapsed_mask += now_test_model_mask;
             all_elapsed_model += now_test_model_model;
 
-            println!("\t\tTest elapsed: {:.2?}, Full model: {:.2?}, Mask only: {:.2?}, Model only: {:.2?}", elapsed_test, now_test_model_full, now_test_model_mask, now_test_model_model)
+            println!("\t\tTest elapsed: {:.2?}, Full model: {:.2?}, Mask only: {:.2?}, Model only: {:.2?}", 
+                elapsed_test, now_test_model_full, now_test_model_mask, now_test_model_model)
         }
         full_elapsed += all_elapsed;
         full_elapsed_full += all_elapsed_full;
@@ -90,7 +92,8 @@ pub fn bench(runs_difficulty: usize, run_tries: usize) -> (Duration, Duration, D
         full_elapsed_model += all_elapsed_model;
 
         let elapsed = now.elapsed();
-        println!("\tRun elapsed: {:.2?}, Full model: {:.2?}, Mask only: {:.2?}, Model only: {:.2?}", elapsed, all_elapsed_full, all_elapsed_mask, all_elapsed_model);
+        println!("\tRun elapsed: {:.2?}, Full model: {:.2?}, Mask only: {:.2?}, Model only: {:.2?}",
+            elapsed, all_elapsed_full, all_elapsed_mask, all_elapsed_model);
     }
 
     full_elapsed /= run_tries as u32;

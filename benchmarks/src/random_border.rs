@@ -9,7 +9,7 @@ pub fn bench(runs_difficulty: usize, run_tries: usize) -> Duration {
     let border_deviation = [5., 10.];
     let max_step = [Some(1), Some(2), Some(3), Some(4), Some(5), None];
 
-    let mut all_elapsed: Vec<Duration> = vec![];
+    let mut all_elapsed: Duration = Duration::default();
 
     for run_try in 0..run_tries {
         println!("\tRun №{}", run_try+1);
@@ -22,7 +22,8 @@ pub fn bench(runs_difficulty: usize, run_tries: usize) -> Duration {
             let now_border_deviation = border_deviation[run % border_deviation.len()];
             let now_max_step = max_step[run % max_step.len()];
 
-            println!("\t\tTest №{}, axis: {now_axis_size}, border_deviation: {now_border_deviation}, max_step: {:?}", run+1, now_max_step);
+            println!("\t\tTest №{}, axis: {now_axis_size}, border_deviation: {now_border_deviation}, max_step: {:?}",
+                run+1, now_max_step);
 
             let mut params = generation_params::Params3D::new();
 
@@ -48,14 +49,9 @@ pub fn bench(runs_difficulty: usize, run_tries: usize) -> Duration {
 
         let elapsed = now.elapsed();
         println!("\tRun elapsed: {:.2?}", elapsed);
-        all_elapsed.push(elapsed);
+        all_elapsed += elapsed;
     }
     println!("Random border benchmark completed succesfully");
 
-    let mut sum_elapsed: Duration = Duration::default();
-    for i in &all_elapsed {
-        sum_elapsed += *i;
-    }
-
-    sum_elapsed / all_elapsed.len().try_into().unwrap()
+    all_elapsed / run_tries as u32 
 }
