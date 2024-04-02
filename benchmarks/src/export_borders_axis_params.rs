@@ -4,7 +4,7 @@ use grunt::types::*;
 use grunt::generators::generate_3d;
 
 pub fn bench(runs_difficulty: usize, run_tries: usize) -> (Duration, Duration, Duration) {
-    println!("Export borders&Axis&Params benchmark...");
+    println!("Export Borders&Axis&Params benchmark...");
     let axis_size = [100., 2000., 5000., 7500., 10000., 15000.];
     let border_deviation = [5., 10.];
     let max_step = [Some(1), Some(2), Some(3), Some(4), Some(5), None];
@@ -13,7 +13,7 @@ pub fn bench(runs_difficulty: usize, run_tries: usize) -> (Duration, Duration, D
     let save_state = vec!["params", "borders"];
 
     let mut diff_params: Vec<generation_params::Params3D> = Vec::new();
-    let num_exp: Vec<AxisExportType> = vec![AxisExportType::IsNum, AxisExportType::IsNum, AxisExportType::IsNum];
+    let num_exp: Vec<AxisExportType> = (0..3).map(|_| AxisExportType::IsNum).collect();
     let scale_exp: Vec<AxisExportType> = 
         vec![AxisExportType::Scale(1.0), AxisExportType::Scale(2.5), AxisExportType::Scale(0.5)];
 

@@ -52,5 +52,4 @@ pub struct LayersFill {
     values_deviation: Option<f32>,
     values_smooth: Option<u32>,
     values_offset: Option<u32>,
-    is_mask_needed: bool,
 }

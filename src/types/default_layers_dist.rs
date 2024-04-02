@@ -76,7 +76,7 @@ impl LayersDist {
         }
     }
 
-    pub fn generate_layers_dist_vec(
+pub fn generate_layers_dist_vec(
         layers_num: u8,
         min_layer_size: i32,
         max_layer_size: i32,
@@ -190,6 +190,18 @@ impl LayersDist {
 impl LayersDist {
     pub fn get_full_data(self: &Self) -> (u8, i32, i32, i32, &Vec<i32>) {
         (self.layers_num, self.max_layer_size, self.min_layer_size, self.layers_sum, &self.layers_dist)
+    }
+
+    pub fn get_layers_num(self: &Self) -> u8 {
+        self.layers_num
+    }
+
+    pub fn get_layer_max_min_sizes(self: &Self) -> (i32, i32) {
+        (self.max_layer_size, self.min_layer_size)
+    }
+
+    pub fn get_layers_sum(self: &Self) -> i32 {
+        self.layers_sum
     }
 
     pub fn get_layers_dist(self: &Self) -> &Vec<i32> {
