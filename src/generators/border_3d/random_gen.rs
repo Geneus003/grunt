@@ -17,10 +17,10 @@ pub fn random_layer_creation_3d(
 
     // Generating limits of generation (max and min heights of layer)
     let upper_limit: i32 = if params.layers_border().border_deviation() >= 1.0 {
-        default_value + params.layers_border().border_deviation() as i32
+        default_value + params.layers_border().border_deviation() as i32 
     } else {
         let model_size_value = *params.layers_dist().get_layers_dist().last().unwrap_or(&0);
-        default_value + (params.layers_border().border_deviation() * model_size_value as f32) as i32
+        default_value + (params.layers_border().border_deviation() * model_size_value as f32) as i32 
     };
 
     let mut lower_limit: i32 = if params.layers_border().border_deviation() >= 1.0 {

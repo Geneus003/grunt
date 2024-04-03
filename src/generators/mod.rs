@@ -33,14 +33,3 @@ pub fn generate_3d(params: Params3D) -> Result<Model3D, &'static str> {
 
     Ok(final_model)
 }
-
-// borders print
-// #[cfg(debug_assertions)]
-// if !(cfg!(test)) {
-//     for i in &borders {
-//         println!("\n\n");
-//         for j in i {
-//             println!("{:?}", j)
-//         }
-//     }
-// }

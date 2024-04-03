@@ -185,6 +185,7 @@ fn export_true_axes(result: &mut String, params: &Params3D, axes_export: &Vec<Ax
     *result += "}"
 }
 
+// 3 functions lower created to modify ONLY axis
 fn export_num_ax(result: &mut String, axes_size: usize) {
     let mut buf = [0u8; 20];
     for i in 0..axes_size {
