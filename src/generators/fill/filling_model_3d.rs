@@ -1,5 +1,9 @@
+#[cfg(debug_assertions)]
 use log::trace;
-use rand::Rng;
+
+use rand::distributions::Distribution;
+
+use crate::generators::fill::GenerationTypes;
 
 fn generate_consts(borders: &Vec<Vec<Vec<i32>>>) -> (i32, usize, usize, usize) {
     let mut max_elem = 0;
@@ -17,7 +21,7 @@ fn generate_consts(borders: &Vec<Vec<Vec<i32>>>) -> (i32, usize, usize, usize) {
 
 pub fn create_full_model_with_mask(
     borders: &Vec<Vec<Vec<i32>>>,
-    fill_values: &Vec<Vec<i32>>
+    fill_values: &Vec<GenerationTypes>
 ) -> (Vec<Vec<Vec<i32>>>, Vec<Vec<Vec<u8>>>) {
     #[cfg(debug_assertions)]
     trace!("Starting filling model: model and mask");
@@ -54,7 +58,10 @@ pub fn create_full_model_with_mask(
                     }
                 }
 
-                now_y_line.push(rng.gen_range(fill_values[now_index][0]..fill_values[now_index][1] + 1));
+                now_y_line.push(match fill_values[now_index] {
+                    GenerationTypes::GenerationExact(value) => value,
+                    GenerationTypes::GenerationRange(generation_range) => generation_range.sample(&mut rng)
+                });
                 now_y_line_mask.push(now_index as u8);
             }
 
@@ -74,7 +81,7 @@ pub fn create_full_model_with_mask(
 
 pub fn create_full_model_without_mask(
     borders: &Vec<Vec<Vec<i32>>>,
-    fill_values: &Vec<Vec<i32>>
+    fill_values: &Vec<GenerationTypes>
 ) -> Vec<Vec<Vec<i32>>> {
     #[cfg(debug_assertions)]
     trace!("Starting filling only model");
@@ -107,7 +114,11 @@ pub fn create_full_model_without_mask(
                         }
                     }
                 }
-                now_y_line.push(rng.gen_range(fill_values[now_index][0]..fill_values[now_index][1] + 1));
+                now_y_line.push(match fill_values[now_index] {
+                    GenerationTypes::GenerationExact(value) => value,
+                    GenerationTypes::GenerationRange(generation_range) => generation_range.sample(&mut rng)
+
+                });
             }
 
             now_depth.push(now_y_line);

@@ -1,3 +1,4 @@
+#[cfg(debug_assertions)]
 use log::trace;
 
 use crate::types::generation_params::Params3D;

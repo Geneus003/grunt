@@ -1,3 +1,4 @@
+#[cfg(debug_assertions)]
 use log::trace;
 
 use crate::types::generation_params::Params3D;
@@ -19,6 +20,7 @@ pub fn add_3d(params: &Params3D, borders: &mut Vec<Vec<Vec<i32>>>, shift_num: us
     let shift_type = now_shift.shift_type();
     let now_shift_angle_z = now_shift.angle_z();
 
+    #[cfg(debug_assertions)]
     let (crossed_point_x, crossed_point_y) = {
         let y_line_coef = 1.0 / ((180.0 - now_shift_angle_y).to_radians().tan());
         let x_line_coef = (180.0 - now_shift_angle_x).to_radians().tan();

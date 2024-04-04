@@ -1,4 +1,6 @@
 use rand::Rng;
+
+#[cfg(debug_assertions)]
 use log::{trace, error};
 
 use crate::types::generation_params::Params3D;

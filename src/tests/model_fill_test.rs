@@ -1,6 +1,7 @@
 use rand::Rng;
 
 use crate::generators::fill::filling_model_3d::*;
+use crate::generators::fill::GenerationTypes;
 
 #[test]
 fn fill_model_and_mask_tests() {
@@ -30,7 +31,19 @@ fn fill_model_and_mask_tests() {
             }
         }
 
-        let filling_values = vec![vec![1, 1], vec![2, 2], vec![3, 3], vec![4, 4], vec![5, 5], vec![6, 6], vec![7, 7], vec![8, 8], vec![9, 9], vec![10, 10], vec![11, 11]];
+        let filling_values = vec![
+            GenerationTypes::GenerationExact(1),
+            GenerationTypes::GenerationExact(2),
+            GenerationTypes::GenerationExact(3),
+            GenerationTypes::GenerationExact(4),
+            GenerationTypes::GenerationExact(5),
+            GenerationTypes::GenerationExact(6),
+            GenerationTypes::GenerationExact(7),
+            GenerationTypes::GenerationExact(8),
+            GenerationTypes::GenerationExact(9),
+            GenerationTypes::GenerationExact(10),
+            GenerationTypes::GenerationExact(11),
+        ];
 
         let (model, model_mask) = create_full_model_with_mask(&borders, &filling_values);
 

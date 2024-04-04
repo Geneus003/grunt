@@ -5,7 +5,7 @@ Characters in line hardlimit - 120
 
 ## How to install
 1) Clone repo
-2) Add to your project using local cargo(path to local lib) package
+2) Add to your project using local cargo package (path to local lib)
 
 ## How to use
 

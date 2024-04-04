@@ -1,9 +1,17 @@
-use rand::Rng;
+use rand::distributions::{Distribution, Uniform};
+
+#[cfg(debug_assertions)]
 use log::trace;
 
 use crate::types::generation_params::Params3D;
 
 pub mod filling_model_3d;
+
+#[derive(Debug, Clone)]
+pub enum GenerationTypes {
+    GenerationRange(Uniform<i32>),
+    GenerationExact(i32),
+}
 
 pub fn fill_3d(
     params: &Params3D,
@@ -12,28 +20,38 @@ pub fn fill_3d(
     #[cfg(debug_assertions)]
     trace!("Preparing for model fill");
 
-    let mut fill_values = params.layers_fill().values_preset().clone();
+    let fill_values = params.layers_fill().values_preset().clone();
     let deviation = params.layers_fill().values_deviation();
     let model_size = *params.layers_dist().get_layers_dist().last().unwrap_or(&0);
 
-    // Recalculating fill_values using deviation
-    for fill_value in &mut fill_values {
-        if fill_value.len() == 2 {
-            continue; }
-        if deviation.is_some() {
-            let mut deviation = deviation.unwrap();
-            if deviation < 1.0 {
-                deviation = deviation * model_size as f32;
-            }
-            let deviation = deviation as i32;
-            fill_value.push(fill_value[0] + deviation);
-            fill_value[0] = if deviation > fill_value[0] {
-                0
-            } else {
-                fill_value[0] - deviation
-            };
-        } else {
-            fill_value.push(fill_value[0]);
+    let mut fill_values_gen_type: Vec<GenerationTypes> = Vec::with_capacity(fill_values.len());
+
+    for fill_value in &fill_values {
+        match fill_value.len() {
+            1 => fill_values_gen_type.push(
+                match deviation {
+                    Some(dev_cof) => {
+                        let deviation = if dev_cof < 1.0 {
+                            (dev_cof * model_size as f32) as i32
+                        } else {
+                            dev_cof as i32
+                        };
+
+                        let first_dev = if deviation > fill_value[0] {
+                            0
+                        } else {
+                            fill_value[0] - deviation
+                        };
+
+                        GenerationTypes::GenerationRange(Uniform::from(first_dev..deviation+fill_value[0]))
+                    },
+                    None => GenerationTypes::GenerationExact(fill_value[0])
+                }
+            ),
+            2 => fill_values_gen_type.push(GenerationTypes::GenerationRange(
+                Uniform::from(fill_value[0]..fill_value[1]+1)
+            )),
+            _ => unreachable!()
         }
     }
 
@@ -41,24 +59,32 @@ pub fn fill_3d(
     trace!("Filling values for layers were recalculated, using deviation: {:?}", fill_values);
 
     // Reodering and adding values to Vec for making generation after easier
-    let mut new_fill_values: Vec<Vec<i32>> = Vec::with_capacity(borders.len());
 
+    let mut new_fill_values: Vec<GenerationTypes> = Vec::with_capacity(fill_values.len());
     if params.layers_fill().is_preset_ordered() {
         for i in 0..borders.len() {
-            new_fill_values.push(fill_values[i % fill_values.len()].clone())
+            new_fill_values.push(fill_values_gen_type[i % fill_values.len()].clone())
         }
     } else {
-        let mut ran = rand::thread_rng();
+        let mut rng = rand::thread_rng();
 
-        let mut last_index = ran.gen_range(0..fill_values.len());
-        let mut new_index = ran.gen_range(0..fill_values.len());
+        let possible_index = Uniform::from(0..fill_values_gen_type.len());
 
-        while new_fill_values.len() != borders.len() {
-            if last_index != new_index {
-                new_fill_values.push(fill_values[new_index].clone());
-                last_index = new_index;
+        let mut last_index = possible_index.sample(&mut rng); 
+        let mut new_index = possible_index.sample(&mut rng); 
+        
+        if fill_values_gen_type.len() > 1 {
+            while new_fill_values.len() != borders.len() {
+                if last_index != new_index {
+                    new_fill_values.push(fill_values_gen_type[new_index].clone());
+                    last_index = new_index;
+                }
+                new_index = possible_index.sample(&mut rng);
             }
-            new_index = ran.gen_range(0..fill_values.len());
+        } else {
+            for _ in 0..borders.len() {
+                new_fill_values.push(fill_values_gen_type[0].clone())
+            }
         }
     }
 

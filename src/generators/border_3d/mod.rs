@@ -1,3 +1,4 @@
+#[cfg(debug_assertions)]
 use log::{trace, info, error};
 
 use crate::types::generation_params::Params3D;
@@ -58,6 +59,7 @@ pub fn validate_layer(params: &Params3D, layer: &Vec<Vec<i32>>, now_layer_id: us
     }
 
     if err_elems != 0 {
+        #[cfg(debug_assertions)]
         error!("There are {err_elems} wrong generated elements in {now_layer_id} layer");
         return Err("Errors while model validatiion");
     }
