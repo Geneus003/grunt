@@ -25,6 +25,7 @@ pub fn fill_3d(
     let model_size = *params.layers_dist().get_layers_dist().last().unwrap_or(&0);
 
     let mut fill_values_gen_type: Vec<GenerationTypes> = Vec::with_capacity(fill_values.len());
+    let mut export_fill_values: Vec<Vec<i32>> = Vec::with_capacity(fill_values.len());
 
     for fill_value in &fill_values {
         match fill_value.len() {
@@ -43,14 +44,21 @@ pub fn fill_3d(
                             fill_value[0] - deviation
                         };
 
-                        GenerationTypes::GenerationRange(Uniform::from(first_dev..deviation+fill_value[0]))
+                        export_fill_values.push(vec![first_dev, fill_value[0]+deviation]);
+                        GenerationTypes::GenerationRange(Uniform::from(first_dev..fill_value[0]+deviation+1))
                     },
-                    None => GenerationTypes::GenerationExact(fill_value[0])
+                    None => {
+                        export_fill_values.push(vec![fill_value[0], fill_value[0]]);
+                        GenerationTypes::GenerationExact(fill_value[0])
+                    }
                 }
             ),
-            2 => fill_values_gen_type.push(GenerationTypes::GenerationRange(
-                Uniform::from(fill_value[0]..fill_value[1]+1)
-            )),
+            2 => {
+                export_fill_values.push(vec![fill_value[0], fill_value[1]]);
+                fill_values_gen_type.push(GenerationTypes::GenerationRange(
+                    Uniform::from(fill_value[0]..fill_value[1]+1)
+                ));
+            },
             _ => unreachable!()
         }
     }
@@ -59,11 +67,13 @@ pub fn fill_3d(
     trace!("Filling values for layers were recalculated, using deviation: {:?}", fill_values);
 
     // Reodering and adding values to Vec for making generation after easier
+    let mut new_fill_values: Vec<GenerationTypes> = Vec::with_capacity(borders.len());
+    let mut new_export_fill_values: Vec<Vec<i32>> = Vec::with_capacity(borders.len());
 
-    let mut new_fill_values: Vec<GenerationTypes> = Vec::with_capacity(fill_values.len());
     if params.layers_fill().is_preset_ordered() {
         for i in 0..borders.len() {
-            new_fill_values.push(fill_values_gen_type[i % fill_values.len()].clone())
+            new_fill_values.push(fill_values_gen_type[i % fill_values.len()].clone());
+            new_export_fill_values.push(export_fill_values[i % fill_values.len()].clone());
         }
     } else {
         let mut rng = rand::thread_rng();
@@ -77,13 +87,15 @@ pub fn fill_3d(
             while new_fill_values.len() != borders.len() {
                 if last_index != new_index {
                     new_fill_values.push(fill_values_gen_type[new_index].clone());
+                    new_export_fill_values.push(export_fill_values[new_index].clone());
                     last_index = new_index;
                 }
                 new_index = possible_index.sample(&mut rng);
             }
         } else {
             for _ in 0..borders.len() {
-                new_fill_values.push(fill_values_gen_type[0].clone())
+                new_fill_values.push(fill_values_gen_type[0].clone());
+                new_export_fill_values.push(export_fill_values[0].clone());
             }
         }
     }
@@ -99,5 +111,5 @@ pub fn fill_3d(
         (Vec::new(), filling_model_3d::create_only_mask(borders))
     };
 
-    (model, model_mask, fill_values)
+    (model, model_mask, new_export_fill_values)
 }

@@ -10,6 +10,7 @@ pub fn bench(runs_difficulty: usize, run_tries: usize) -> (Duration, Duration, D
     let border_deviation = [5., 10.];
     let max_step = [Some(3), Some(5)];
     let layers_dist = [vec![20, 30, 20], vec![200, 300, 200], vec![40, 60, 80, 3000, 21000], vec![2000, 3000, 2000]];
+    let fill_preset = vec![vec![10, 20], vec![100, 200], vec![300, 300], vec![400, 800]];
 
     let mut diff_params: Vec<generation_params::Params3D> = Vec::new();
 
@@ -31,6 +32,11 @@ pub fn bench(runs_difficulty: usize, run_tries: usize) -> (Duration, Duration, D
         borders.set_border_max_step(now_max_step);
 
         params.set_layers_border(borders);
+
+        let mut fill = LayersFill::new();
+        fill.set_values_preset(fill_preset.clone()).unwrap();
+
+        params.set_layers_fill(fill);
 
         params.set_mask_needed(true);
         params.set_model_needed(true);

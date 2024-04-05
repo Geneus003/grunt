@@ -1,4 +1,5 @@
 use rand::Rng;
+use rand::distributions::Uniform;
 
 use crate::generators::fill::filling_model_3d::*;
 use crate::generators::fill::GenerationTypes;
@@ -40,9 +41,8 @@ fn fill_model_and_mask_tests() {
             GenerationTypes::GenerationExact(6),
             GenerationTypes::GenerationExact(7),
             GenerationTypes::GenerationExact(8),
-            GenerationTypes::GenerationExact(9),
-            GenerationTypes::GenerationExact(10),
-            GenerationTypes::GenerationExact(11),
+            GenerationTypes::GenerationRange(Uniform::from(9..10)),
+            GenerationTypes::GenerationRange(Uniform::from(11..255)),
         ];
 
         let (model, model_mask) = create_full_model_with_mask(&borders, &filling_values);
@@ -59,12 +59,17 @@ fn fill_model_and_mask_tests() {
             for j in 0..model[0].len() {
                 for k in 0..model[0][0].len() {
                     let model_value = model[i][j][k];
-                    
-                    if (model_value - 1) as u8 != model_mask[i][j][k] { errors += 1 }
+
+                    if model_value < 9 {
+                        if (model_value - 1) as u8 != model_mask[i][j][k] { errors += 1 }
+                    } else {
+                        if (model_value == 9 || model_value == 10) && model_mask[i][j][k] != 8 { errors += 1 } 
+                        if (model_value > 10 && model_value < 255) && model_mask[i][j][k] != 9 { errors += 1 }
+                    }
 
                     if model_mask[i][j][k] as usize == model_size - 1 { continue; }
 
-                    if borders[(model_value - 1) as usize][j][k] < i as i32 {
+                    if borders[model_mask[i][j][k] as usize][j][k] < i as i32 {
                         errors += 1;
                         break 'a
                     }

@@ -41,6 +41,11 @@ impl Model3D {
             export_model_num(&mut result, &self.borders, true)
         } else { result += "null" }
 
+        result += ",\"fill_values\":";
+        if save.contains(&"fill_values") {
+            export_model_num(&mut result, &self.borders, true)
+        } else { result += "null" }
+
         result += ",\"model\":";
         if save.contains(&"model") {
             export_model_num(&mut result, &self.model, false)
@@ -67,11 +72,7 @@ fn export_model_num(result: &mut String, model: &Vec<Vec<Vec<i32>>>, is_border: 
     for (depth_num, depth) in model.iter().enumerate() {
         *result += if is_border == true {
             "{\"bo"
-        } else {
-            "{\"de"
-        };
-
-        *result += format!("{depth_num}\":[").as_str();
+        } else { "{\"de" }; *result += format!("{depth_num}\":[").as_str();
         for (y_num, y_axis) in depth.iter().enumerate() {
             *result += "{\"y";
             *result += format!("{y_num}\":[").as_str();
