@@ -1,4 +1,4 @@
-use grunt::generators::generate_3d;
+use grunt::model3d::generate_model;
 use grunt::types::*;
 
 fn main() {
@@ -32,7 +32,7 @@ fn main() {
     shift.set_main_region(3).unwrap();
     params.add_shift(shift);
 
-    let model = generate_3d(params).unwrap();
+    let model = generate_model(params).unwrap();
 
     let save_state = vec!["params", "borders", "model", "model_mask"];
     let axis_export = vec![AxisExportType::IsNum, AxisExportType::IsNum, AxisExportType::IsNum];

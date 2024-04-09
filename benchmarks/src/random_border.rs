@@ -1,7 +1,7 @@
 use std::time::{Instant, Duration};
 
 use grunt::types::*;
-use grunt::generators::generate_3d;
+use grunt::model3d::generate_model;
 
 pub fn bench(runs_difficulty: usize, run_tries: usize) -> Duration {
     println!("Random border benchmark...");
@@ -41,7 +41,7 @@ pub fn bench(runs_difficulty: usize, run_tries: usize) -> Duration {
             params.set_mask_needed(false);
             params.set_model_needed(false);
 
-            let _ = generate_3d(params).unwrap();
+            let _ = generate_model(params).unwrap();
 
             let elapsed_test = now_test.elapsed();
             println!("\t\tTest elapsed: {:.2?}", elapsed_test)

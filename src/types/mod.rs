@@ -5,7 +5,6 @@ pub mod layers_borders_gen;
 pub mod layers_filling_gen;
 pub mod default_layers_dist;
 
-pub mod models;
 pub mod shifts;
 pub mod generation_params;
 

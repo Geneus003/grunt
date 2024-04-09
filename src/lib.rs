@@ -1,2 +1,2 @@
-pub mod generators;
 pub mod types;
+pub mod model3d;

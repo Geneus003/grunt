@@ -1,7 +1,7 @@
 use std::time::{Instant, Duration};
 
 use grunt::types::*;
-use grunt::generators::generate_3d;
+use grunt::model3d::generate_model;
 
 pub fn bench(runs_difficulty: usize, run_tries: usize) -> (Duration, Duration, Duration) {
     println!("Export Borders&Axis&Params benchmark...");
@@ -57,7 +57,7 @@ pub fn bench(runs_difficulty: usize, run_tries: usize) -> (Duration, Duration, D
             let now_borders_count = now_axis_size * now_axis_size * layers_dist[run % layers_dist.len()].len() as f32;
 
             print!("\t\tGenerating tests...");
-            let model = generate_3d(diff_params[run].clone()).unwrap();
+            let model = generate_model(diff_params[run].clone()).unwrap();
             println!(" Completed!");
 
             let now_test = Instant::now();

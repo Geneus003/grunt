@@ -2,7 +2,7 @@ use rand::Rng;
 
 use super::types::{Axis, LayersDist, LayersBorder};
 use super::types::generation_params::Params3D;
-use super::generators::border_creation::create_layers_borders_3d;
+use super::model3d::borders3d::create_layers_borders_3d;
 
 #[test]
 fn random_gen_layers_borders_tests(){

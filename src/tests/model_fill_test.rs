@@ -1,8 +1,8 @@
 use rand::Rng;
 use rand::distributions::Uniform;
 
-use crate::generators::fill::filling_model_3d::*;
-use crate::generators::fill::GenerationTypes;
+use crate::model3d::fill3d::filling_model_3d::*;
+use crate::model3d::fill3d::GenerationTypes;
 
 #[test]
 fn fill_model_and_mask_tests() {

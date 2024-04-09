@@ -1,7 +1,7 @@
 use std::time::{Instant, Duration};
 
 use grunt::types::*;
-use grunt::generators::generate_3d;
+use grunt::model3d::generate_model;
 
 pub fn bench(runs_difficulty: usize, run_tries: usize) -> (Duration, Duration, Duration, Duration) {
     println!("Model generation benchmark...");
@@ -71,15 +71,15 @@ pub fn bench(runs_difficulty: usize, run_tries: usize) -> (Duration, Duration, D
             let now_test = Instant::now();
 
             let now_test_model_full = Instant::now();
-            let _ = generate_3d(now_params);
+            let _ = generate_model(now_params);
             let now_test_model_full = now_test_model_full.elapsed();
 
             let now_test_model_mask = Instant::now();
-            let _ = generate_3d(now_params_mask);
+            let _ = generate_model(now_params_mask);
             let now_test_model_mask = now_test_model_mask.elapsed();
 
             let now_test_model_model = Instant::now();
-            let _ = generate_3d(now_params_model);
+            let _ = generate_model(now_params_model);
             let now_test_model_model = now_test_model_model.elapsed();
 
             let elapsed_test = now_test.elapsed();

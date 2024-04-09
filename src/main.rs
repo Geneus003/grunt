@@ -1,9 +1,8 @@
-use generators::generate_3d;
 use types::{Axis, LayersDist, LayersBorder, LayersFill, AxisExportType};
 use types::shifts::Shift3D;
 
-pub mod generators;
 pub mod types;
+pub mod model3d;
 
 fn main() {
     #[cfg(debug_assertions)]
@@ -29,7 +28,7 @@ fn main() {
     // borders.set_border_mod_func(Some(test_function));
     // params.set_layers_border(borders);
 
-    params.set_x_axis(Axis::generate_axis(1.0, 3.0, None));
+    params.set_x_axis(Axis::generate_axis(1.0, 30.0, None));
     params.set_y_axis(Axis::generate_axis(1.0, 3.0, None));
 
     params.set_layers_dist(LayersDist::create_from_vec([2, 3, 2].to_vec()).unwrap_or(LayersDist::new()));
@@ -79,7 +78,7 @@ fn main() {
 
 
     println!("{:?}", params);
-    let model = generate_3d(params).unwrap();
+    let model = model3d::generate_model(params).unwrap();
 
     use std::time::Instant;
     let now = Instant::now();

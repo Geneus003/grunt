@@ -7,7 +7,7 @@ use crate::types::generation_params::Params3D;
 
 const REGENERATE_TRIES:i32 = 500;
 
-pub fn random_layer_creation_3d(
+pub fn random_layer_creation(
     params: &Params3D,
     layer: &mut Vec<Vec<i32>>,
     now_layer_id: usize)

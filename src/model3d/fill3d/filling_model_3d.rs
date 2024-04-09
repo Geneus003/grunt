@@ -3,7 +3,7 @@ use log::trace;
 
 use rand::distributions::Distribution;
 
-use crate::generators::fill::GenerationTypes;
+use crate::model3d::fill3d::GenerationTypes;
 
 fn generate_consts(borders: &Vec<Vec<Vec<i32>>>) -> (i32, usize, usize, usize) {
     let mut max_elem = 0;

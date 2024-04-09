@@ -1,4 +1,4 @@
-use crate::types::models::Model3D;
+use crate::model3d::Model3D;
 
 impl Model3D {
     pub fn get_by_num(self: &Self, x: usize, y: usize) -> Result<Vec<i32>, &'static str> {

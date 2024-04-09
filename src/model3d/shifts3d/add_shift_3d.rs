@@ -4,7 +4,7 @@ use log::trace;
 use crate::types::generation_params::Params3D;
 use crate::types::shifts::ShiftTypes;
 
-pub fn add_3d(params: &Params3D, borders: &mut Vec<Vec<Vec<i32>>>, shift_num: usize) {
+pub fn add_shift(params: &Params3D, borders: &mut Vec<Vec<Vec<i32>>>, shift_num: usize) {
     #[cfg(debug_assertions)]
     trace!("Starting generating slice");
 

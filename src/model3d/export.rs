@@ -3,7 +3,7 @@ use std::io::Write;
 
 use numtoa::NumToA;
 
-use crate::types::models::Model3D;
+use crate::model3d::Model3D;
 use crate::types::generation_params::Params3D;
 use crate::types::AxisExportType;
 
@@ -78,14 +78,8 @@ fn export_model_num(result: &mut String, model: &Vec<Vec<Vec<i32>>>, is_border: 
             *result += format!("{y_num}\":[").as_str();
 
             result.push_str(y_axis[0].numtoa_str(10, &mut buf));
-            let mut skip_x = true;
 
-            for x in y_axis {
-                if skip_x == true {
-                    skip_x = false;
-                    continue;
-                }
-
+            for x in y_axis[1..].iter() {
                 result.push(',');
                 result.push_str(x.numtoa_str(10, &mut buf));
             }
@@ -117,14 +111,8 @@ fn export_mask_num(result: &mut String, model: &Vec<Vec<Vec<u8>>>) {
             *result += format!("{y_num}\":[").as_str();
 
             result.push_str(y_axis[0].numtoa_str(10, &mut buf));
-            let mut skip_x = true;
 
-            for x in y_axis {
-                if skip_x == true {
-                    skip_x = false;
-                    continue;
-                }
-
+            for x in y_axis[1..].iter() {
                 result.push(',');
                 result.push_str(x.numtoa_str(10, &mut buf));
             }
@@ -212,9 +200,9 @@ fn export_custom_ax(result: &mut String, new_axis: &Vec<f32>) {
     *result += &(new_axis[new_axis.len()-1]).to_string();
 }
 
-fn get_max_depth(model: &Vec<Vec<Vec<i32>>>) -> i32 {
+fn get_max_depth(borders: &Vec<Vec<Vec<i32>>>) -> i32 {
     let mut max_elem = 0;
-    for y_cord in model {
+    for y_cord in borders {
         for x_cord in y_cord {
             for depth in x_cord {
                 if *depth > max_elem {
