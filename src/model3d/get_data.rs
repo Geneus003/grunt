@@ -11,4 +11,14 @@ impl Model3D {
         }
         Ok(output_vec)
     }
+
+    pub fn to_cross_section_by_angle(self: &Self, pos_x: f32, angle: f32, accuracy: i32) -> Result<(), &'static str> {
+        if angle <= 0.0 && angle >= 180.0 {
+            return Err("Angle must be between 0.0 and 180.0 degrees")
+        }
+
+        let x_ax = self.params().x_axis();
+
+        Ok(())
+    }
 }

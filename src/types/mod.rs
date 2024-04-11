@@ -20,6 +20,7 @@ pub struct Axis {
     end: f32,
     step: Option<f32>,
     axis: Vec<f32>,
+    ordered: bool,
 }
 
 #[derive(Debug, Clone, Deserialize, Serialize)]

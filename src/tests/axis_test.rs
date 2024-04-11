@@ -60,3 +60,18 @@ fn create_from_vec_tests() {
     let ax = Axis::create_from_vec(vec![]);
     assert!(ax.is_err());
 } 
+
+#[test]
+fn axis_ordered_test() {
+    assert_eq!(Axis::generate_axis(0.0, 100.0, None).ordered(), true);
+    assert_eq!(Axis::generate_axis(-100.0, 0.0, None).ordered(), true);
+    assert_eq!(Axis::generate_axis(8.7, 9.1, Some(0.5)).ordered(), true);
+    assert_eq!(Axis::generate_axis(9.1, 8.7, Some(0.5)).ordered(), true);
+    assert_eq!(Axis::create_from_vec(vec![4.0, 5.0, 6.0]).unwrap().ordered(), true);
+    assert_eq!(Axis::create_from_vec(vec![6.0, 5.4, 5.2]).unwrap().ordered(), true);
+    assert_eq!(Axis::create_from_vec(vec![6.0, 5.4, 5.4]).unwrap().ordered(), true);
+    assert_eq!(Axis::create_from_vec(vec![4.0, 4.0, 4.0]).unwrap().ordered(), true);
+    assert_eq!(Axis::create_from_vec(vec![4.1, 4.0, 4.1]).unwrap().ordered(), false);
+    assert_eq!(Axis::create_from_vec(vec![4.0, 4.1, 4.0]).unwrap().ordered(), false);
+
+}

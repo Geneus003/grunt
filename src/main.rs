@@ -3,6 +3,7 @@ use types::shifts::Shift3D;
 
 pub mod types;
 pub mod model3d;
+pub mod model2d;
 
 fn main() {
     #[cfg(debug_assertions)]

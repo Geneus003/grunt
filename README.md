@@ -4,7 +4,7 @@ Project to generate 3D raster (image, grid and so on) of surface. Project can cr
 Characters in line hardlimit - 120
 
 ## How to install
-1) Clone repo
+1) Clone repo (use 0.3 branch if you wanna use examle below)
 2) Add to your project using local cargo package (path to local lib)
 
 ## How to use
