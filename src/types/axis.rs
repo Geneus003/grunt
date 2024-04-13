@@ -65,28 +65,55 @@ impl Axis {
 }
 
 impl Axis {
-    // Function to find id of first element which is smaller than target or equal
-    pub fn find_first_element_smaller(self: &Self, target: f32) -> Option<usize> {
-        let mut right_border = self.axis.len();
-        let mut left_border = 0usize;
+    pub fn find_elements_smaller(self: &Self, target: f32) -> Option<usize> {
+        if self.ordered {
+            let inc_order = self.axis[0] < self.axis[self.axis.len() - 1];
 
-        loop {
-            println!("{left_border}, {right_border}");
-            let now_el = (right_border + left_border) / 2;
-            if target > self.axis[now_el] {
-                left_border = now_el
-            } else {
-                right_border = now_el
-            } 
+            let mut smaller_border = 0usize;
+            let mut bigger_border = self.axis.len() - 1;
 
-            if left_border + 1 == right_border {
-                return Some(left_border)
-            } else if left_border == right_border {
-                if self.axis[left_border] == target {
-                    return Some(left_border)
+            loop {
+                let now_el = (smaller_border + bigger_border) / 2;
+
+                if self.axis[now_el] <= target {
+                    if inc_order{
+                        smaller_border = now_el;
+                    } else {
+                        bigger_border = now_el;
+                    }
+                } else {
+                    if inc_order{
+                        bigger_border = now_el;
+                    } else {
+                        smaller_border = now_el;
+                    }
                 }
-                return None
+
+                if smaller_border + 1 == bigger_border {
+                    if inc_order{
+                        if target < self.axis[smaller_border] {
+                            return None
+                        } else if target >= self.axis[bigger_border] {
+                            return Some(bigger_border)
+                        }
+                        return Some(smaller_border);
+                    } else {
+                        if target < self.axis[bigger_border] {
+                            return None
+                        } else if target >= self.axis[smaller_border] {
+                            return Some(smaller_border)
+                        }
+                        return Some(bigger_border);
+                    }
+                }
             }
+        } else {
+            for (num, el) in self.axis.iter().enumerate() {
+                if *el <= target {
+                    return Some(num)
+                }
+            }
+            None
         }
     }
 }
