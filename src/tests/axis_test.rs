@@ -22,11 +22,7 @@ fn gen_axis_tests() {
 
     let ax = Axis::generate_axis(-0.2, 0.2, Some(1.0));
     assert_eq!(*ax.get_axis(), vec![-0.2]);
-
-    let ax = Axis::generate_axis(-0.2, 0.2, Some(-0.2));
-    let ans: Vec<f32> = Vec::new();
-    assert_eq!(*ax.get_axis(), ans);
-
+let ax = Axis::generate_axis(-0.2, 0.2, Some(-0.2)); let ans: Vec<f32> = Vec::new(); assert_eq!(*ax.get_axis(), ans);
     let ax = Axis::generate_axis(0.2, -0.2, Some(-0.2));
     assert_eq!(*ax.get_axis(), vec![0.2, 0.0, -0.2]);
 
@@ -77,34 +73,34 @@ fn axis_ordered_test() {
 
 #[test]
 fn axis_find_el() {
-    assert_eq!(Axis::generate_axis(0.0, 100.0, None).find_elements_smaller(38.5).unwrap(), 38);
-    assert_eq!(Axis::generate_axis(0.0, 100.0, None).find_elements_smaller(38.0).unwrap(), 38);
-    assert_eq!(Axis::generate_axis(0.0, 100.0, None).find_elements_smaller(0.5).unwrap(), 0);
-    assert_eq!(Axis::generate_axis(0.0, 100.0, None).find_elements_smaller(0.0).unwrap(), 0);
-    assert_eq!(Axis::generate_axis(0.0, 100.0, None).find_elements_smaller(100.5).unwrap(), 100);
-    assert_eq!(Axis::generate_axis(0.0, 100.0, None).find_elements_smaller(100.0).unwrap(), 100);
-    assert!(Axis::generate_axis(0.0, 100.0, None).find_elements_smaller(-1.0).is_none());
-    assert!(Axis::generate_axis(0.0, 100.0, None).find_elements_smaller(-0.1).is_none());
+    assert_eq!(Axis::generate_axis(0.0, 100.0, None).find_element_smaller(38.5).unwrap(), 38);
+    assert_eq!(Axis::generate_axis(0.0, 100.0, None).find_element_smaller(38.0).unwrap(), 38);
+    assert_eq!(Axis::generate_axis(0.0, 100.0, None).find_element_smaller(0.5).unwrap(), 0);
+    assert_eq!(Axis::generate_axis(0.0, 100.0, None).find_element_smaller(0.0).unwrap(), 0);
+    assert_eq!(Axis::generate_axis(0.0, 100.0, None).find_element_smaller(100.5).unwrap(), 100);
+    assert_eq!(Axis::generate_axis(0.0, 100.0, None).find_element_smaller(100.0).unwrap(), 100);
+    assert!(Axis::generate_axis(0.0, 100.0, None).find_element_smaller(-1.0).is_none());
+    assert!(Axis::generate_axis(0.0, 100.0, None).find_element_smaller(-0.1).is_none());
 
-    assert_eq!(Axis::generate_axis(100.0, 0.0, None).find_elements_smaller(38.5).unwrap(), 62);
-    assert_eq!(Axis::generate_axis(100.0, 0.0, None).find_elements_smaller(38.0).unwrap(), 62);
-    assert_eq!(Axis::generate_axis(100.0, 0.0, None).find_elements_smaller(0.0).unwrap(), 100);
-    assert_eq!(Axis::generate_axis(100.0, 0.0, None).find_elements_smaller(0.5).unwrap(), 100);
-    assert_eq!(Axis::generate_axis(100.0, 0.0, None).find_elements_smaller(100.5).unwrap(), 0);
-    assert_eq!(Axis::generate_axis(100.0, 0.0, None).find_elements_smaller(100.0).unwrap(), 0);
-    assert!(Axis::generate_axis(100.0, 0.0, None).find_elements_smaller(-1.0).is_none());
-    assert!(Axis::generate_axis(100.0, 0.0, None).find_elements_smaller(-0.1).is_none());
+    assert_eq!(Axis::generate_axis(100.0, 0.0, None).find_element_smaller(38.5).unwrap(), 62);
+    assert_eq!(Axis::generate_axis(100.0, 0.0, None).find_element_smaller(38.0).unwrap(), 62);
+    assert_eq!(Axis::generate_axis(100.0, 0.0, None).find_element_smaller(0.0).unwrap(), 100);
+    assert_eq!(Axis::generate_axis(100.0, 0.0, None).find_element_smaller(0.5).unwrap(), 100);
+    assert_eq!(Axis::generate_axis(100.0, 0.0, None).find_element_smaller(100.5).unwrap(), 0);
+    assert_eq!(Axis::generate_axis(100.0, 0.0, None).find_element_smaller(100.0).unwrap(), 0);
+    assert!(Axis::generate_axis(100.0, 0.0, None).find_element_smaller(-1.0).is_none());
+    assert!(Axis::generate_axis(100.0, 0.0, None).find_element_smaller(-0.1).is_none());
 
-    assert_eq!(Axis::create_from_vec(vec![1.5, 2.5, 3.3]).unwrap().find_elements_smaller(3.5).unwrap(), 2);
-    assert_eq!(Axis::create_from_vec(vec![1.5, 2.5, 3.3]).unwrap().find_elements_smaller(3.1).unwrap(), 1);
-    assert_eq!(Axis::create_from_vec(vec![1.5, 2.5, 3.3]).unwrap().find_elements_smaller(1.5).unwrap(), 0);
-    assert_eq!(Axis::create_from_vec(vec![3.3, 2.5, 1.5]).unwrap().find_elements_smaller(3.5).unwrap(), 0);
-    assert_eq!(Axis::create_from_vec(vec![3.3, 2.5, 1.5]).unwrap().find_elements_smaller(3.1).unwrap(), 1);
-    assert_eq!(Axis::create_from_vec(vec![3.3, 2.5, 1.5]).unwrap().find_elements_smaller(1.5).unwrap(), 2);
-    assert!(Axis::create_from_vec(vec![1.5, 2.5, 3.3]).unwrap().find_elements_smaller(1.0).is_none());
-    assert!(Axis::create_from_vec(vec![3.3, 2.5, 1.5]).unwrap().find_elements_smaller(1.0).is_none());
+    assert_eq!(Axis::create_from_vec(vec![1.5, 2.5, 3.3]).unwrap().find_element_smaller(3.5).unwrap(), 2);
+    assert_eq!(Axis::create_from_vec(vec![1.5, 2.5, 3.3]).unwrap().find_element_smaller(3.1).unwrap(), 1);
+    assert_eq!(Axis::create_from_vec(vec![1.5, 2.5, 3.3]).unwrap().find_element_smaller(1.5).unwrap(), 0);
+    assert_eq!(Axis::create_from_vec(vec![3.3, 2.5, 1.5]).unwrap().find_element_smaller(3.5).unwrap(), 0);
+    assert_eq!(Axis::create_from_vec(vec![3.3, 2.5, 1.5]).unwrap().find_element_smaller(3.1).unwrap(), 1);
+    assert_eq!(Axis::create_from_vec(vec![3.3, 2.5, 1.5]).unwrap().find_element_smaller(1.5).unwrap(), 2);
+    assert!(Axis::create_from_vec(vec![1.5, 2.5, 3.3]).unwrap().find_element_smaller(1.0).is_none());
+    assert!(Axis::create_from_vec(vec![3.3, 2.5, 1.5]).unwrap().find_element_smaller(1.0).is_none());
 
-    assert_eq!(Axis::create_from_vec(vec![4.0, 4.0, 4.0]).unwrap().find_elements_smaller(4.0).unwrap(), 0);
-    assert_eq!(Axis::create_from_vec(vec![4.0, 4.0, 4.0, 3.0]).unwrap().find_elements_smaller(4.0).unwrap(), 0);
-    assert_eq!(Axis::create_from_vec(vec![4.0, 4.0, 4.0, 5.0]).unwrap().find_elements_smaller(4.0).unwrap(), 2);
+    assert_eq!(Axis::create_from_vec(vec![4.0, 4.0, 4.0]).unwrap().find_element_smaller(4.0).unwrap(), 0);
+    assert_eq!(Axis::create_from_vec(vec![4.0, 4.0, 4.0, 3.0]).unwrap().find_element_smaller(4.0).unwrap(), 0);
+    assert_eq!(Axis::create_from_vec(vec![4.0, 4.0, 4.0, 5.0]).unwrap().find_element_smaller(4.0).unwrap(), 2);
 }

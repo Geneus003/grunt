@@ -7,7 +7,7 @@ pub mod borders3d;
 pub mod shifts3d;
 pub mod fill3d;
 pub mod export;
-pub mod get_data;
+pub mod convert_data;
 
 pub fn generate_model(params: Params3D) -> Result<Model3D, &'static str> {
     #[cfg(debug_assertions)]

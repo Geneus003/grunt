@@ -86,15 +86,15 @@ fn main() {
 
     let save_state = vec!["params", "borders", "model", "model_mask"];
     let axis_export = vec![AxisExportType::IsNum, AxisExportType::IsNum, AxisExportType::IsNum];
-    model.export_model("my_model", &save_state, &axis_export).unwrap();
-
-    println!("{:?}", model.get_by_num(0, 0));
+    // model.export_model("my_model", &save_state, &axis_export).unwrap();
 
     let elapsed = now.elapsed();
 
     if !(cfg!(test)) {
         println!("Elapsed export: {:.2?}", elapsed);
     }
+
+    let _ = model.to_model_2d_by_angle(10.0, 45.0, 100);
 }
 
 #[cfg(test)]

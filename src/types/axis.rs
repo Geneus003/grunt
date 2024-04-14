@@ -65,7 +65,7 @@ impl Axis {
 }
 
 impl Axis {
-    pub fn find_elements_smaller(self: &Self, target: f32) -> Option<usize> {
+    pub fn find_element_smaller(self: &Self, target: f32) -> Option<usize> {
         if self.ordered {
             let inc_order = self.axis[0] < self.axis[self.axis.len() - 1];
 
