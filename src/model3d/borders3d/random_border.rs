@@ -1,4 +1,5 @@
 use rand::Rng;
+use rand::distributions::{Uniform, Distribution};
 
 #[cfg(debug_assertions)]
 use log::{trace, error};
@@ -9,7 +10,7 @@ const REGENERATE_TRIES:i32 = 500;
 
 pub fn random_layer_creation(
     params: &Params3D,
-    layer: &mut Vec<Vec<i32>>,
+    layer: &mut [Vec<i32>],
     now_layer_id: usize)
 -> Result<(), &'static str> {
     let default_value = params.layers_dist().get_layers_dist_summed()[now_layer_id];
@@ -34,9 +35,10 @@ pub fn random_layer_creation(
     if lower_limit < 0 { lower_limit = 0; }
 
     if max_step.is_none() || upper_limit == lower_limit {
-        for layer_line in 0..layer.len() {
-            for layer_el in 0..layer[layer_line].len() {
-                layer[layer_line][layer_el] = rng.gen_range(lower_limit..upper_limit+1);
+        let basic_range = Uniform::from(lower_limit..upper_limit+1);
+        for layer_line in layer.iter_mut() {
+            for layer_el in  layer_line.iter_mut() {
+                *layer_el = basic_range.sample(&mut rng);
             }
         }
         return Ok(())

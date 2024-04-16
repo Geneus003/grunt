@@ -14,6 +14,8 @@ pub enum AxisExportType {
     CustomAxis(Vec<f32>),
 }
 
+pub type BorderModFuncParams = fn(usize, usize, usize, i32) -> i32;
+
 #[derive(Debug, Clone, Deserialize, Serialize)]
 pub struct Axis {
     start: f32,
@@ -38,7 +40,7 @@ pub struct LayersBorder {
     border_deviation: f32,
     #[serde(skip_deserializing)]
     #[serde(skip_serializing)]
-    border_mod_func: Option<fn(usize, usize, usize, i32) -> i32>, // xcord, ycord, zvalue, layer_num
+    border_mod_func: Option<BorderModFuncParams>, // xcord, ycord, zvalue, layer_num
     border_type: String,
     border_max_step: Option<i32>,
     border_step_prob: Option<f32>,

@@ -1,4 +1,11 @@
 use crate::types::LayersBorder;
+use crate::types::BorderModFuncParams;
+
+impl Default for LayersBorder {
+    fn default() -> LayersBorder {
+        LayersBorder::new()
+    }
+}
 
 impl LayersBorder {
     pub fn new() -> LayersBorder {
@@ -14,7 +21,7 @@ impl LayersBorder {
 }
 
 impl LayersBorder {
-    pub fn set_border_deviation(self: &mut Self, border_deviation: f32) -> Result<(), &'static str> {
+    pub fn set_border_deviation(&mut self, border_deviation: f32) -> Result<(), &'static str> {
         if border_deviation < 0.0 {
             return Err("Border deviation can't be negative.")
         }
@@ -22,19 +29,19 @@ impl LayersBorder {
         Ok(())
     }
 
-    pub fn border_deviation(self: &Self) -> f32 {
+    pub fn border_deviation(&self) -> f32 {
         self.border_deviation
     }
 
-    pub fn set_border_mod_func(self: &mut Self, mod_func: Option<fn(usize, usize, usize, i32) -> i32>) {
+    pub fn set_border_mod_func(&mut self, mod_func: Option<BorderModFuncParams>) {
         self.border_mod_func = mod_func;
     }
 
-    pub fn border_mod_func(self: &Self) -> Option<fn(usize, usize, usize, i32) -> i32> {
+    pub fn border_mod_func(&self) -> Option<BorderModFuncParams> {
         self.border_mod_func
     }
 
-    pub fn set_border_type(self: &mut Self, border_type: String) -> Result<(), &'static str> {
+    pub fn set_border_type(&mut self, border_type: String) -> Result<(), &'static str> {
         match border_type.as_str() {
             "random" => (),
             _ => return Err("border_type can be next: random"),
@@ -42,19 +49,19 @@ impl LayersBorder {
         Ok(())
     }
 
-    pub fn border_type(self: &Self) -> &String {
+    pub fn border_type(&self) -> &String {
         &self.border_type
     }
 
-    pub fn set_border_max_step(self: &mut Self, max_step: Option<i32>) {
+    pub fn set_border_max_step(&mut self, max_step: Option<i32>) {
         self.border_max_step = max_step
     }
 
-    pub fn border_max_step(self: &Self) -> Option<i32> {
+    pub fn border_max_step(&self) -> Option<i32> {
         self.border_max_step
     }
 
-    pub fn set_border_step_prob(self: &mut Self, prob: Option<f32>) -> Result<(), &'static str> {
+    pub fn set_border_step_prob(&mut self, prob: Option<f32>) -> Result<(), &'static str> {
         if prob.is_none() {
             self.border_step_prob = prob
         } else {
@@ -68,15 +75,15 @@ impl LayersBorder {
         Ok(())
     }
 
-    pub fn border_step_prob(self: &Self) -> Option<f32> {
+    pub fn border_step_prob(&self) -> Option<f32> {
         self.border_step_prob
     }
 
-    pub fn set_layers_same_deviation(self: &mut Self, same_deviation: bool) {
+    pub fn set_layers_same_deviation(&mut self, same_deviation: bool) {
         self.layers_same_deviation = same_deviation
     } 
 
-    pub fn layers_same_deviation(self: &Self) -> bool {
+    pub fn layers_same_deviation(&self) -> bool {
         self.layers_same_deviation
     } 
 }

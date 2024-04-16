@@ -4,7 +4,7 @@ use log::trace;
 use crate::types::generation_params::Params3D;
 use crate::types::shifts::ShiftTypes;
 
-pub fn add_shift(params: &Params3D, borders: &mut Vec<Vec<Vec<i32>>>, shift_num: usize) {
+pub fn add_shift(params: &Params3D, borders: &mut [Vec<Vec<i32>>], shift_num: usize) {
     #[cfg(debug_assertions)]
     trace!("Starting generating slice");
 
@@ -95,8 +95,8 @@ pub fn add_shift(params: &Params3D, borders: &mut Vec<Vec<Vec<i32>>>, shift_num:
 
             let slice_depth = ((now_shift_angle_z_tan * minimal_len).round() as i32).abs();
 
-            for z in 0..borders.len() {
-                let now_border = &mut borders[z][y_num][x_num];
+            for border in borders.iter_mut() {
+                let now_border = &mut border[y_num][x_num];
 
                 match shift_type {
                     ShiftTypes::InnerLift | ShiftTypes::OuterLift => {

@@ -24,12 +24,12 @@ fn random_gen_layers_borders_tests(){
             expect("Impossible to generate, recheck test"));
 
         let mut borders = LayersBorder::new();
-        let _ = borders.set_border_deviation(rng.gen_range(0..100) as f32 / 10.0).expect("Error");
-        let _ = borders.set_border_max_step(Some(rng.gen_range(0..100)));
+        borders.set_border_deviation(rng.gen_range(0..100) as f32 / 10.0).expect("Error");
+        borders.set_border_max_step(Some(rng.gen_range(0..100)));
         params.set_layers_border(borders);
 
         let res = create_layers_borders_3d(&params);
-        assert_eq!(res.is_ok(), true);
+        assert!(res.is_ok());
     }
 }
 

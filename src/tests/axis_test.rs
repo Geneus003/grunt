@@ -22,7 +22,11 @@ fn gen_axis_tests() {
 
     let ax = Axis::generate_axis(-0.2, 0.2, Some(1.0));
     assert_eq!(*ax.get_axis(), vec![-0.2]);
-let ax = Axis::generate_axis(-0.2, 0.2, Some(-0.2)); let ans: Vec<f32> = Vec::new(); assert_eq!(*ax.get_axis(), ans);
+
+    let ax = Axis::generate_axis(-0.2, 0.2, Some(-0.2)); 
+    let ans: Vec<f32> = Vec::new();
+    assert_eq!(*ax.get_axis(), ans);
+
     let ax = Axis::generate_axis(0.2, -0.2, Some(-0.2));
     assert_eq!(*ax.get_axis(), vec![0.2, 0.0, -0.2]);
 
@@ -59,16 +63,18 @@ fn create_from_vec_tests() {
 
 #[test]
 fn axis_ordered_test() {
-    assert_eq!(Axis::generate_axis(0.0, 100.0, None).ordered(), true);
-    assert_eq!(Axis::generate_axis(-100.0, 0.0, None).ordered(), true);
-    assert_eq!(Axis::generate_axis(8.7, 9.1, Some(0.5)).ordered(), true);
-    assert_eq!(Axis::generate_axis(9.1, 8.7, Some(0.5)).ordered(), true);
-    assert_eq!(Axis::create_from_vec(vec![4.0, 5.0, 6.0]).unwrap().ordered(), true);
-    assert_eq!(Axis::create_from_vec(vec![6.0, 5.4, 5.2]).unwrap().ordered(), true);
-    assert_eq!(Axis::create_from_vec(vec![6.0, 5.4, 5.4]).unwrap().ordered(), true);
-    assert_eq!(Axis::create_from_vec(vec![4.0, 4.0, 4.0]).unwrap().ordered(), true);
-    assert_eq!(Axis::create_from_vec(vec![4.1, 4.0, 4.1]).unwrap().ordered(), false);
-    assert_eq!(Axis::create_from_vec(vec![4.0, 4.1, 4.0]).unwrap().ordered(), false);
+    assert!(Axis::generate_axis(0.0, 100.0, None).ordered());
+    assert!(Axis::generate_axis(-100.0, 0.0, None).ordered());
+    assert!(Axis::generate_axis(8.7, 9.1, Some(0.5)).ordered());
+    assert!(Axis::generate_axis(9.1, 8.7, Some(0.5)).ordered());
+    assert!(Axis::create_from_vec(vec![4.0, 5.0, 6.0]).unwrap().ordered());
+    assert!(Axis::create_from_vec(vec![6.0, 5.4, 5.2]).unwrap().ordered());
+    assert!(Axis::create_from_vec(vec![6.0, 5.4, 5.4]).unwrap().ordered());
+    assert!(Axis::create_from_vec(vec![4.0, 4.0, 4.0]).unwrap().ordered());
+
+    // Must be false
+    assert!(!Axis::create_from_vec(vec![4.1, 4.0, 4.1]).unwrap().ordered());
+    assert!(!Axis::create_from_vec(vec![4.0, 4.1, 4.0]).unwrap().ordered());
 }
 
 #[test]

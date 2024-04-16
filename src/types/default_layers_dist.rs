@@ -2,6 +2,12 @@ use rand::Rng;
 
 use crate::types::LayersDist;
 
+impl Default for LayersDist {
+    fn default() -> LayersDist {
+        LayersDist::new()
+    }
+}
+
 impl LayersDist {
     pub fn new() -> LayersDist {
         LayersDist {
@@ -111,10 +117,10 @@ pub fn generate_layers_dist_vec(
         while points != 0 && tries <= 10000 {
             let avg_layer_mod = points / layers_num as i32;
 
-            for i in 0..layers_num as usize {
+            for layer in layers.iter_mut() {
                 if znak {
-                    if points + layers[i] <= max_layer_size {
-                        layers[i] += points;
+                    if points + *layer <= max_layer_size {
+                        *layer += points;
                         points = 0;
                         break;
                     }
@@ -125,13 +131,13 @@ pub fn generate_layers_dist_vec(
                         rng.gen_range(0..avg_layer_mod*2)
                     };
 
-                    if layers[i] + now_mod <= max_layer_size {
-                        layers[i] += now_mod;
+                    if *layer + now_mod <= max_layer_size {
+                        *layer += now_mod;
                         points -= now_mod;
                     }
                 } else {
-                    if layers[i].checked_sub(points).unwrap_or(0) >= min_layer_size {
-                        layers[i] -= points;
+                    if layer.checked_sub(points).unwrap_or(0) >= min_layer_size {
+                        *layer -= points;
                         points = 0;
                         break;
                     }
@@ -142,13 +148,12 @@ pub fn generate_layers_dist_vec(
                         rng.gen_range(0..avg_layer_mod*2)
                     };
 
-                    if layers[i].checked_sub(now_mod).unwrap_or(0) >= min_layer_size {
-                        layers[i] -= now_mod;
+                    if layer.checked_sub(now_mod).unwrap_or(0) >= min_layer_size {
+                        *layer -= now_mod;
                         points = points.checked_sub(now_mod).unwrap_or(0);
                     }
                 }
             }
-
             tries += 1;
         }
 
@@ -188,31 +193,31 @@ pub fn generate_layers_dist_vec(
 }
 
 impl LayersDist {
-    pub fn get_full_data(self: &Self) -> (u8, i32, i32, i32, &Vec<i32>) {
+    pub fn get_full_data(&self) -> (u8, i32, i32, i32, &Vec<i32>) {
         (self.layers_num, self.max_layer_size, self.min_layer_size, self.layers_sum, &self.layers_dist)
     }
 
-    pub fn get_layers_num(self: &Self) -> u8 {
+    pub fn get_layers_num(&self) -> u8 {
         self.layers_num
     }
 
-    pub fn get_layer_max_min_sizes(self: &Self) -> (i32, i32) {
+    pub fn get_layer_max_min_sizes(&self) -> (i32, i32) {
         (self.max_layer_size, self.min_layer_size)
     }
 
-    pub fn get_layers_sum(self: &Self) -> i32 {
+    pub fn get_layers_sum(&self) -> i32 {
         self.layers_sum
     }
 
-    pub fn get_layers_dist(self: &Self) -> &Vec<i32> {
+    pub fn get_layers_dist(&self) -> &Vec<i32> {
         &self.layers_dist
     }
 
-    pub fn get_layers_dist_summed(self: &Self) -> &Vec<i32> {
+    pub fn get_layers_dist_summed(&self) -> &Vec<i32> {
         &self.layers_dist_summed
     }
 
-    pub fn get_layers_count(self: &Self) -> usize {
+    pub fn get_layers_count(&self) -> usize {
         self.layers_dist.len()
     }
 }

@@ -15,7 +15,7 @@ pub fn generate_model(params: Params3D) -> Result<Model3D, &'static str> {
 
     let mut borders = borders3d::create_layers_borders_3d(&params)?;
 
-    if params.shifts().len() > 0 {
+    if !(params.shifts().is_empty()) {
         #[cfg(debug_assertions)]
         trace!("{} shifts found", params.shifts().len());
 
@@ -62,23 +62,23 @@ impl Model3D {
 }
 
 impl Model3D {
-    pub fn model(self: &Self) -> &Vec<Vec<Vec<i32>>> {
+    pub fn model(&self) -> &Vec<Vec<Vec<i32>>> {
         &self.model
     }
 
-    pub fn model_mask(self: &Self) -> &Vec<Vec<Vec<u8>>> {
+    pub fn model_mask(&self) -> &Vec<Vec<Vec<u8>>> {
         &self.model_mask
     }
     
-    pub fn borders(self: &Self) -> &Vec<Vec<Vec<i32>>> {
+    pub fn borders(&self) -> &Vec<Vec<Vec<i32>>> {
         &self.borders
     }
 
-    pub fn layers_filling_values(self: &Self) -> &Vec<Vec<i32>> {
+    pub fn layers_filling_values(&self) -> &Vec<Vec<i32>> {
         &self.layers_filling_values
     }
 
-    pub fn params(self: &Self) -> &Params3D {
+    pub fn params(&self) -> &Params3D {
         &self.params
     }
 }

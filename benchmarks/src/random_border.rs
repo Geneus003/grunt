@@ -30,7 +30,7 @@ pub fn bench(runs_difficulty: usize, run_tries: usize) -> Duration {
             params.set_x_axis(Axis::generate_axis(0.0, now_axis_size, None));
             params.set_y_axis(Axis::generate_axis(0.0, now_axis_size, None));
 
-            params.set_layers_dist(LayersDist::create_from_vec([20, 30, 20].to_vec()).unwrap_or(LayersDist::new()));
+            params.set_layers_dist(LayersDist::create_from_vec([20, 30, 20].to_vec()).unwrap_or_default());
 
             let mut borders = LayersBorder::new();
             borders.set_border_deviation(now_border_deviation).unwrap();

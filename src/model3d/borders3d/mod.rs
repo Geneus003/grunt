@@ -18,14 +18,14 @@ pub fn create_layers_borders_3d(params: &Params3D) -> Result<Vec<Vec<Vec<i32>>>,
 
     let mut layers_borders = vec![vec![vec![0i32; x_size]; y_size]; layers_count];
 
-    for i in 0..layers_count {
-        let _ = match params.layers_border().border_type().as_str() {
-            "random" => random_border::random_layer_creation(params, &mut layers_borders[i], i)?,
+    for (i, layer) in layers_borders.iter_mut().enumerate() {
+        match params.layers_border().border_type().as_str() {
+            "random" => random_border::random_layer_creation(params, layer, i)?,
             _ => return Err("Incorrect border type"),
         };
 
         #[cfg(debug_assertions)]
-        if let Err(err) = validate_layer(params, &layers_borders[i], i) {
+        if let Err(err) = validate_layer(params, layer, i) {
             error!("Validating for layer {i} FAILED: {err}");
             return Err("Model is not valid");
         }
@@ -39,10 +39,10 @@ pub fn create_layers_borders_3d(params: &Params3D) -> Result<Vec<Vec<Vec<i32>>>,
         trace!("Border's mod function found");
 
         let mod_func = params.layers_border().border_mod_func().unwrap();
-        for layer in 0..layers_borders.len() {
-            for y in 0..layers_borders[layer].len() {
-                for x in 0..layers_borders[layer][y].len() {
-                    layers_borders[layer][y][x] -= mod_func(x, y, layer, layers_borders[layer][y][x])
+        for (layer_num, layer) in layers_borders.iter_mut().enumerate() {
+            for (y_num, layer_y) in layer.iter_mut().enumerate() {
+                for (x_num, layer_x) in layer_y.iter_mut().enumerate() {
+                    *layer_x -= mod_func(x_num, y_num, layer_num, *layer_x)
                 }
             }
         }
@@ -54,7 +54,7 @@ pub fn create_layers_borders_3d(params: &Params3D) -> Result<Vec<Vec<Vec<i32>>>,
 	Ok(layers_borders)
 }
 
-pub fn validate_layer(params: &Params3D, layer: &Vec<Vec<i32>>, now_layer_id: usize) -> Result<(), &'static str> {
+pub fn validate_layer(params: &Params3D, layer: &[Vec<i32>], now_layer_id: usize) -> Result<(), &'static str> {
     let default_value = params.layers_dist().get_layers_dist_summed()[now_layer_id];
     let max_step = params.layers_border().border_max_step();
 
@@ -87,21 +87,17 @@ pub fn validate_layer(params: &Params3D, layer: &Vec<Vec<i32>>, now_layer_id: us
             } else if max_step.is_some(){
                 let max_step = max_step.unwrap();
 
-                if i != layer.len() - 1 {
-                    if (layer[i][j] - layer[i+1][j]).abs() > max_step {
-                        #[cfg(debug_assertions)]
-                        info!("In layer {now_layer_id} elem {i}, {j} cannot be validated");
-                        err_elems += 1;
-                        continue;
-                    }
+                if i != layer.len() - 1 && (layer[i][j] - layer[i+1][j]).abs() > max_step {
+                    #[cfg(debug_assertions)]
+                    info!("In layer {now_layer_id} elem {i}, {j} cannot be validated");
+                    err_elems += 1;
+                    continue;
                 }
 
-                if j != layer[i].len() - 1 {
-                    if (layer[i][j] - layer[i][j+1]).abs() > max_step {
+                if j != layer[i].len() - 1 && layer[i][j] - layer[i][j+1].abs() > max_step{
                         #[cfg(debug_assertions)]
                         info!("In layer {now_layer_id} elem {i}, {j} cannot be validated");
                         err_elems += 1;
-                    }
                 }
             }
         }

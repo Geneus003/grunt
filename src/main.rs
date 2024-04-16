@@ -8,9 +8,8 @@ pub mod model2d;
 fn main() {
     #[cfg(debug_assertions)]
     env_logger::init();
-
     fn _test_function(x_cord: usize, y_cord: usize, _layers_num: usize, _z_value: i32) -> i32 {
-        if x_cord <= 6 && y_cord >= 4 && y_cord <= 6 {
+        if x_cord <= 6 && (4..=6).contains(&y_cord) {
             return -6
         }
         0
@@ -32,7 +31,7 @@ fn main() {
     params.set_x_axis(Axis::generate_axis(1.0, 30.0, None));
     params.set_y_axis(Axis::generate_axis(1.0, 3.0, None));
 
-    params.set_layers_dist(LayersDist::create_from_vec([2, 3, 2].to_vec()).unwrap_or(LayersDist::new()));
+    params.set_layers_dist(LayersDist::create_from_vec([2, 3, 2].to_vec()).unwrap_or_default());
 
     let mut borders = LayersBorder::new();
     borders.set_border_deviation(5.0).unwrap();
@@ -77,20 +76,19 @@ fn main() {
     shift.set_main_region(3).unwrap();
     params.add_shift(shift);
 
-
     println!("{:?}", params);
     let model = model3d::generate_model(params).unwrap();
 
     use std::time::Instant;
     let now = Instant::now();
 
-    let save_state = vec!["params", "borders", "model", "model_mask"];
-    let axis_export = vec![AxisExportType::IsNum, AxisExportType::IsNum, AxisExportType::IsNum];
+    let _save_state = ["params", "borders", "model", "model_mask"];
+    let _axis_export = [AxisExportType::IsNum, AxisExportType::IsNum, AxisExportType::IsNum];
     // model.export_model("my_model", &save_state, &axis_export).unwrap();
 
     let elapsed = now.elapsed();
 
-    if !(cfg!(test)) {
+    if !cfg!(test) {
         println!("Elapsed export: {:.2?}", elapsed);
     }
 

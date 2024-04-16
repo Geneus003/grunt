@@ -5,6 +5,8 @@ use rand::distributions::Distribution;
 
 use crate::model3d::fill3d::GenerationTypes;
 
+type ModelAndMaskType = (Vec<Vec<Vec<i32>>>, Vec<Vec<Vec<u8>>>);
+
 fn generate_consts(borders: &Vec<Vec<Vec<i32>>>) -> (i32, usize, usize, usize) {
     let mut max_elem = 0;
     for y_cord in borders {
@@ -21,8 +23,8 @@ fn generate_consts(borders: &Vec<Vec<Vec<i32>>>) -> (i32, usize, usize, usize) {
 
 pub fn create_full_model_with_mask(
     borders: &Vec<Vec<Vec<i32>>>,
-    fill_values: &Vec<GenerationTypes>
-) -> (Vec<Vec<Vec<i32>>>, Vec<Vec<Vec<u8>>>) {
+    fill_values: &[GenerationTypes]
+) -> ModelAndMaskType {
     #[cfg(debug_assertions)]
     trace!("Starting filling model: model and mask");
 
@@ -81,7 +83,7 @@ pub fn create_full_model_with_mask(
 
 pub fn create_full_model_without_mask(
     borders: &Vec<Vec<Vec<i32>>>,
-    fill_values: &Vec<GenerationTypes>
+    fill_values: &[GenerationTypes]
 ) -> Vec<Vec<Vec<i32>>> {
     #[cfg(debug_assertions)]
     trace!("Starting filling only model");

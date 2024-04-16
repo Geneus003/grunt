@@ -13,10 +13,12 @@ pub enum GenerationTypes {
     GenerationExact(i32),
 }
 
+type FillFnReturnType = (Vec<Vec<Vec<i32>>>, Vec<Vec<Vec<u8>>>, Vec<Vec<i32>>);
+
 pub fn fill(
     params: &Params3D,
     borders: &Vec<Vec<Vec<i32>>>
-) -> (Vec<Vec<Vec<i32>>>, Vec<Vec<Vec<u8>>>, Vec<Vec<i32>>) {
+) -> FillFnReturnType {
     #[cfg(debug_assertions)]
     trace!("Preparing for model fill");
 

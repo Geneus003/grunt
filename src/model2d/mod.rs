@@ -19,15 +19,15 @@ impl Model2D {
 }
 
 impl Model2D {
-    pub fn model(self: &Self) -> &Vec<Vec<i32>> {
+    pub fn model(&self) -> &Vec<Vec<i32>> {
         &self.model
     }
 
-    pub fn model_mask(self: &Self) -> &Vec<Vec<u8>> {
+    pub fn model_mask(&self) -> &Vec<Vec<u8>> {
         &self.model_mask
     }
     
-    pub fn borders(self: &Self) -> &Vec<Vec<i32>> {
+    pub fn borders(&self) -> &Vec<Vec<i32>> {
         &self.borders
     }
 }

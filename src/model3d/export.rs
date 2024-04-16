@@ -8,7 +8,7 @@ use crate::types::generation_params::Params3D;
 use crate::types::AxisExportType;
 
 impl Model3D {
-    pub fn export_model(self: &Self, name: &str, save: &Vec<&str>, axes_export: &Vec<AxisExportType>) -> Result<(), std::io::Error> {
+    pub fn export_model(&self, name: &str, save: &[&str], axes_export: &Vec<AxisExportType>) -> Result<(), std::io::Error> {
         let default_ax_type = vec![AxisExportType::Scale(1.0), AxisExportType::Scale(1.0), AxisExportType::IsNum];
 
         let axes_export = if axes_export.len() != 3 {
@@ -27,9 +27,9 @@ impl Model3D {
 
         result += ",\"output_axes\":";
         let mut axes_size = [self.params.x_axis().get_axis_len(), self.params.y_axis().get_axis_len(), 0]; 
-        if self.model.len() != 0 {
+        if !(self.model.is_empty()) {
             axes_size[2] = self.model.len()
-        } else if self.model_mask.len() != 0 {
+        } else if !(self.model_mask.is_empty()) {
             axes_size[2] = self.model_mask.len()
         } else {
             axes_size[2] = get_max_depth(&self.borders) as usize
@@ -65,12 +65,12 @@ impl Model3D {
     }
 }
 
-fn export_model_num(result: &mut String, model: &Vec<Vec<Vec<i32>>>, is_border: bool) {
+fn export_model_num(result: &mut String, model: &[Vec<Vec<i32>>], is_border: bool) {
     let mut buf = [0u8; 12];
     *result += "[";
 
     for (depth_num, depth) in model.iter().enumerate() {
-        *result += if is_border == true {
+        *result += if is_border {
             "{\"bo"
         } else { "{\"de" }; *result += format!("{depth_num}\":[").as_str();
         for (y_num, y_axis) in depth.iter().enumerate() {
@@ -99,7 +99,7 @@ fn export_model_num(result: &mut String, model: &Vec<Vec<Vec<i32>>>, is_border: 
     *result += "]";
 }
 
-fn export_mask_num(result: &mut String, model: &Vec<Vec<Vec<u8>>>) {
+fn export_mask_num(result: &mut String, model: &[Vec<Vec<u8>>]) {
     let mut buf = [0u8; 12];
     *result += "[";
 
@@ -136,7 +136,7 @@ fn export_params(result: &mut String, params: &Params3D) {
     result.push_str(serde_json::to_string(params).unwrap().as_str());
 }
 
-fn export_true_axes(result: &mut String, params: &Params3D, axes_export: &Vec<AxisExportType>, model_size: [usize; 3]) {
+fn export_true_axes(result: &mut String, params: &Params3D, axes_export: &[AxisExportType], model_size: [usize; 3]) {
     let mut now_ax: &Vec<f32>;
     let z_ax = if matches!(axes_export[2], AxisExportType::Scale(_)) {
         (0..model_size[2]+1).map(|i| i as f32).collect()
@@ -184,7 +184,7 @@ fn export_num_ax(result: &mut String, axes_size: usize) {
     *result += axes_size.numtoa_str(10, &mut buf)
 }
 
-fn export_scale_ax(result: &mut String, scale_value: f32, axis: &Vec<f32>) {
+fn export_scale_ax(result: &mut String, scale_value: f32, axis: &[f32]) {
     for i in axis[..axis.len()-1].iter() {
         *result += &(i * scale_value).to_string();
         *result += ",";
@@ -192,7 +192,7 @@ fn export_scale_ax(result: &mut String, scale_value: f32, axis: &Vec<f32>) {
     *result += &(axis[axis.len()-1] * scale_value).to_string();
 }
 
-fn export_custom_ax(result: &mut String, new_axis: &Vec<f32>) {
+fn export_custom_ax(result: &mut String, new_axis: &[f32]) {
     for i in new_axis[..new_axis.len()-1].iter() {
         *result += &i.to_string();
         *result += ",";

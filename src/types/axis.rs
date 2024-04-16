@@ -1,5 +1,12 @@
 use crate::types::Axis;
 
+
+impl Default for Axis {
+    fn default() -> Axis {
+        Axis::new()
+    }
+}
+
 impl Axis {
     pub fn new() -> Axis {
         Axis {
@@ -13,10 +20,7 @@ impl Axis {
 
     pub fn generate_axis<T: Into<f32>>(start: T, end: T, step: Option<T>) -> Axis {
         let (start, end) = (start.into(), end.into());
-        let step = match step {
-            Some(step) => Some(step.into()),
-            None => None,
-        };
+        let step = step.map(|step| step.into());
 
         let new_step = step.unwrap_or(if start < end {1.0} else {-1.0});
 
@@ -65,7 +69,7 @@ impl Axis {
 }
 
 impl Axis {
-    pub fn find_element_smaller(self: &Self, target: f32) -> Option<usize> {
+    pub fn find_element_smaller(&self, target: f32) -> Option<usize> {
         if self.ordered {
             let inc_order = self.axis[0] < self.axis[self.axis.len() - 1];
 
@@ -81,12 +85,10 @@ impl Axis {
                     } else {
                         bigger_border = now_el;
                     }
+                } else if inc_order {
+                    bigger_border = now_el;
                 } else {
-                    if inc_order{
-                        bigger_border = now_el;
-                    } else {
-                        smaller_border = now_el;
-                    }
+                    smaller_border = now_el;
                 }
 
                 if smaller_border + 1 == bigger_border {
@@ -119,19 +121,19 @@ impl Axis {
 }
 
 impl Axis {
-    pub fn get_full_axis_data(self: &Self) -> (f32, f32, Option<f32>, &Vec<f32>) {
+    pub fn get_full_axis_data(&self) -> (f32, f32, Option<f32>, &Vec<f32>) {
         (self.start, self.end, self.step, &self.axis)
     }
 
-    pub fn get_axis(self: &Self) -> &Vec<f32> {
+    pub fn get_axis(&self) -> &Vec<f32> {
         &self.axis
     }
 
-    pub fn get_axis_len(self: &Self) -> usize {
+    pub fn get_axis_len(&self) -> usize {
         self.axis.len()
     }
 
-    pub fn ordered(self: &Self) -> bool {
+    pub fn ordered(&self) -> bool {
         self.ordered
     }
 }
