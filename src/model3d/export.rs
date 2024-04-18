@@ -28,9 +28,9 @@ impl Model3D {
         result += ",\"output_axes\":";
         let mut axes_size = [self.params.x_axis().get_axis_len(), self.params.y_axis().get_axis_len(), 0]; 
         if !(self.model.is_empty()) {
-            axes_size[2] = self.model.len()
+            axes_size[2] = self.model[0][0].len()
         } else if !(self.model_mask.is_empty()) {
-            axes_size[2] = self.model_mask.len()
+            axes_size[2] = self.model_mask[0][0].len()
         } else {
             axes_size[2] = get_max_depth(&self.borders) as usize
         }
@@ -38,17 +38,17 @@ impl Model3D {
 
         result += ",\"borders\":";
         if save.contains(&"borders") {
-            export_model_num(&mut result, &self.borders, true)
+            export_border_num(&mut result, &self.borders)
         } else { result += "null" }
 
         result += ",\"fill_values\":";
         if save.contains(&"fill_values") {
-            export_model_num(&mut result, &self.borders, true)
+            export_border_num(&mut result, &self.borders)
         } else { result += "null" }
 
         result += ",\"model\":";
         if save.contains(&"model") {
-            export_model_num(&mut result, &self.model, false)
+            export_model_num(&mut result, &self.model)
         } else { result += "null" }
 
         result += ",\"model_mask\":";
@@ -65,14 +65,11 @@ impl Model3D {
     }
 }
 
-fn export_model_num(result: &mut String, model: &[Vec<Vec<i32>>], is_border: bool) {
-    let mut buf = [0u8; 12];
-    *result += "[";
-
+fn export_border_num(result: &mut String, model: &[Vec<Vec<i32>>]){
+    let mut buf = [0u8; 12]; *result += "[";
     for (depth_num, depth) in model.iter().enumerate() {
-        *result += if is_border {
-            "{\"bo"
-        } else { "{\"de" }; *result += format!("{depth_num}\":[").as_str();
+        *result += "{\"bo";
+        *result += format!("{depth_num}\":[").as_str();
         for (y_num, y_axis) in depth.iter().enumerate() {
             *result += "{\"y";
             *result += format!("{y_num}\":[").as_str();
@@ -97,33 +94,71 @@ fn export_model_num(result: &mut String, model: &[Vec<Vec<i32>>], is_border: boo
         }
     }
     *result += "]";
+
+}
+
+fn export_model_num(result: &mut String, model: &[Vec<Vec<i32>>]) {
+    let mut buf = [0u8; 12];
+    *result += "[";
+
+    for (x_num, x_ax) in model.iter().enumerate() {
+        *result += "{\"x";
+        *result += format!("{x_num}\":[").as_str();
+
+        for (y_num, y_ax) in x_ax.iter().enumerate() {
+            *result += "{\"y";
+            *result += format!("{y_num}\":[").as_str();
+
+            result.push_str(y_ax[0].numtoa_str(10, &mut buf));
+
+            for depth in y_ax[1..].iter() {
+                result.push(',');
+                result.push_str(depth.numtoa_str(10, &mut buf));
+            }
+
+            if y_num != x_ax.len() - 1 {
+                *result += "]},"
+            } else {
+                *result += "]}"
+            }
+        }
+
+        if x_num != model.len() - 1 {
+            *result += "]},";
+        } else {
+            *result += "]}";
+        }
+    }
+    *result += "]";
 }
 
 fn export_mask_num(result: &mut String, model: &[Vec<Vec<u8>>]) {
     let mut buf = [0u8; 12];
     *result += "[";
 
-    for (depth_num, depth) in model.iter().enumerate() {
-        *result += "{\"de";
-        *result += format!("{depth_num}\":[").as_str();
-        for (y_num, y_axis) in depth.iter().enumerate() {
+    for (x_num, x_ax) in model.iter().enumerate() {
+        *result += "{\"x";
+        *result += format!("{x_num}\":[").as_str();
+
+        for (y_num, y_ax) in x_ax.iter().enumerate() {
             *result += "{\"y";
             *result += format!("{y_num}\":[").as_str();
 
-            result.push_str(y_axis[0].numtoa_str(10, &mut buf));
+            result.push_str(y_ax[0].numtoa_str(10, &mut buf));
 
-            for x in y_axis[1..].iter() {
+            for depth in y_ax[1..].iter() {
                 result.push(',');
-                result.push_str(x.numtoa_str(10, &mut buf));
+                result.push_str(depth.numtoa_str(10, &mut buf));
             }
 
-            if y_num != depth.len() - 1 {
+            if y_num != x_ax.len() - 1 {
                 *result += "]},"
             } else {
                 *result += "]}"
             }
         }
-        if depth_num != model.len() - 1 {
+
+        if x_num != model.len() - 1 {
             *result += "]},";
         } else {
             *result += "]}";

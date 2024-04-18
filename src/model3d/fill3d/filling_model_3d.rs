@@ -29,55 +29,57 @@ pub fn create_full_model_with_mask(
     trace!("Starting filling model: model and mask");
 
     let (max_elem, layers_count, y_size, x_size) = generate_consts(borders);
+    let max_elem: usize = max_elem.try_into().unwrap();
 
-    let mut model: Vec<Vec<Vec<i32>>> = Vec::with_capacity(max_elem.try_into().expect("Capacity overfill"));
-    let mut model_mask: Vec<Vec<Vec<u8>>> = Vec::with_capacity(max_elem.try_into().expect("Capacity overfill"));
+    let mut model: Vec<Vec<Vec<i32>>> = Vec::with_capacity(x_size);
+    let mut model_mask: Vec<Vec<Vec<u8>>> = Vec::with_capacity(x_size);
     let mut rng = rand::thread_rng();
 
-    let mut now_next_depth: Vec<Vec<i32>> = borders[0].clone();
-    let mut now_next_index: Vec<Vec<usize>> = vec![vec![0; x_size]; y_size];
+    for x_cord in 0..x_size {
 
-    for depth in 0..max_elem {
-
-        let mut now_depth: Vec<Vec<i32>> = Vec::with_capacity(y_size);
-        let mut now_depth_mask: Vec<Vec<u8>> = Vec::with_capacity(y_size);
+        let mut now_x: Vec<Vec<i32>> = Vec::with_capacity(y_size);
+        let mut now_x_mask: Vec<Vec<u8>> = Vec::with_capacity(y_size);
 
         for y_cord in 0..y_size {
-            
-            let mut now_y_line: Vec<i32> = Vec::with_capacity(x_size);
-            let mut now_y_line_mask: Vec<u8> = Vec::with_capacity(x_size);
 
-            for x_cord in 0..x_size {
-                let mut now_index = now_next_index[y_cord][x_cord];
-                if depth >= now_next_depth[y_cord][x_cord] && now_index < layers_count - 1 {
+            let mut now_y: Vec<i32> = Vec::with_capacity(max_elem);
+            let mut now_y_mask: Vec<u8> = Vec::with_capacity(max_elem);
+
+            let mut now_index: usize = 0;
+            let mut now_index_u8: u8 = 0;
+            let mut now_depth: usize = borders[now_index][y_cord][x_cord].try_into().unwrap_or(0);
+
+            for depth in 0..max_elem {
+
+                if depth >= now_depth && now_index < layers_count - 1 {
                     loop {
-                        now_next_index[y_cord][x_cord] += 1;
                         now_index += 1;
-                        now_next_depth[y_cord][x_cord] = borders[now_index][y_cord][x_cord];
-                        if now_next_depth[y_cord][x_cord] > depth || now_index == layers_count - 1 {
+                        now_depth = borders[now_index][y_cord][x_cord].try_into().unwrap_or(0);
+                        if now_depth > depth || now_index == layers_count - 1 {
+                            now_index_u8 = now_index as u8;
                             break;
                         }
                     }
                 }
 
-                now_y_line.push(match fill_values[now_index] {
+                now_y.push(match fill_values[now_index] {
                     GenerationTypes::GenerationExact(value) => value,
                     GenerationTypes::GenerationRange(generation_range) => generation_range.sample(&mut rng)
                 });
-                now_y_line_mask.push(now_index as u8);
+                now_y_mask.push(now_index_u8);
             }
 
-            now_depth.push(now_y_line);
-            now_depth_mask.push(now_y_line_mask);
+            now_x.push(now_y);
+            now_x_mask.push(now_y_mask);
         }
 
-        model.push(now_depth);
-        model_mask.push(now_depth_mask);
+        model.push(now_x);
+        model_mask.push(now_x_mask);
     }
 
     #[cfg(debug_assertions)]
-    trace!("Model and mask ware filled succesfully");
-    
+    trace!("Model and mask were filled succesfully");
+
     (model, model_mask)
 }
 
@@ -89,49 +91,49 @@ pub fn create_full_model_without_mask(
     trace!("Starting filling only model");
 
     let (max_elem, layers_count, y_size, x_size) = generate_consts(borders);
+    let max_elem: usize = max_elem.try_into().unwrap();
 
-    let mut model: Vec<Vec<Vec<i32>>> = Vec::with_capacity(max_elem.try_into().expect("Capacity overfill"));
+    let mut model: Vec<Vec<Vec<i32>>> = Vec::with_capacity(x_size);
     let mut rng = rand::thread_rng();
 
-    let mut now_next_depth: Vec<Vec<i32>> = borders[0].clone();
-    let mut now_next_index: Vec<Vec<usize>> = vec![vec![0; x_size]; y_size];
+    for x_cord in 0..x_size {
 
-    for depth in 0..max_elem {
-
-        let mut now_depth: Vec<Vec<i32>> = Vec::with_capacity(y_size);
+        let mut now_x: Vec<Vec<i32>> = Vec::with_capacity(y_size);
 
         for y_cord in 0..y_size {
-            
-            let mut now_y_line: Vec<i32> = Vec::with_capacity(x_size);
 
-            for x_cord in 0..x_size {
-                let mut now_index = now_next_index[y_cord][x_cord];
-                if depth >= now_next_depth[y_cord][x_cord] && now_index < layers_count - 1 {
+            let mut now_y: Vec<i32> = Vec::with_capacity(max_elem);
+
+            let mut now_index: usize = 0;
+            let mut now_depth: usize = borders[now_index][y_cord][x_cord].try_into().unwrap_or(0);
+
+            for depth in 0..max_elem {
+
+                if depth >= now_depth && now_index < layers_count - 1 {
                     loop {
-                        now_next_index[y_cord][x_cord] += 1;
                         now_index += 1;
-                        now_next_depth[y_cord][x_cord] = borders[now_index][y_cord][x_cord];
-                        if now_next_depth[y_cord][x_cord] > depth || now_index == layers_count - 1 {
+                        now_depth = borders[now_index][y_cord][x_cord].try_into().unwrap_or(0);
+                        if now_depth > depth || now_index == layers_count - 1 {
                             break;
                         }
                     }
                 }
-                now_y_line.push(match fill_values[now_index] {
+
+                now_y.push(match fill_values[now_index] {
                     GenerationTypes::GenerationExact(value) => value,
                     GenerationTypes::GenerationRange(generation_range) => generation_range.sample(&mut rng)
-
                 });
             }
 
-            now_depth.push(now_y_line);
+            now_x.push(now_y);
         }
 
-        model.push(now_depth);
+        model.push(now_x);
     }
 
     #[cfg(debug_assertions)]
     trace!("Model was filled succesfully");
-    
+
     model
 }
 
@@ -139,46 +141,49 @@ pub fn create_only_mask(
     borders: &Vec<Vec<Vec<i32>>>,
 ) -> Vec<Vec<Vec<u8>>> {
     #[cfg(debug_assertions)]
-    trace!("Starting filling model: model and mask");
+    trace!("Starting filling only mask");
 
     let (max_elem, layers_count, y_size, x_size) = generate_consts(borders);
+    let max_elem: usize = max_elem.try_into().unwrap();
 
-    let mut model_mask: Vec<Vec<Vec<u8>>> = Vec::with_capacity(max_elem.try_into().expect("Capacity overfill"));
+    let mut model_mask: Vec<Vec<Vec<u8>>> = Vec::with_capacity(x_size);
 
-    let mut now_next_depth: Vec<Vec<i32>> = borders[0].clone();
-    let mut now_next_index: Vec<Vec<usize>> = vec![vec![0; x_size]; y_size];
+    for x_cord in 0..x_size {
 
-    for depth in 0..max_elem {
-
-        let mut now_depth_mask: Vec<Vec<u8>> = Vec::with_capacity(y_size);
+        let mut now_x_mask: Vec<Vec<u8>> = Vec::with_capacity(y_size);
 
         for y_cord in 0..y_size {
-            
-            let mut now_y_line_mask: Vec<u8> = Vec::with_capacity(x_size);
 
-            for x_cord in 0..x_size {
-                let mut now_index = now_next_index[y_cord][x_cord];
-                if depth >= now_next_depth[y_cord][x_cord] && now_index < layers_count - 1 {
+            let mut now_y_mask: Vec<u8> = Vec::with_capacity(max_elem);
+
+            let mut now_index: usize = 0;
+            let mut now_index_u8: u8 = 0;
+            let mut now_depth: usize = borders[now_index][y_cord][x_cord].try_into().unwrap_or(0);
+
+            for depth in 0..max_elem {
+
+                if depth >= now_depth && now_index < layers_count - 1 {
                     loop {
-                        now_next_index[y_cord][x_cord] += 1;
                         now_index += 1;
-                        now_next_depth[y_cord][x_cord] = borders[now_index][y_cord][x_cord];
-                        if now_next_depth[y_cord][x_cord] > depth || now_index == layers_count - 1 {
+                        now_depth = borders[now_index][y_cord][x_cord].try_into().unwrap_or(0);
+                        if now_depth > depth || now_index == layers_count - 1 {
+                            now_index_u8 = now_index as u8;
                             break;
                         }
                     }
                 }
-                now_y_line_mask.push(now_index as u8);
+
+                now_y_mask.push(now_index_u8);
             }
 
-            now_depth_mask.push(now_y_line_mask);
+            now_x_mask.push(now_y_mask);
         }
 
-        model_mask.push(now_depth_mask);
+        model_mask.push(now_x_mask);
     }
 
     #[cfg(debug_assertions)]
-    trace!("Model and mask ware filled succesfully");
-    
+    trace!("Mask was filled succesfully");
+
     model_mask
 }

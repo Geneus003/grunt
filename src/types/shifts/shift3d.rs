@@ -39,7 +39,7 @@ impl Shift3D {
     }
 
     pub fn set_angle_x(&mut self, angle_x: f32) -> Result<(), &'static str> {
-        if !(0.0..180.0).contains(&angle_x) {
+        if !(0.0..=180.0).contains(&angle_x) {
             return Err("Angle should be between 0.0 and 180.0");
         }
         self.angle_x = angle_x;
@@ -51,7 +51,7 @@ impl Shift3D {
     }
 
     pub fn set_angle_y(&mut self, angle_y: f32) -> Result<(), &'static str> {
-        if !(0.0..180.0).contains(&angle_y) {
+        if !(0.0..=180.0).contains(&angle_y) {
             return Err("Angle should be between 0.0 and 180.0");
         }
         self.angle_y = angle_y;
@@ -75,7 +75,7 @@ impl Shift3D {
     }
 
     pub fn set_angle_z(&mut self, angle_z: f32) -> Result<(), &'static str> {
-        if !(0.0..90.0).contains(&angle_z) {
+        if !(0.0..=90.0).contains(&angle_z) {
             return Err("Angle_z should be between 0 and 90.0");
         }
         self.angle_z = angle_z;

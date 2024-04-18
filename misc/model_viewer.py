@@ -10,9 +10,9 @@ class ViewerEngine:
         self.y_axis = y_axis
         self.z_axis = z_axis
         self.kwargs = {
-            'z_axis': len(model),
+            'x_axis': len(model[0][0]),
             'y_axis': len(model[0]),
-            'x_axis': len(model[0][0])
+            'z_axis': len(model),
         }
 
     def __call__(self, param, value):
@@ -51,7 +51,7 @@ class ViewerEngine:
     def update_z_axis(self, value):
         new_model = self.model[:self.value_to_num(value, "z_axis")]
         mesh = pv.ImageData()
-        mesh.dimensions = np.array((len(new_model[0][0]),len(new_model[0]), len(new_model))) + 1
+        mesh.dimensions = np.array((len(new_model[0][0]), len(new_model[0]), len(new_model))) + 1
         mesh.origin = (0, 0, 0)
         mesh.spacing = (1, 1, 1)
         mesh.cell_data["values"] = new_model.flatten()
@@ -60,7 +60,7 @@ class ViewerEngine:
     def update_y_axis(self, value):
         new_model = self.model[:, :self.value_to_num(value, "y_axis"), :]
         mesh = pv.ImageData()
-        mesh.dimensions = np.array((len(new_model[0][0]),len(new_model[0]), len(new_model))) + 1
+        mesh.dimensions = np.array((len(new_model[0][0]), len(new_model[0]), len(new_model))) + 1
         mesh.origin = (0, 0, 0)
         mesh.spacing = (1, 1, 1)
         mesh.cell_data["values"] = new_model.flatten()
@@ -69,11 +69,26 @@ class ViewerEngine:
     def update_x_axis(self, value):
         new_model = self.model[:, :, :self.value_to_num(value, "x_axis")]
         mesh = pv.ImageData()
-        mesh.dimensions = np.array((len(new_model[0][0]),len(new_model[0]), len(new_model))) + 1
+        mesh.dimensions = np.array((len(new_model[0][0]), len(new_model[0]), len(new_model))) + 1
         mesh.origin = (0, 0, 0)
         mesh.spacing = (1, 1, 1)
         mesh.cell_data["values"] = new_model.flatten()
         self.output.copy_from(mesh)
+
+def flatten_to_zyx(model):
+    size_x = len(model)
+    size_y = len(model[0])
+    size_z = len(model[0][0])
+    layer_count = size_x * size_y
+    size_count = size_x * size_y * size_z
+
+    array_flatten = np.zeros(size_count)
+    for i in range(0, size_count):
+        array_flatten[i] = model[i%size_x][(i%layer_count)//size_y][i//layer_count]
+
+    return array_flatten
+
+
 
 def main():
     try:
@@ -85,9 +100,9 @@ def main():
     model_file = json.load(model_file)
 
     model = []
-    for i, e in enumerate(model_file["model"]):
+    for i, e in enumerate(model_file["model_mask"]):
         model.append([])
-        for j, ee in enumerate(e[f"de{i}"]):
+        for j, ee in enumerate(e[f"x{i}"]):
             model[-1].append([])
             for k in ee[f"y{j}"]:
                 model[-1][-1].append(int(k))
@@ -96,8 +111,13 @@ def main():
     y_axis = [float(i) for i in model_file["output_axes"]["y_ax"]]
     z_axis = [float(i) for i in model_file["output_axes"]["z_ax"]]
 
-    model = np.array(model[::-1])
-    
+    z_s = len(model[0][0])
+    y_s = len(model[0])
+    x_s = len(model)
+
+    # model = np.array(model[::-1])
+    model = np.array(flatten_to_zyx(model).reshape((z_s, y_s, x_s))[::-1])
+
     print("model size:", model.shape)
 
     mesh = pv.ImageData()
@@ -105,6 +125,7 @@ def main():
     mesh.origin = (0, 0, 0)
     mesh.spacing = (1, 1, 1)
     mesh.cell_data["values"] = model.flatten()
+    # mesh.cell_data["values"] = np.arange(mesh.n_cells)
 
     p = pv.Plotter()
     p.add_mesh(mesh, opacity=1, show_edges=True)
@@ -144,4 +165,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-

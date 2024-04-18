@@ -28,7 +28,7 @@ fn main() {
     // borders.set_border_mod_func(Some(test_function));
     // params.set_layers_border(borders);
 
-    params.set_x_axis(Axis::generate_axis(1.0, 30.0, None));
+    params.set_x_axis(Axis::generate_axis(1.0, 10.0, None));
     params.set_y_axis(Axis::generate_axis(1.0, 3.0, None));
 
     params.set_layers_dist(LayersDist::create_from_vec([2, 3, 2].to_vec()).unwrap_or_default());
@@ -82,9 +82,9 @@ fn main() {
     use std::time::Instant;
     let now = Instant::now();
 
-    let _save_state = ["params", "borders", "model", "model_mask"];
-    let _axis_export = [AxisExportType::IsNum, AxisExportType::IsNum, AxisExportType::IsNum];
-    // model.export_model("my_model", &save_state, &axis_export).unwrap();
+    let save_state = ["params", "borders", "model", "model_mask"];
+    let axis_export = vec![AxisExportType::IsNum, AxisExportType::IsNum, AxisExportType::IsNum];
+    model.export_model("my_model", &save_state, &axis_export).unwrap();
 
     let elapsed = now.elapsed();
 

@@ -1,8 +1,6 @@
 use rand::Rng;
 use rand::distributions::Uniform;
-
-use crate::model3d::fill3d::filling_model_3d::*;
-use crate::model3d::fill3d::GenerationTypes;
+use crate::model3d::fill3d::filling_model_3d::*; use crate::model3d::fill3d::GenerationTypes;
 
 #[test]
 fn fill_model_and_mask_tests() {
@@ -69,7 +67,7 @@ fn fill_model_and_mask_tests() {
 
                     if model_mask[i][j][k] as usize == model_size - 1 { continue; }
 
-                    if borders[model_mask[i][j][k] as usize][j][k] < i as i32 {
+                    if borders[model_mask[i][j][k] as usize][j][i] < k as i32 {
                         errors += 1;
                         break 'a
                     }
