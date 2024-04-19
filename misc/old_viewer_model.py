@@ -11,7 +11,7 @@ def flatten_to_zyx(model):
 
     array_flatten = np.zeros(size_count)
     for i in range(0, size_count):
-        array_flatten[i] = model[i%size_x][(i%layer_count)//size_y][i//layer_count]
+        array_flatten[i] = model[i%size_x][(i%layer_count)//size_x][i//layer_count]
 
     return array_flatten
 
@@ -26,9 +26,9 @@ def main():
     for i, e in enumerate(model_file["model"]):
         model.append([])
         for j, ee in enumerate(e[f"x{i}"]):
-            model[-1].append([])
+            model[i].append([])
             for k in ee[f"y{j}"]:
-                model[-1][-1].append(int(k))
+                model[i][j].append(int(k))
 
     z_s = len(model[0][0])
     y_s = len(model[0])
@@ -41,7 +41,7 @@ def main():
 
     ax = plt.figure().add_subplot(111,projection ='3d')
 
-    colors = plt.cm.PuOr(model)
+    colors = plt.cm.plasma(model)
     ax.voxels(x, y, z, model, facecolors=colors, alpha=0.8)
 
     ax.invert_zaxis()

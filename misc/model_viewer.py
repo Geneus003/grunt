@@ -84,7 +84,7 @@ def flatten_to_zyx(model):
 
     array_flatten = np.zeros(size_count)
     for i in range(0, size_count):
-        array_flatten[i] = model[i%size_x][(i%layer_count)//size_y][i//layer_count]
+        array_flatten[i] = model[i%size_x][(i%layer_count)//size_x][i//layer_count]
 
     return array_flatten
 

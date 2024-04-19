@@ -2,16 +2,11 @@ use crate::model3d::Model3D;
 use crate::model2d::Model2D;
 
 impl Model3D {
-    // REWRITE IT
     pub fn get_by_num(&self, x: usize, y: usize) -> Result<Vec<i32>, &'static str> {
         if self.model.is_empty() { return Err("Model doesn't exists in object") };
-        if self.model[0].len() < y || self.model[0][0].len() < x { return Err("X or Y out of bounds") };
+        if self.model.len() < x || self.model[0].len() < y { return Err("X or Y out of bounds") };
 
-        let mut output_vec = Vec::with_capacity(self.model.len());
-        for i in 0..self.model.len() {
-            output_vec.push(self.model[i][x][y]);
-        }
-        Ok(output_vec)
+        Ok(self.model[x][y].clone())
     }
 
     pub fn to_model_2d_by_angle(&self, pos_x: f32, angle: f32, resolution: usize) -> Result<(), &'static str> {
@@ -63,13 +58,14 @@ impl Model3D {
 
         let source_model = &self.model;
         let source_model_mask = &self.model_mask;
+        let source_model_size_x = self.borders.len();
         let source_model_size_y = self.borders[0].len();
-        let source_model_size_x = self.borders[0][0].len();
-        let source_model_size_z = self.borders.len();
+        let borders_model_size_z = self.borders[0][0].len();
 
         let model_ex: bool = !self.model.is_empty();
         let mask_ex: bool = !self.model_mask.is_empty();
 
+        let mut borders: Vec<Vec<i32>> = Vec::with_capacity(cords_x.len());
         let mut model: Vec<Vec<i32>> = Vec::with_capacity(if model_ex {cords_x.len()} else {0});
         let mut model_mask: Vec<Vec<u8>> = Vec::with_capacity(if mask_ex {cords_x.len()} else {0});
 
@@ -80,23 +76,25 @@ impl Model3D {
                 return Err("Invalid coodinates: it must be smaller than model size")
             }
 
+            let mut borders_temp_vec: Vec<i32> = Vec::with_capacity(borders_model_size_z);
+            for layer in &self.borders {
+                borders_temp_vec.push(layer[y_cord][*x_cord]);
+            }
+            borders.push(borders_temp_vec);
+
             if model_ex{
-                let mut temp_vec: Vec<i32> = Vec::with_capacity(source_model_size_z);
-                for depth in source_model {
-                    temp_vec.push(depth[y_cord][*x_cord]);
-                }
-                model.push(temp_vec);
+                model.push(source_model[*x_cord][y_cord].clone());
             }
 
             if mask_ex {
-                let mut temp_vec: Vec<u8> = Vec::with_capacity(source_model_size_z);
-                for depth in source_model_mask {
-                    temp_vec.push(depth[y_cord][*x_cord]);
-                }
-                model_mask.push(temp_vec);
+                model_mask.push(source_model_mask[*x_cord][y_cord].clone());
             }
-
         }
-        Err("Literally nothing")
+
+        Ok(Model2D::new(
+            model,
+            model_mask,
+            borders
+        ))
     }
 }
