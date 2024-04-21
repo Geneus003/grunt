@@ -28,14 +28,14 @@ fn main() {
     // borders.set_border_mod_func(Some(test_function));
     // params.set_layers_border(borders);
 
-    params.set_x_axis(Axis::generate_axis(1.0, 10.0, None));
-    params.set_y_axis(Axis::generate_axis(1.0, 3.0, None));
+    params.set_x_axis(Axis::generate_axis(1.0, 100.0, None));
+    params.set_y_axis(Axis::generate_axis(1.0, 100.0, None));
 
-    params.set_layers_dist(LayersDist::create_from_vec([2, 3, 2].to_vec()).unwrap_or_default());
+    params.set_layers_dist(LayersDist::create_from_vec([20, 30, 20].to_vec()).unwrap_or_default());
 
     let mut borders = LayersBorder::new();
-    borders.set_border_deviation(5.0).unwrap();
-    borders.set_border_max_step(Some(1));
+    borders.set_border_deviation(8.0).unwrap();
+    borders.set_border_max_step(Some(3));
     // borders.set_border_mod_func(Some(_test_function));
     params.set_layers_border(borders);
 
@@ -83,7 +83,7 @@ fn main() {
     let now = Instant::now();
 
     let save_state = ["params", "borders", "model", "model_mask"];
-    let axis_export = vec![AxisExportType::IsNum, AxisExportType::IsNum, AxisExportType::IsNum];
+    let axis_export = vec![AxisExportType::Scale(1.0), AxisExportType::Scale(1.0), AxisExportType::AsNum];
     model.export_model("my_model", &save_state, &axis_export).unwrap();
 
     let elapsed = now.elapsed();
@@ -92,7 +92,8 @@ fn main() {
         println!("Elapsed export: {:.2?}", elapsed);
     }
 
-    let _ = model.to_model_2d_by_angle(10.0, 45.0, 100);
+    let _model_2d = model.to_model_2d_by_angle(4.0, 45.0, 10).unwrap();
+    // println!("{:?}", model_2d.model())
 }
 
 #[cfg(test)]

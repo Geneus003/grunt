@@ -9,7 +9,8 @@ pub mod shifts;
 pub mod generation_params;
 
 pub enum AxisExportType {
-    IsNum,
+    AsNum,
+    AsSelf,
     Scale(f32),
     CustomAxis(Vec<f32>),
 }

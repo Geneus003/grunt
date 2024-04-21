@@ -5,11 +5,11 @@ use numtoa::NumToA;
 
 use crate::model3d::Model3D;
 use crate::types::generation_params::Params3D;
-use crate::types::AxisExportType;
+use crate::types::{AxisExportType, Axis};
 
 impl Model3D {
     pub fn export_model(&self, name: &str, save: &[&str], axes_export: &Vec<AxisExportType>) -> Result<(), std::io::Error> {
-        let default_ax_type = vec![AxisExportType::Scale(1.0), AxisExportType::Scale(1.0), AxisExportType::IsNum];
+        let default_ax_type = vec![AxisExportType::Scale(1.0), AxisExportType::Scale(1.0), AxisExportType::AsNum];
 
         let axes_export = if axes_export.len() != 3 {
             eprintln!("WARNING: Axes export param is ignored, it must contain 3 elements (for x, y, z)");
@@ -26,15 +26,7 @@ impl Model3D {
         } else { result += "null" }
 
         result += ",\"output_axes\":";
-        let mut axes_size = [self.params.x_axis().get_axis_len(), self.params.y_axis().get_axis_len(), 0]; 
-        if !(self.model.is_empty()) {
-            axes_size[2] = self.model[0][0].len()
-        } else if !(self.model_mask.is_empty()) {
-            axes_size[2] = self.model_mask[0][0].len()
-        } else {
-            axes_size[2] = get_max_depth(&self.borders) as usize
-        }
-        export_true_axes(&mut result, &self.params, axes_export, axes_size);
+        export_true_axes(&mut result, &self.params, axes_export, get_max_depth(&self.borders));
 
         result += ",\"borders\":";
         if save.contains(&"borders") {
@@ -171,68 +163,19 @@ fn export_params(result: &mut String, params: &Params3D) {
     result.push_str(serde_json::to_string(params).unwrap().as_str());
 }
 
-fn export_true_axes(result: &mut String, params: &Params3D, axes_export: &[AxisExportType], model_size: [usize; 3]) {
-    let mut now_ax: &Vec<f32>;
-    let z_ax = if matches!(axes_export[2], AxisExportType::Scale(_)) {
-        (0..model_size[2]+1).map(|i| i as f32).collect()
-    } else { vec![] };
-    for (export_id, export_type) in axes_export.iter().enumerate() {
-        match export_id {
-            0 => {
-                *result += "{\"x_ax\":[";
-                now_ax = params.x_axis().get_axis();
-            },
-            1 => {
-                *result += "\"y_ax\":[";
-                now_ax = params.y_axis().get_axis();
-            },
-            2 => {
-                *result += "\"z_ax\":[";
-                now_ax = &z_ax 
-            },
-            _ => unreachable!("Error while exporting")
-        }
+fn export_true_axes(result: &mut String, params: &Params3D, axes_export: &[AxisExportType], depth_model_size: i32) {
+    *result += "{\"x_ax\":[";
+    params.x_axis().export_axis(&axes_export[0], result);
+    *result += "],";
 
-        match export_type {
-            AxisExportType::IsNum => export_num_ax(result, model_size[export_id]),
-            AxisExportType::Scale(scale) => export_scale_ax(result, *scale, now_ax),
-            AxisExportType::CustomAxis(new_ax) => export_custom_ax(result, new_ax),
-        }
-        
-        match export_id {
-            0 => { *result += "]," },
-            1 => { *result += "]," },
-            2 => { *result += "]" },
-            _ => unreachable!("Error while exporting")
-        }
-    }
-    *result += "}"
-}
+    *result += "\"y_ax\":[";
+    params.y_axis().export_axis(&axes_export[1], result);
+    *result += "],";
 
-// 3 functions lower created to modify ONLY axis
-fn export_num_ax(result: &mut String, axes_size: usize) {
-    let mut buf = [0u8; 20];
-    for i in 0..axes_size {
-        *result += i.numtoa_str(10, &mut buf);
-        *result += ",";
-    }
-    *result += axes_size.numtoa_str(10, &mut buf)
-}
+    *result += "\"z_ax\":[";
+    Axis::generate_axis(1.0, depth_model_size as f32, None).export_axis(&axes_export[2], result);
+    *result += "]}";
 
-fn export_scale_ax(result: &mut String, scale_value: f32, axis: &[f32]) {
-    for i in axis[..axis.len()-1].iter() {
-        *result += &(i * scale_value).to_string();
-        *result += ",";
-    }
-    *result += &(axis[axis.len()-1] * scale_value).to_string();
-}
-
-fn export_custom_ax(result: &mut String, new_axis: &[f32]) {
-    for i in new_axis[..new_axis.len()-1].iter() {
-        *result += &i.to_string();
-        *result += ",";
-    }
-    *result += &(new_axis[new_axis.len()-1]).to_string();
 }
 
 fn get_max_depth(borders: &Vec<Vec<Vec<i32>>>) -> i32 {

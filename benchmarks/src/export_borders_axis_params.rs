@@ -13,9 +13,9 @@ pub fn bench(runs_difficulty: usize, run_tries: usize) -> (Duration, Duration, D
     let save_state = vec!["params", "borders"];
 
     let mut diff_params: Vec<generation_params::Params3D> = Vec::new();
-    let num_exp: Vec<AxisExportType> = (0..3).map(|_| AxisExportType::IsNum).collect();
+    let num_exp: Vec<AxisExportType> = (0..3).map(|_| AxisExportType::AsNum).collect();
     let scale_exp: Vec<AxisExportType> = 
-        vec![AxisExportType::Scale(1.0), AxisExportType::Scale(2.5), AxisExportType::Scale(0.5)];
+        vec![AxisExportType::AsSelf, AxisExportType::Scale(2.5), AxisExportType::Scale(0.5)];
 
     for run in 0..runs_difficulty {
         let now_axis_size = axis_size[run % axis_size.len()];

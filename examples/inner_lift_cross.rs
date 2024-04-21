@@ -35,7 +35,7 @@ fn main() {
     let model = generate_model(params).unwrap();
 
     let save_state = vec!["params", "borders", "model", "model_mask"];
-    let axis_export = vec![AxisExportType::Scale(1.0), AxisExportType::Scale(2.0), AxisExportType::CustomAxis(vec![50.0, 100.0])];
+    let axis_export = vec![AxisExportType::AsSelf, AxisExportType::Scale(2.0), AxisExportType::CustomAxis(vec![50.0, 100.0])];
     model.export_model("my_model", &save_state, &axis_export).unwrap();
 
     println!("generation succesfull, check my_model.json")

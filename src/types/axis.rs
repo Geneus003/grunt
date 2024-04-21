@@ -1,5 +1,7 @@
-use crate::types::Axis;
+use numtoa::NumToA;
 
+use crate::types::Axis;
+use crate::types::AxisExportType;
 
 impl Default for Axis {
     fn default() -> Axis {
@@ -116,6 +118,43 @@ impl Axis {
                 }
             }
             None
+        }
+    }
+}
+
+impl Axis {
+    fn export_num_ax(&self, result: &mut String) {
+        let mut buf = [0u8; 20];
+        for i in 0..self.axis.len() {
+            *result += i.numtoa_str(10, &mut buf);
+            *result += ",";
+        }
+        *result += self.axis.len().numtoa_str(10, &mut buf)
+    }
+
+    fn export_scale_ax(&self, result: &mut String, scale_value: f32) {
+        for i in self.axis[..self.axis.len() - 1].iter() {
+            *result += &(i * scale_value).to_string();
+            *result += ",";
+        }
+        *result += &(self.axis[self.axis.len() - 1] * scale_value).to_string();
+    }
+
+    fn export_self_ax(&self, result: &mut String) {
+        for i in self.axis[..self.axis.len() - 1].iter() {
+            *result += &i.to_string();
+            *result += ",";
+        }
+        *result += &self.axis[self.axis.len() - 1].to_string();
+    }
+
+    pub fn export_axis(&self, export_type: &AxisExportType, result: &mut String) {
+        match export_type {
+            AxisExportType::AsNum => self.export_num_ax(result),
+            AxisExportType::AsSelf => self.export_self_ax(result),
+            AxisExportType::Scale(scale_param) => self.export_scale_ax(result, *scale_param),
+            // I know, i know, its bad but it's kinda unvirsal
+            AxisExportType::CustomAxis(ax) => Axis::create_from_vec(ax.to_vec()).unwrap().export_self_ax(result),
         }
     }
 }

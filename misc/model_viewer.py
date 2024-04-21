@@ -32,7 +32,7 @@ class ViewerEngine:
                 if max_bound - min_bound == 1:
                     return max_bound 
                 if value == axis[(max_bound + min_bound) // 2]:
-                    return (max_bound + min_bound) // 2 + 1
+                    return (max_bound + min_bound) // 2 + 1 
                 elif value > axis[(max_bound + min_bound) // 2]:
                     min_bound = (max_bound + min_bound) // 2
                 else:
@@ -100,7 +100,7 @@ def main():
     model_file = json.load(model_file)
 
     model = []
-    for i, e in enumerate(model_file["model_mask"]):
+    for i, e in enumerate(model_file["model"]):
         model.append([])
         for j, ee in enumerate(e[f"x{i}"]):
             model[-1].append([])
@@ -129,7 +129,7 @@ def main():
 
     p = pv.Plotter()
     p.add_mesh(mesh, opacity=1, show_edges=True)
-    p.show_bounds(axes_ranges=[x_axis[0], x_axis[-1], y_axis[0], y_axis[-1], z_axis[0], z_axis[-1]])
+    p.show_bounds(axes_ranges=[x_axis[0], x_axis[-1], y_axis[0], y_axis[-1], z_axis[0], z_axis[-1]], color="red", location="all", xtitle="X ax", ytitle="Y ax")
 
     engine = ViewerEngine(mesh, model.copy(), x_axis, y_axis, z_axis)
 

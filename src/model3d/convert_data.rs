@@ -9,17 +9,18 @@ impl Model3D {
         Ok(self.model[x][y].clone())
     }
 
-    pub fn to_model_2d_by_angle(&self, pos_x: f32, angle: f32, resolution: usize) -> Result<(), &'static str> {
+    pub fn to_model_2d_by_angle(&self, pos_x: f32, angle: f32, resolution: usize) -> Result<Model2D, &'static str> {
         let angle = (angle * 1000.0).round() / 1000.0;
         let is_acute = angle <= 90.0;
-        let _pos_y = 0.0f32;
 
         if angle <= 0.0 || angle >= 180.0 {
             return Err("Angle must be between 0.0 and 180.0 degrees")
         }
 
+        let x_ax_obj = self.params.x_axis();
+        let y_ax_obj = self.params.y_axis();
         let x_ax = self.params.x_axis().get_axis();
-        let _y_ax = self.params.y_axis().get_axis();
+        let pos_y = self.params.y_axis().get_axis()[0];
 
         let end_x = if is_acute {
             x_ax[0]
@@ -27,7 +28,7 @@ impl Model3D {
             x_ax[x_ax.len()-1]
         };
         
-        let (_delt_y, _delt_x) = if is_acute {
+        let (delt_y, delt_x) = if is_acute {
             if pos_x < end_x {
                 return Err("pos_x must be bigger than start of axis with acute angle");
             }
@@ -41,53 +42,71 @@ impl Model3D {
             ((-angle).to_radians().tan() * delt_x, delt_x)
         };
 
-        let _model_2d: Vec<Vec<i32>> = Vec::with_capacity(resolution);
-        let (_now_x, _now_y) = (pos_x, 0.0);
+        let (mut now_x, mut now_y) = (pos_x, pos_y);
+        let (delt_x, delt_y) = (delt_x / resolution as f32, delt_y / resolution as f32);
+
+        let mut nums_x: Vec<usize> = Vec::with_capacity(resolution);
+        let mut nums_y: Vec<usize> = Vec::with_capacity(resolution);
+
+        println!("Delts: {delt_y}, {delt_y}");
+
         for _ in 0..resolution {
+            println!("{now_x}, {now_y}");
+            nums_x.push(x_ax_obj.find_element_smaller(now_x).unwrap());
+            nums_y.push(y_ax_obj.find_element_smaller(now_y).unwrap());
 
-
+            now_x = if is_acute {
+                ((now_x - delt_x) * 1000.0).round() / 1000.0
+            } else {
+                ((now_x + delt_x) * 1000.0).round() / 1000.0
+            };
+            now_y = ((now_y + delt_y) * 1000.0).round() / 1000.0;
         }
 
-        Ok(())
+        self.form_2d_by_nums(nums_x, nums_y)
     }
 
-    pub fn form_2d_by_nums(&self, cords_x: Vec<usize>, cords_y: Vec<usize>) -> Result<Model2D, &'static str> {
-        if cords_x.len() != cords_y.len() {
+    pub fn form_2d_by_nums(&self, nums_x: Vec<usize>, nums_y: Vec<usize>) -> Result<Model2D, &'static str> {
+        if nums_x.len() != nums_y.len() {
             return Err("Vectors cords_x and cords_y must be with same size")
         }
 
         let source_model = &self.model;
         let source_model_mask = &self.model_mask;
-        let source_model_size_x = self.borders.len();
+
+        // Borders format is Z->Y->X, using borders because model || mask can be empty
+        let borders_model_size_z = self.borders.len();
         let source_model_size_y = self.borders[0].len();
-        let borders_model_size_z = self.borders[0][0].len();
+        let source_model_size_x = self.borders[0][0].len();
 
         let model_ex: bool = !self.model.is_empty();
         let mask_ex: bool = !self.model_mask.is_empty();
 
-        let mut borders: Vec<Vec<i32>> = Vec::with_capacity(cords_x.len());
-        let mut model: Vec<Vec<i32>> = Vec::with_capacity(if model_ex {cords_x.len()} else {0});
-        let mut model_mask: Vec<Vec<u8>> = Vec::with_capacity(if mask_ex {cords_x.len()} else {0});
+        let mut borders: Vec<Vec<i32>> = Vec::with_capacity(nums_x.len());
+        let mut model: Vec<Vec<i32>> = Vec::with_capacity(if model_ex {nums_x.len()} else {0});
+        let mut model_mask: Vec<Vec<u8>> = Vec::with_capacity(if mask_ex {nums_x.len()} else {0});
 
-        for (num, x_cord) in cords_x.iter().enumerate() {
-            let y_cord = cords_y[num];
+        println!("{:?}, {:?}", nums_x, nums_y);
 
-            if y_cord >= source_model_size_y || *x_cord >= source_model_size_x {
+        for (num, x_num) in nums_x.iter().enumerate() {
+            let y_num = nums_y[num];
+
+            if y_num >= source_model_size_y || *x_num >= source_model_size_x {
                 return Err("Invalid coodinates: it must be smaller than model size")
             }
 
             let mut borders_temp_vec: Vec<i32> = Vec::with_capacity(borders_model_size_z);
             for layer in &self.borders {
-                borders_temp_vec.push(layer[y_cord][*x_cord]);
+                borders_temp_vec.push(layer[y_num][*x_num]);
             }
             borders.push(borders_temp_vec);
 
             if model_ex{
-                model.push(source_model[*x_cord][y_cord].clone());
+                model.push(source_model[*x_num][y_num].clone());
             }
 
             if mask_ex {
-                model_mask.push(source_model_mask[*x_cord][y_cord].clone());
+                model_mask.push(source_model_mask[*x_num][y_num].clone());
             }
         }
 

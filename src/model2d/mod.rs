@@ -1,3 +1,5 @@
+pub mod export;
+
 #[derive(Debug, Clone)]
 pub struct Model2D {
     model: Vec<Vec<i32>>,

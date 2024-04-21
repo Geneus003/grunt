@@ -27,7 +27,7 @@ fn main() {
     shift.set_pos_x(4.5);
     shift.set_angle_x(90.0).unwrap();
     shift.set_angle_z(90.0).unwrap();
-    shift.set_shift_force(2);
+    shift.set_shift_force(3);
     shift.set_shift_type(shifts::ShiftTypes::OuterDescent);
     shift.set_main_region(1).unwrap();
     params.add_shift(shift);
@@ -35,7 +35,7 @@ fn main() {
     let model = generate_model(params).unwrap();
 
     let save_state = vec!["params", "borders", "model", "model_mask"];
-    let axis_export = vec![AxisExportType::IsNum, AxisExportType::IsNum, AxisExportType::IsNum];
+    let axis_export = vec![AxisExportType::AsNum, AxisExportType::AsNum, AxisExportType::AsNum];
     model.export_model("my_model", &save_state, &axis_export).unwrap();
 
     println!("generation succesfull, check my_model.json")
