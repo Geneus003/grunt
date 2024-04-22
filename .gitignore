@@ -17,4 +17,4 @@ Cargo.lock
 misc/venv/
 
 # Generated models
-my_model.json
+my_model*

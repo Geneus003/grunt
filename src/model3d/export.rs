@@ -9,7 +9,7 @@ use crate::types::{AxisExportType, Axis};
 
 impl Model3D {
     pub fn export_model(&self, name: &str, save: &[&str], axes_export: &Vec<AxisExportType>) -> Result<(), std::io::Error> {
-        let default_ax_type = vec![AxisExportType::Scale(1.0), AxisExportType::Scale(1.0), AxisExportType::AsNum];
+        let default_ax_type = vec![AxisExportType::AsSelf, AxisExportType::AsSelf, AxisExportType::AsSelf];
 
         let axes_export = if axes_export.len() != 3 {
             eprintln!("WARNING: Axes export param is ignored, it must contain 3 elements (for x, y, z)");
@@ -57,9 +57,9 @@ impl Model3D {
     }
 }
 
-fn export_border_num(result: &mut String, model: &[Vec<Vec<i32>>]){
+fn export_border_num(result: &mut String, borders: &[Vec<Vec<i32>>]){
     let mut buf = [0u8; 12]; *result += "[";
-    for (depth_num, depth) in model.iter().enumerate() {
+    for (depth_num, depth) in borders.iter().enumerate() {
         *result += "{\"bo";
         *result += format!("{depth_num}\":[").as_str();
         for (y_num, y_axis) in depth.iter().enumerate() {
@@ -79,14 +79,13 @@ fn export_border_num(result: &mut String, model: &[Vec<Vec<i32>>]){
                 *result += "]}"
             }
         }
-        if depth_num != model.len() - 1 {
+        if depth_num != borders.len() - 1 {
             *result += "]},";
         } else {
             *result += "]}";
         }
     }
     *result += "]";
-
 }
 
 fn export_model_num(result: &mut String, model: &[Vec<Vec<i32>>]) {
@@ -124,11 +123,11 @@ fn export_model_num(result: &mut String, model: &[Vec<Vec<i32>>]) {
     *result += "]";
 }
 
-fn export_mask_num(result: &mut String, model: &[Vec<Vec<u8>>]) {
+fn export_mask_num(result: &mut String, model_mask: &[Vec<Vec<u8>>]) {
     let mut buf = [0u8; 12];
     *result += "[";
 
-    for (x_num, x_ax) in model.iter().enumerate() {
+    for (x_num, x_ax) in model_mask.iter().enumerate() {
         *result += "{\"x";
         *result += format!("{x_num}\":[").as_str();
 
@@ -150,7 +149,7 @@ fn export_mask_num(result: &mut String, model: &[Vec<Vec<u8>>]) {
             }
         }
 
-        if x_num != model.len() - 1 {
+        if x_num != model_mask.len() - 1 {
             *result += "]},";
         } else {
             *result += "]}";
@@ -180,14 +179,15 @@ fn export_true_axes(result: &mut String, params: &Params3D, axes_export: &[AxisE
 
 fn get_max_depth(borders: &Vec<Vec<Vec<i32>>>) -> i32 {
     let mut max_elem = 0;
-    for y_cord in borders {
-        for x_cord in y_cord {
-            for depth in x_cord {
-                if *depth > max_elem {
-                    max_elem = *depth;
+    // borders stores as Z->Y->X
+    for depth in borders {
+        for y_cord in depth {
+            for x_cord_value in y_cord {
+                if *x_cord_value > max_elem {
+                    max_elem = *x_cord_value;
                 } 
             }
-        } }
-
+        } 
+    }
     max_elem
 }

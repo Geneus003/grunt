@@ -1,5 +1,7 @@
 use crate::model3d::Model3D;
 use crate::model2d::Model2D;
+use crate::types::generation_params::Params2D;
+use crate::types::Axis;
 
 impl Model3D {
     pub fn get_by_num(&self, x: usize, y: usize) -> Result<Vec<i32>, &'static str> {
@@ -48,10 +50,7 @@ impl Model3D {
         let mut nums_x: Vec<usize> = Vec::with_capacity(resolution);
         let mut nums_y: Vec<usize> = Vec::with_capacity(resolution);
 
-        println!("Delts: {delt_y}, {delt_y}");
-
         for _ in 0..resolution {
-            println!("{now_x}, {now_y}");
             nums_x.push(x_ax_obj.find_element_smaller(now_x).unwrap());
             nums_y.push(y_ax_obj.find_element_smaller(now_y).unwrap());
 
@@ -85,8 +84,7 @@ impl Model3D {
         let mut borders: Vec<Vec<i32>> = Vec::with_capacity(nums_x.len());
         let mut model: Vec<Vec<i32>> = Vec::with_capacity(if model_ex {nums_x.len()} else {0});
         let mut model_mask: Vec<Vec<u8>> = Vec::with_capacity(if mask_ex {nums_x.len()} else {0});
-
-        println!("{:?}, {:?}", nums_x, nums_y);
+        let mut x_ax: Vec<f32> = Vec::with_capacity(nums_x.len());
 
         for (num, x_num) in nums_x.iter().enumerate() {
             let y_num = nums_y[num];
@@ -94,6 +92,8 @@ impl Model3D {
             if y_num >= source_model_size_y || *x_num >= source_model_size_x {
                 return Err("Invalid coodinates: it must be smaller than model size")
             }
+
+            x_ax.push(*x_num as f32);
 
             let mut borders_temp_vec: Vec<i32> = Vec::with_capacity(borders_model_size_z);
             for layer in &self.borders {
@@ -110,10 +110,14 @@ impl Model3D {
             }
         }
 
+        let mut params = Params2D::new();
+        params.set_x_axis(Axis::create_from_vec(x_ax).unwrap());
+
         Ok(Model2D::new(
             model,
             model_mask,
-            borders
+            borders,
+            params,
         ))
     }
 }

@@ -83,7 +83,7 @@ fn main() {
     let now = Instant::now();
 
     let save_state = ["params", "borders", "model", "model_mask"];
-    let axis_export = vec![AxisExportType::Scale(1.0), AxisExportType::Scale(1.0), AxisExportType::AsNum];
+    let axis_export = vec![AxisExportType::AsSelf, AxisExportType::AsSelf, AxisExportType::AsSelf];
     model.export_model("my_model", &save_state, &axis_export).unwrap();
 
     let elapsed = now.elapsed();
@@ -92,8 +92,11 @@ fn main() {
         println!("Elapsed export: {:.2?}", elapsed);
     }
 
-    let _model_2d = model.to_model_2d_by_angle(4.0, 45.0, 10).unwrap();
-    // println!("{:?}", model_2d.model())
+    let save_state = ["borders", "model", "model_mask"];
+    let axis_export = vec![AxisExportType::AsSelf, AxisExportType::AsSelf];
+
+    let model_2d = model.to_model_2d_by_angle(4.0, 45.0, 10).unwrap();
+    model_2d.export_model("my_model2D", &save_state, &axis_export).unwrap()
 }
 
 #[cfg(test)]

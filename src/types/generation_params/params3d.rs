@@ -23,6 +23,7 @@ impl Params3D {
         }
     }
 }
+
 impl Params3D {
     pub fn set_x_axis(&mut self, axis: Axis) {
         self.x_ax = axis;

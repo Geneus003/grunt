@@ -9,14 +9,15 @@ type ModelAndMaskType = (Vec<Vec<Vec<i32>>>, Vec<Vec<Vec<u8>>>);
 
 fn generate_consts(borders: &Vec<Vec<Vec<i32>>>) -> (i32, usize, usize, usize) {
     let mut max_elem = 0;
-    for y_cord in borders {
-        for x_cord in y_cord {
-            for depth in x_cord {
-                if *depth > max_elem {
-                    max_elem = *depth;
+    for depth in borders {
+        for y_cord in depth {
+            for x_cord_value in y_cord {
+                if *x_cord_value > max_elem {
+                    max_elem = *x_cord_value;
                 } 
             }
-        } }
+        } 
+    }
 
     (max_elem, borders.len(), borders[0].len(), borders[0][0].len())
 }
