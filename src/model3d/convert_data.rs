@@ -1,7 +1,7 @@
 use crate::model3d::Model3D;
 use crate::model2d::Model2D;
 use crate::types::generation_params::Params2D;
-use crate::types::Axis;
+use crate::types::Axis; 
 
 impl Model3D {
     pub fn get_by_num(&self, x: usize, y: usize) -> Result<Vec<i32>, &'static str> {
@@ -93,7 +93,7 @@ impl Model3D {
                 return Err("Invalid coodinates: it must be smaller than model size")
             }
 
-            x_ax.push(*x_num as f32);
+            x_ax.push(num as f32);
 
             let mut borders_temp_vec: Vec<i32> = Vec::with_capacity(borders_model_size_z);
             for layer in &self.borders {

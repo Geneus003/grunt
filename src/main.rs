@@ -96,6 +96,7 @@ fn main() {
     let axis_export = vec![AxisExportType::AsSelf, AxisExportType::AsSelf];
 
     let model_2d = model.to_model_2d_by_angle(4.0, 45.0, 10).unwrap();
+    println!("2d Model depth is {}", model_2d.model()[0].len());
     model_2d.export_model("my_model2D", &save_state, &axis_export).unwrap()
 }
 

@@ -26,7 +26,16 @@ impl Model2D {
         } else { result += "null" }
 
         result += ",\"output_axes\":";
-        export_true_axes(&mut result, &self.params, axes_export, get_max_depth(&self.borders));
+
+        let max_depth = if !self.model.is_empty() {
+            self.model[0].len()
+        } else if !self.model_mask.is_empty() {
+            self.model_mask[0].len()
+        } else {
+            get_max_depth(&self.borders)
+        };
+
+        export_true_axes(&mut result, &self.params, axes_export, max_depth);
 
         result += ",\"borders\":";
         if save.contains(&"borders") {
@@ -129,18 +138,18 @@ fn export_mask_num(result: &mut String, model_mask: &[Vec<u8>]) {
     *result += "]";
 }
 
-fn export_true_axes(result: &mut String, params: &Params2D, axes_export: &[AxisExportType], depth_model_size: i32) {
+fn export_true_axes(result: &mut String, params: &Params2D, axes_export: &[AxisExportType], depth_model_size: usize) {
     *result += "{\"x_ax\":[";
     params.x_axis().export_axis(&axes_export[0], result);
     *result += "],";
 
     *result += "\"z_ax\":[";
-    Axis::generate_axis(1.0, depth_model_size as f32, None).export_axis(&axes_export[1], result);
+    Axis::generate_axis(0.0, (depth_model_size-1) as f32, None).export_axis(&axes_export[1], result);
     *result += "]}";
 
 }
 
-fn get_max_depth(borders: &Vec<Vec<i32>>) -> i32 {
+fn get_max_depth(borders: &Vec<Vec<i32>>) -> usize {
     let mut max_elem = 0;
     for depth in borders {
         for x_cord_value in depth {
@@ -149,5 +158,5 @@ fn get_max_depth(borders: &Vec<Vec<i32>>) -> i32 {
             } 
         } 
     }
-    max_elem
+    max_elem as usize
 }
