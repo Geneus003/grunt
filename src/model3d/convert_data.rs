@@ -13,7 +13,7 @@ impl Model3D {
 
     pub fn to_model_2d_by_angle(&self, pos_x: f32, angle: f32, resolution: usize) -> Result<Model2D, &'static str> {
         let angle = (angle * 1000.0).round() / 1000.0;
-        let is_acute = angle <= 90.0;
+        let is_acute = angle < 90.0;
 
         if angle <= 0.0 || angle >= 180.0 {
             return Err("Angle must be between 0.0 and 180.0 degrees")
@@ -23,6 +23,7 @@ impl Model3D {
         let y_ax_obj = self.params.y_axis();
         let x_ax = self.params.x_axis().get_axis();
         let pos_y = self.params.y_axis().get_axis()[0];
+        let y_ax_size = self.params.y_axis().get_axis_len() as f32;
 
         let end_x = if is_acute {
             x_ax[0]
@@ -34,31 +35,43 @@ impl Model3D {
             if pos_x < end_x {
                 return Err("pos_x must be bigger than start of axis with acute angle");
             }
-            let delt_x = pos_x - end_x;
-            (angle.to_radians().tan() * delt_x, delt_x)
+
+            let angle_tan = angle.to_radians().tan();
+            let mut delt_x = pos_x - end_x;
+            if y_ax_size / delt_x <  angle_tan {
+                delt_x = y_ax_size / angle_tan;
+            }
+
+            (angle_tan * delt_x, delt_x)
         } else {
             if pos_x > end_x {
                 return Err("pos_x must be smaller than end of axis with obtuse angle");
             }
-            let delt_x = end_x - pos_x;
-            ((-angle).to_radians().tan() * delt_x, delt_x)
+            let angle_tan = (-angle).to_radians().tan();
+            let mut delt_x = end_x - pos_x;
+            if y_ax_size / delt_x <  angle_tan {
+                delt_x = y_ax_size / angle_tan;
+            }
+
+            (angle_tan * delt_x, delt_x)
         };
 
         let (mut now_x, mut now_y) = (pos_x, pos_y);
-        let (delt_x, delt_y) = (delt_x / resolution as f32, delt_y / resolution as f32);
+        let (mut delt_x, delt_y) = (delt_x / (resolution - 1) as f32, delt_y / ((resolution - 1) as f32));
+
+        if !is_acute {
+            delt_x = -delt_x
+        }
 
         let mut nums_x: Vec<usize> = Vec::with_capacity(resolution);
         let mut nums_y: Vec<usize> = Vec::with_capacity(resolution);
 
-        for _ in 0..resolution {
+        for _ in 0..(resolution) {
+            println!("{}, {}, {}, {}, {}", now_x, delt_x, delt_y, pos_x, end_x);
             nums_x.push(x_ax_obj.find_element_smaller(now_x).unwrap());
             nums_y.push(y_ax_obj.find_element_smaller(now_y).unwrap());
 
-            now_x = if is_acute {
-                ((now_x - delt_x) * 1000.0).round() / 1000.0
-            } else {
-                ((now_x + delt_x) * 1000.0).round() / 1000.0
-            };
+            now_x = ((now_x + delt_x) * 1000.0).round() / 1000.0;
             now_y = ((now_y + delt_y) * 1000.0).round() / 1000.0;
         }
 
