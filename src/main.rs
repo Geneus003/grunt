@@ -27,8 +27,7 @@ fn main() {
     // let _ = borders.set_border_max_step(Some(5));
     // borders.set_border_mod_func(Some(test_function));
     // params.set_layers_border(borders);
-
-    params.set_x_axis(Axis::generate_axis(1.0, 100.0, None));
+params.set_x_axis(Axis::generate_axis(1.0, 100.0, None));
     params.set_y_axis(Axis::generate_axis(1.0, 100.0, None));
 
     params.set_layers_dist(LayersDist::create_from_vec([20, 30, 20].to_vec()).unwrap_or_default());
@@ -84,7 +83,7 @@ fn main() {
     shift.set_angle_x(90.0).unwrap();
     shift.set_angle_z(75.0).unwrap();
     shift.set_shift_force(10);
-    shift.set_shift_type(types::shifts::ShiftTypes::InnerDescent);
+    shift.set_shift_type(types::shifts::ShiftTypes::OuterLift);
     shift.set_main_region(1).unwrap();
     params.add_shift(shift);
 
