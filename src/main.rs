@@ -28,10 +28,10 @@ fn main() {
     // borders.set_border_mod_func(Some(test_function));
     // params.set_layers_border(borders);
 
-    params.set_x_axis(Axis::generate_axis(1.0, 10.0, None));
-    params.set_y_axis(Axis::generate_axis(1.0, 10.0, None));
+    params.set_x_axis(Axis::generate_axis(1.0, 100.0, None));
+    params.set_y_axis(Axis::generate_axis(1.0, 100.0, None));
 
-    params.set_layers_dist(LayersDist::create_from_vec([2, 3, 2].to_vec()).unwrap_or_default());
+    params.set_layers_dist(LayersDist::create_from_vec([20, 30, 20].to_vec()).unwrap_or_default());
 
     let mut borders = LayersBorder::new();
     borders.set_border_deviation(1.0).unwrap();
@@ -77,6 +77,17 @@ fn main() {
     shift.set_main_region(3).unwrap();
     // params.add_shift(shift);
 
+    let mut shift = Shift3D::new();
+    shift.set_pos_y(50.0);
+    shift.set_angle_y(90.0).unwrap();
+    shift.set_pos_x(50.0);
+    shift.set_angle_x(90.0).unwrap();
+    shift.set_angle_z(75.0).unwrap();
+    shift.set_shift_force(10);
+    shift.set_shift_type(types::shifts::ShiftTypes::InnerDescent);
+    shift.set_main_region(1).unwrap();
+    params.add_shift(shift);
+
     println!("{:?}", params);
     let model = model3d::generate_model(params).unwrap();
 
@@ -96,7 +107,7 @@ fn main() {
     let save_state = ["borders", "model", "model_mask"];
     let axis_export = vec![AxisExportType::AsSelf, AxisExportType::AsSelf];
 
-    let model_2d = model.to_model_2d_by_angle(3.0, 85.0, 500).unwrap();
+    let model_2d = model.to_model_2d_by_angle(50.0, 85.0, 200).unwrap();
     println!("2d Model depth is {}", model_2d.model()[0].len());
     model_2d.export_model("my_model2D", &save_state, &axis_export).unwrap()
 }

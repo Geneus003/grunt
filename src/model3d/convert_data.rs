@@ -67,7 +67,7 @@ impl Model3D {
         let mut nums_y: Vec<usize> = Vec::with_capacity(resolution);
 
         for _ in 0..(resolution) {
-            println!("{}, {}, {}, {}, {}", now_x, delt_x, delt_y, pos_x, end_x);
+            // println!("{}, {}, {}, {}, {}", now_x, delt_x, delt_y, pos_x, end_x);
             nums_x.push(x_ax_obj.find_element_smaller(now_x).unwrap());
             nums_y.push(y_ax_obj.find_element_smaller(now_y).unwrap());
 

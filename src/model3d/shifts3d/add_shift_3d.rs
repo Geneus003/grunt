@@ -68,6 +68,16 @@ pub fn add_shift(params: &Params3D, borders: &mut [Vec<Vec<i32>>], shift_num: us
         });
     }
 
+    let is_inner: bool = match shift_type {
+        ShiftTypes::InnerLift | ShiftTypes::InnerDescent => true,
+        ShiftTypes::OuterLift | ShiftTypes::OuterDescent => false,
+    };
+
+    let is_lift: bool = match shift_type {
+        ShiftTypes::InnerLift | ShiftTypes::OuterLift => true,
+        ShiftTypes::InnerDescent | ShiftTypes::OuterDescent => false,
+    };
+
     for (y_num, y) in params.y_axis().get_axis().iter().enumerate() {
         for (x_num, x) in params.x_axis().get_axis().iter().enumerate() {
             // State 1 - left lower part
@@ -82,15 +92,28 @@ pub fn add_shift(params: &Params3D, borders: &mut [Vec<Vec<i32>>], shift_num: us
             state += if *y <= y_line_y_point { 1 } else { 3 };
             state += if *x <= x_line_x_point { 0 } else { 1 };
 
-            match shift_type {
-                ShiftTypes::InnerLift | ShiftTypes::InnerDescent => if state != target_state { continue; },
-                ShiftTypes::OuterLift | ShiftTypes::OuterDescent => if state == target_state { continue; },
+            if (is_inner && state != target_state) || (!is_inner && state == target_state) {
+                continue;
             }
 
-            let minimal_len = if (*x - x_line_x_point).abs() < (*y - y_line_y_point).abs() {
-                (*x - x_line_x_point).abs()
+            let x_minimal_len = (*x - x_line_x_point).abs();
+            let y_minimal_len = (*y - y_line_y_point).abs();
+
+            // This block determines minimal distinance beetween point and working target state.
+            let minimal_len = if !is_inner {
+                let state_status = state + target_state;
+                match state_status {
+                    3 | 7 => x_minimal_len,
+                    4 | 6 => y_minimal_len,
+                    _ =>  {
+                        ((*x - crossed_point_x as f32).abs().powi(2) + (*y - crossed_point_y as f32).abs().powi(2))
+                            .sqrt()
+                    }
+                }
+            } else if x_minimal_len < y_minimal_len {
+                x_minimal_len
             } else {
-                (*y - y_line_y_point).abs()
+                y_minimal_len
             };
 
             let slice_depth = ((now_shift_angle_z_tan * minimal_len).round() as i32).abs();
@@ -98,27 +121,24 @@ pub fn add_shift(params: &Params3D, borders: &mut [Vec<Vec<i32>>], shift_num: us
             for border in borders.iter_mut() {
                 let now_border = &mut border[y_num][x_num];
 
-                match shift_type {
-                    ShiftTypes::InnerLift | ShiftTypes::OuterLift => {
-                        if *now_border > slice_depth {
-                            continue;
-                        }
-                        let mut now_shift_force = slice_depth - *now_border;
-                        if slice_depth - *now_border > shift_force {
-                            now_shift_force = shift_force
-                        }
-                        *now_border -= now_shift_force;
+                if is_lift {
+                    if *now_border > slice_depth {
+                        continue;
                     }
-                    ShiftTypes::InnerDescent | ShiftTypes::OuterDescent => {
-                        if *now_border > slice_depth {
-                            continue;
-                        }
-                        let mut now_shift_force = slice_depth - *now_border;
-                        if slice_depth - *now_border > shift_force {
-                            now_shift_force = shift_force
-                        }
-                        *now_border += now_shift_force;
+                    let mut now_shift_force = slice_depth - *now_border;
+                    if slice_depth - *now_border > shift_force {
+                        now_shift_force = shift_force
                     }
+                    *now_border -= now_shift_force;
+                } else {
+                    if *now_border > slice_depth {
+                        continue;
+                    }
+                    let mut now_shift_force = slice_depth - *now_border;
+                    if slice_depth - *now_border > shift_force {
+                        now_shift_force = shift_force
+                    }
+                    *now_border += now_shift_force;
                 }
             }
         }
