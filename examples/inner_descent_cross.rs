@@ -27,7 +27,7 @@ fn main() {
     shift.set_pos_x(4.5);
     shift.set_angle_x(90.0).unwrap();
     shift.set_angle_z(90.0).unwrap();
-    shift.set_shift_force(2);
+    shift.set_shift_force(2).unwrap();
     shift.set_shift_type(shifts::ShiftTypes::InnerDescent);
     shift.set_main_region(4).unwrap();
     params.add_shift(shift);

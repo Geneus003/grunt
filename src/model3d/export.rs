@@ -26,7 +26,7 @@ impl Model3D {
         } else { result += "null" }
 
         result += ",\"output_axes\":";
-        export_true_axes(&mut result, &self.params, axes_export, get_max_depth(&self.borders));
+        export_true_axes(&mut result, &self.params, axes_export, self.max_depth);
 
         result += ",\"borders\":";
         if save.contains(&"borders") {
@@ -175,19 +175,4 @@ fn export_true_axes(result: &mut String, params: &Params3D, axes_export: &[AxisE
     Axis::generate_axis(1.0, depth_model_size as f32, None).export_axis(&axes_export[2], result);
     *result += "]}";
 
-}
-
-fn get_max_depth(borders: &Vec<Vec<Vec<i32>>>) -> i32 {
-    let mut max_elem = 0;
-    // borders stores as Z->Y->X
-    for depth in borders {
-        for y_cord in depth {
-            for x_cord_value in y_cord {
-                if *x_cord_value > max_elem {
-                    max_elem = *x_cord_value;
-                } 
-            }
-        } 
-    }
-    max_elem
 }

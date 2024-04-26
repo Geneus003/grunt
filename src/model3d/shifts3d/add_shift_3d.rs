@@ -2,13 +2,11 @@
 use log::trace;
 
 use crate::types::generation_params::Params3D;
-use crate::types::shifts::ShiftTypes;
+use crate::types::shifts::{Shift3D, ShiftTypes};
 
-pub fn add_shift(params: &Params3D, borders: &mut [Vec<Vec<i32>>], shift_num: usize) {
+pub fn add_shift(params: &Params3D, borders: &mut [Vec<Vec<i32>>], now_shift: &Shift3D, max_depth: &mut i32) {
     #[cfg(debug_assertions)]
     trace!("Starting generating slice");
-
-    let now_shift = params.shifts()[shift_num].clone();
 
     let now_shift_angle_y = now_shift.angle_y();
     let now_shift_angle_x = now_shift.angle_x();
@@ -20,9 +18,6 @@ pub fn add_shift(params: &Params3D, borders: &mut [Vec<Vec<i32>>], shift_num: us
     let shift_type = now_shift.shift_type();
     let now_shift_angle_z = now_shift.angle_z();
 
-    let model_size = get_max_depth(borders);
-
-    #[cfg(debug_assertions)]
     let (crossed_point_x, crossed_point_y) = {
         let y_line_coef = 1.0 / ((180.0 - now_shift_angle_y).to_radians().tan());
         let x_line_coef = (180.0 - now_shift_angle_x).to_radians().tan();
@@ -119,7 +114,7 @@ pub fn add_shift(params: &Params3D, borders: &mut [Vec<Vec<i32>>], shift_num: us
             };
 
             let mut slice_depth = ((now_shift_angle_z_tan * minimal_len).round() as i32).abs();
-            if is_lift { slice_depth = model_size - slice_depth}
+            if is_lift { slice_depth = *max_depth - slice_depth}
 
             for border in borders.iter_mut() {
                 let now_border = &mut border[y_num][x_num];
@@ -142,6 +137,9 @@ pub fn add_shift(params: &Params3D, borders: &mut [Vec<Vec<i32>>], shift_num: us
                         now_shift_force = shift_force
                     }
                     *now_border += now_shift_force;
+                    if *now_border > *max_depth {
+                        *max_depth = *now_border
+                    }
                 }
             }
         }
@@ -149,19 +147,4 @@ pub fn add_shift(params: &Params3D, borders: &mut [Vec<Vec<i32>>], shift_num: us
 
     #[cfg(debug_assertions)]
     trace!("Slice generation has finished");
-}
-
-fn get_max_depth(borders: &[Vec<Vec<i32>>]) -> i32 {
-    let mut max_elem = 0;
-    // borders stores as Z->Y->X
-    for depth in borders {
-        for y_cord in depth {
-            for x_cord_value in y_cord {
-                if *x_cord_value > max_elem {
-                    max_elem = *x_cord_value;
-                } 
-            }
-        } 
-    }
-    max_elem
 }

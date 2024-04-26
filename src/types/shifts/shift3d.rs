@@ -86,8 +86,12 @@ impl Shift3D {
         self.angle_z
     }
 
-    pub fn set_shift_force(&mut self, shift_force: i32) {
-        self.shift_force = shift_force
+    pub fn set_shift_force(&mut self, shift_force: i32) -> Result<(), &'static str> {
+        if shift_force < 0 {
+            return Err("Shift force cannot be negative")
+        }
+        self.shift_force = shift_force;
+        Ok(())
     }
 
     pub fn shift_force(&self) -> i32 {

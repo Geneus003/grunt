@@ -39,9 +39,10 @@ def main():
 
     z, y, x = np.indices(np.array(model.shape) + 1).astype(int)
 
-    ax = plt.figure().add_subplot(111,projection ='3d')
+    ax = plt.figure().add_subplot(111, projection='3d')
 
     colors = plt.cm.plasma(model)
+
     ax.voxels(x, y, z, model, facecolors=colors, alpha=0.8)
 
     ax.invert_zaxis()
