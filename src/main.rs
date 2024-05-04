@@ -34,7 +34,8 @@ fn main() {
 
     let mut borders = LayersBorder::new();
     borders.set_border_deviation(1.0).unwrap();
-    borders.set_border_max_step(Some(1));
+    borders.set_border_max_step(Some(0));
+    borders.set_deviation_override(Some(vec![[1, 10], [20, 50], [100, 100]])).unwrap();
     // borders.set_border_mod_func(Some(_test_function));
     params.set_layers_border(borders);
 

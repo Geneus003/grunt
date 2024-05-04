@@ -15,7 +15,8 @@ impl LayersBorder {
             border_type: String::from("random"),
             border_max_step: None,
             border_step_prob: Some(0.5),
-            layers_same_deviation: false,
+            borders_same_pattern: false,
+            deviation_override: None,
         }
     }
 }
@@ -79,11 +80,31 @@ impl LayersBorder {
         self.border_step_prob
     }
 
-    pub fn set_layers_same_deviation(&mut self, same_deviation: bool) {
-        self.layers_same_deviation = same_deviation
+    pub fn set_layers_same_deviation(&mut self, is_pattern_same: bool) {
+        self.borders_same_pattern = is_pattern_same
     } 
 
     pub fn layers_same_deviation(&self) -> bool {
-        self.layers_same_deviation
+        self.borders_same_pattern
     } 
+
+    pub fn set_deviation_override(&mut self, deviation_override: Option<Vec<[i32; 2]>>) -> Result<(), &'static str> {
+        self.deviation_override = match deviation_override {
+            Some(override_vec) => {
+                if override_vec.is_empty() { return Err("Devitaion override vec cannot be empty") }
+                for i in &override_vec {
+                    if i[1] < i[0] {
+                        return Err("Second element in vector's array must be bigger or equal first one")
+                    }
+                }
+                Some(override_vec)
+            }
+            None => None
+        };
+        Ok(())
+    }
+
+    pub fn deviation_override(&self) -> &Option<Vec<[i32; 2]>> {
+        &self.deviation_override
+    }
 }

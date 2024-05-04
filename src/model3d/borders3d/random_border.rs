@@ -4,36 +4,17 @@ use rand::distributions::{Uniform, Distribution};
 #[cfg(debug_assertions)]
 use log::{trace, error};
 
-use crate::types::generation_params::Params3D;
-
 const REGENERATE_TRIES:i32 = 500;
 
 pub fn random_layer_creation(
-    params: &Params3D,
-    layer: &mut [Vec<i32>],
-    now_layer_id: usize)
+    max_step: Option<i32>,
+    upper_limit: i32,
+    lower_limit: i32,
+    layer: &mut [Vec<i32>])
 -> Result<(), &'static str> {
-    let default_value = params.layers_dist().get_layers_dist_summed()[now_layer_id];
-    let max_step = params.layers_border().border_max_step();
     let mut failed_generation_count = 0;
     let mut rng = rand::thread_rng();
-
-    // Generating limits of generation (max and min heights of layer)
-    let upper_limit: i32 = if params.layers_border().border_deviation() >= 1.0 {
-        default_value + params.layers_border().border_deviation() as i32 
-    } else {
-        let model_size_value = *params.layers_dist().get_layers_dist().last().unwrap_or(&0);
-        default_value + (params.layers_border().border_deviation() * model_size_value as f32) as i32 
-    };
-
-    let mut lower_limit: i32 = if params.layers_border().border_deviation() >= 1.0 {
-        default_value - (params.layers_border().border_deviation() as i32)
-    } else {
-        let model_size_value = *params.layers_dist().get_layers_dist().last().unwrap_or(&0);
-        default_value - (params.layers_border().border_deviation() * model_size_value as f32) as i32 };
     
-    if lower_limit < 0 { lower_limit = 0; }
-
     if max_step.is_none() || upper_limit == lower_limit {
         let basic_range = Uniform::from(lower_limit..upper_limit+1);
         for layer_line in layer.iter_mut() {

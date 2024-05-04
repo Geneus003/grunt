@@ -9,7 +9,12 @@ pub fn create_layers_borders_3d(params: &Params3D) -> Result<Vec<Vec<Vec<i32>>>,
     #[cfg(debug_assertions)]
     trace!("Starting creating 3D borders");
 
-    let layers_count = params.layers_dist().get_layers_count();
+    let layers_dist_params = params.layers_dist();
+    let layers_borders_params = params.layers_border();
+
+    let borders_deviation = layers_borders_params.border_deviation();
+    let deviation_override = layers_borders_params.deviation_override();
+    let layers_count = layers_dist_params.get_layers_count();
     let x_size = params.x_axis().get_axis_len();
     let y_size = params.y_axis().get_axis_len();
 
@@ -18,18 +23,47 @@ pub fn create_layers_borders_3d(params: &Params3D) -> Result<Vec<Vec<Vec<i32>>>,
 
     let mut layers_borders = vec![vec![vec![0i32; x_size]; y_size]; layers_count];
 
+    let mut upper_limit: i32;
+    let mut lower_limit: i32;
+    let max_step = params.layers_border().border_max_step();
+
     for (i, layer) in layers_borders.iter_mut().enumerate() {
+        // Generating limits of generation (max and min heights of layer)
+        if let Some(deviation_override) = deviation_override.as_ref() {
+            let deviation_override_len = deviation_override.len();
+
+            lower_limit = deviation_override[i % deviation_override_len][0];
+            upper_limit = deviation_override[i % deviation_override_len][1];
+        } else {
+            let default_value = layers_dist_params.get_layers_dist_summed()[i];
+
+            upper_limit = if borders_deviation >= 1.0 {
+                default_value + borders_deviation as i32 
+            } else {
+                let model_size_value = *params.layers_dist().get_layers_dist().last().unwrap_or(&0);
+                default_value + (borders_deviation * model_size_value as f32) as i32 
+            };
+
+            lower_limit = if borders_deviation >= 1.0 {
+                default_value - (borders_deviation as i32)
+            } else {
+                let model_size_value = *params.layers_dist().get_layers_dist().last().unwrap_or(&0);
+                default_value - (borders_deviation * model_size_value as f32) as i32 
+            };
+        }
+
+        if lower_limit < 0 { lower_limit = 0; }
+
         match params.layers_border().border_type().as_str() {
-            "random" => random_border::random_layer_creation(params, layer, i)?,
+            "random" => random_border::random_layer_creation(max_step, upper_limit, lower_limit, layer)?,
             _ => return Err("Incorrect border type"),
         };
 
         #[cfg(debug_assertions)]
-        if let Err(err) = validate_layer(params, layer, i) {
+        if let Err(err) = validate_layer(max_step, upper_limit, lower_limit, layer, i) {
             error!("Validating for layer {i} FAILED: {err}");
             return Err("Model is not valid");
         }
-
         #[cfg(debug_assertions)]
         trace!("Validating for layer {i} completed succesfully");
     }
@@ -54,25 +88,13 @@ pub fn create_layers_borders_3d(params: &Params3D) -> Result<Vec<Vec<Vec<i32>>>,
 	Ok(layers_borders)
 }
 
-pub fn validate_layer(params: &Params3D, layer: &[Vec<i32>], now_layer_id: usize) -> Result<(), &'static str> {
-    let default_value = params.layers_dist().get_layers_dist_summed()[now_layer_id];
-    let max_step = params.layers_border().border_max_step();
-
-    let upper_limit: i32 = if params.layers_border().border_deviation() >= 1.0 {
-        default_value + params.layers_border().border_deviation() as i32
-    } else {
-        let model_size_value = *params.layers_dist().get_layers_dist().last().unwrap_or(&0);
-        default_value + (params.layers_border().border_deviation() * model_size_value as f32) as i32
-    };
-
-    let lower_limit: i32 = if params.layers_border().border_deviation() >= 1.0 {
-        default_value.checked_sub(params.layers_border().border_deviation() as i32).unwrap_or(0)
-    } else {
-        let model_size_value =*params.layers_dist().get_layers_dist().last().unwrap_or(&0);
-        default_value
-            .checked_sub((params.layers_border().border_deviation() * model_size_value as f32) as i32).unwrap_or(0)
-    };
-
+pub fn validate_layer(
+    max_step: Option<i32>,
+    upper_limit: i32,
+    lower_limit: i32,
+    layer: &[Vec<i32>],
+    now_layer_id: usize)
+-> Result<(), &'static str> {
     #[cfg(debug_assertions)]
     trace!("Layer's params: max_step-{:?}, upper_limit-{upper_limit}, lower_limit-{lower_limit}", max_step);
 

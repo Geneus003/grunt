@@ -45,7 +45,8 @@ pub struct LayersBorder {
     border_type: String,
     border_max_step: Option<i32>,
     border_step_prob: Option<f32>,
-    layers_same_deviation: bool,
+    borders_same_pattern: bool,
+    deviation_override: Option<Vec<[i32; 2]>>,
 }
 
 #[derive(Debug, Clone, Deserialize, Serialize)]
