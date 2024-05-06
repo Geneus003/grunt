@@ -1,5 +1,5 @@
 import numpy as np
-import json
+import ujson
 import pyvista as pv
 
 class ViewerEngine:
@@ -75,50 +75,47 @@ class ViewerEngine:
         mesh.cell_data["values"] = new_model.flatten()
         self.output.copy_from(mesh)
 
-def flatten_to_zyx(model):
-    size_x = len(model)
-    size_y = len(model[0])
-    size_z = len(model[0][0])
-    layer_count = size_x * size_y
-    size_count = size_x * size_y * size_z
-
-    array_flatten = np.zeros(size_count)
-    for i in range(0, size_count):
-        array_flatten[i] = model[i%size_x][(i%layer_count)//size_x][i//layer_count]
-
-    return array_flatten
-
-
-
 def main():
     try:
-        model_file = open("../my_model.json")
+        model_file_source = open("../my_model.json")
     except FileNotFoundError:
-         model_file = open("./my_model.json")
-    # model_file = open("../target/release/my_model.json")
-    print("loading", model_file)
-    model_file = json.load(model_file)
+        model_file_source = open("./my_model.json")
+    print("loading", model_file_source)
+    model_file = ujson.load(model_file_source)
 
-    model = []
-    for i, e in enumerate(model_file["model"]):
-        model.append([])
+    print("Json loaded")
+    del(model_file_source)
+
+    target = "model_mask"
+    x_s = len(model_file[target])
+    y_s = len(model_file[target][0]["x0"])
+    z_s = len(model_file[target][0]["x0"][0]["y0"])
+    print(f"{target} size(x, y, z): ",x_s, y_s, z_s)
+
+    loaded_model = np.empty(dtype=int, shape=(x_s, y_s, z_s))
+    for i, e in enumerate(model_file["model_mask"]):
         for j, ee in enumerate(e[f"x{i}"]):
-            model[-1].append([])
-            for k in ee[f"y{j}"]:
-                model[-1][-1].append(int(k))
+            # for k in ee[f"y{j}"]:
+            #     loaded_model[i][j][k] = int(k)
 
-    x_axis = [float(i) for i in model_file["output_axes"]["x_ax"]]
-    y_axis = [float(i) for i in model_file["output_axes"]["y_ax"]]
-    z_axis = [float(i) for i in model_file["output_axes"]["z_ax"]]
+            loaded_model[i][j] = np.array([int(k) for k in ee[f"y{j}"]])
 
-    z_s = len(model[0][0])
-    y_s = len(model[0])
-    x_s = len(model)
+    x_axis = np.array([float(i) for i in model_file["output_axes"]["x_ax"]])
+    y_axis = np.array([float(i) for i in model_file["output_axes"]["y_ax"]])
+    z_axis = np.array([float(i) for i in model_file["output_axes"]["z_ax"]])
 
-    # model = np.array(model[::-1])
-    model = np.array(flatten_to_zyx(model).reshape((z_s, y_s, x_s))[::-1])
+    print("JSON converted")
+    del(model_file)
 
-    print("model size:", model.shape)
+    model = np.empty(dtype=int, shape=(z_s, y_s, x_s))
+    for i in range(z_s):
+        now_i = z_s - i - 1
+        for j in range(y_s):
+            for k in range(x_s):
+                model[now_i][j][k] = loaded_model[k][j][i]
+
+    print("JSON restructured")
+    del(loaded_model)
 
     mesh = pv.ImageData()
     mesh.dimensions = np.array((len(model[0][0]),len(model[0]), len(model))) + 1
