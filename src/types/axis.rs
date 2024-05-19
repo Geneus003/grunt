@@ -120,6 +120,11 @@ impl Axis {
             None
         }
     }
+
+    pub fn convert_to_perp_ax(pos: f32, angle: f32) {
+        let new_angle = ((180.0 - angle) * 1000.0).round() / 1000.0;
+
+    }
 }
 
 impl Axis {

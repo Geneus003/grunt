@@ -59,7 +59,7 @@ impl Model3D {
         let (mut now_x, mut now_y) = (pos_x, pos_y);
         let (mut delt_x, delt_y) = (delt_x / (resolution - 1) as f32, delt_y / ((resolution - 1) as f32));
 
-        if !is_acute {
+        if is_acute {
             delt_x = -delt_x
         }
 
@@ -86,7 +86,7 @@ impl Model3D {
         let source_model = &self.model;
         let source_model_mask = &self.model_mask;
 
-        // Borders format is Z->Y->X, using borders because model || mask can be empty
+        // Borders format is Z->Y->X, using borders because model or mask can be empty
         let borders_model_size_z = self.borders.len();
         let source_model_size_y = self.borders[0].len();
         let source_model_size_x = self.borders[0][0].len();
@@ -114,7 +114,7 @@ impl Model3D {
             }
             borders.push(borders_temp_vec);
 
-            if model_ex{
+            if model_ex {
                 model.push(source_model[*x_num][y_num].clone());
             }
 

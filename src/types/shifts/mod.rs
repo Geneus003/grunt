@@ -1,6 +1,7 @@
 use serde::{Deserialize, Serialize};
 
 pub mod shift3d;
+pub mod shift2d;
 
 #[derive(Debug, Clone, Deserialize, Serialize)]
 pub enum ShiftTypes {
@@ -8,6 +9,16 @@ pub enum ShiftTypes {
     OuterDescent,
     InnerLift,
     OuterLift,
+}
+
+#[derive(Debug, Clone, Deserialize, Serialize)]
+pub enum ShiftTypes2D {
+    LeftDescent,
+    RightDescent,
+    LeftLift,
+    RightLift,
+    Horst,
+    Graber,
 }
 
 #[derive(Debug, Clone, Deserialize, Serialize)]
@@ -20,4 +31,11 @@ pub struct Shift3D {
     angle_z: f32,
     shift_force: i32,
     shift_type: ShiftTypes,
+}
+
+pub struct Shift2D {
+    pos_x: f32,
+    angle: f32,
+    shift_force: i32,
+    shift_type: ShiftTypes2D,
 }
