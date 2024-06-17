@@ -22,8 +22,8 @@ pub fn bench(runs_difficulty: usize, run_tries: usize) -> (Duration, Duration, D
 
         let mut params = generation_params::Params3D::new();
 
-        params.set_x_axis(Axis::generate_axis(0.0, now_axis_size, None));
-        params.set_y_axis(Axis::generate_axis(0.0, now_axis_size, None));
+        params.set_x_axis(Axis::generate_axis(0.0, now_axis_size, None).unwrap());
+        params.set_y_axis(Axis::generate_axis(0.0, now_axis_size, None).unwrap());
 
         params.set_layers_dist(LayersDist::create_from_vec(now_layers_dist).unwrap_or_default());
 

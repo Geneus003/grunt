@@ -17,13 +17,21 @@ pub enum AxisExportType {
 
 pub type BorderModFuncParams = fn(usize, usize, usize, i32) -> i32;
 
+/// Struct to strore Axis and its params
+/// Note: All the coords inside Axis vec represents edges of blocks, so if vec contains 11 elements
+/// it means there 10 blocks, so then first and latest points are whole model limits.
 #[derive(Debug, Clone, Deserialize, Serialize)]
 pub struct Axis {
+    /// Cord of beginning for the first block
     start: f32,
+    /// Cord of end of the last block
     end: f32,
+    /// Step between edges if exists
     step: Option<f32>,
+    /// Number of blocks, NOT axis values
+    blocks_count: usize,
+    /// Cords of edges
     axis: Vec<f32>,
-    ordered: bool,
 }
 
 #[derive(Debug, Clone, Deserialize, Serialize)]

@@ -7,8 +7,8 @@ fn main() {
 
     let mut params = generation_params::Params3D::new();
 
-    params.set_x_axis(Axis::generate_axis(0.0, 4.5, Some(0.5)));
-    params.set_y_axis(Axis::generate_axis(0.0, 4.5, Some(0.5)));
+    params.set_x_axis(Axis::generate_axis(0.0, 4.5, Some(0.5)).unwrap());
+    params.set_y_axis(Axis::generate_axis(0.0, 4.5, Some(0.5)).unwrap());
 
     params.set_layers_dist(LayersDist::create_from_vec([2, 3, 4].to_vec()).unwrap_or_default());
 

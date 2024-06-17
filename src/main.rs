@@ -1,5 +1,7 @@
-use types::{Axis, LayersDist, LayersBorder, LayersFill, AxisExportType};
+use types::{Axis, LayersBorder, LayersFill};
 use types::shifts::Shift3D;
+
+use crate::types::AxisExportType;
 
 pub mod types;
 pub mod model3d;
@@ -8,6 +10,7 @@ pub mod model2d;
 fn main() {
     #[cfg(debug_assertions)]
     env_logger::init();
+
     fn _test_function(x_cord: usize, y_cord: usize, _layers_num: usize, _z_value: i32) -> i32 {
         if x_cord <= 6 && (4..=6).contains(&y_cord) {
             return -6
@@ -17,23 +20,12 @@ fn main() {
 
     let mut params = types::generation_params::Params3D::new();
 
-    // params.set_x_axis(Axis::generate_axis(0.0, 10.0, None));
-    // params.set_y_axis(Axis::generate_axis(0.0, 10.0, None));
-    // params.set_layers_dist(LayersDist::create_from_vec([12, 12, 12].to_vec()).unwrap_or(LayersDist::new()));
-    // let mut borders = LayersBorder::new();
-    // let _ = borders.set_border_deviation(10.0);
-    // let _ = borders.set_border_max_step(Some(5));
-    // borders.set_border_mod_func(Some(test_function));
-    // params.set_layers_border(borders);
-    params.set_x_axis(Axis::generate_axis(1.0, 1500.0, None));
-    params.set_y_axis(Axis::generate_axis(1.0, 1500.0, None));
-
-    params.set_layers_dist(LayersDist::create_from_vec([20, 30, 20].to_vec()).unwrap_or_default());
+    params.set_x_axis(Axis::generate_axis(1.0, 15.0, None).unwrap());
+    params.set_y_axis(Axis::generate_axis(1.0, 15.0, None).unwrap());
 
     let mut borders = LayersBorder::new();
-    borders.set_border_deviation(1.0).unwrap();
-    borders.set_border_max_step(Some(0));
-    borders.set_deviation_override(Some(vec![[1, 10], [20, 50], [180, 180]])).unwrap();
+    borders.set_border_max_step(Some(3));
+    borders.set_deviation_override(Some(vec![[50, 65], [100, 120], [200, 200]])).unwrap();
     // borders.set_border_mod_func(Some(_test_function));
     params.set_layers_border(borders);
 
@@ -43,46 +35,13 @@ fn main() {
     params.set_layers_fill(fill);
 
     let mut shift = Shift3D::new();
-    shift.set_pos_y(50.0);
-    shift.set_angle_y(130.0).unwrap();
-    shift.set_pos_x(-30.0);
-    shift.set_angle_x(135.0).unwrap();
-    shift.set_angle_z(85.0).unwrap();
-    shift.set_shift_force(10).unwrap();
-    shift.set_shift_type(types::shifts::ShiftTypes::InnerDescent);
-    shift.set_main_region(1).unwrap();
-    // params.add_shift(shift);
-
-    let mut shift = Shift3D::new();
-    shift.set_pos_y(20.0);
-    shift.set_angle_y(134.0).unwrap();
-    shift.set_pos_x(-1.0);
-    shift.set_angle_x(135.0).unwrap();
-    shift.set_angle_z(80.0).unwrap();
-    shift.set_shift_force(10).unwrap();
-    shift.set_shift_type(types::shifts::ShiftTypes::InnerLift);
-    shift.set_main_region(1).unwrap();
-    // params.add_shift(shift);
-
-    let mut shift = Shift3D::new();
-    shift.set_pos_y(80.0);
-    shift.set_angle_y(110.0).unwrap();
-    shift.set_pos_x(40.0);
+    shift.set_pos_y(5.0);
+    shift.set_angle_y(90.0).unwrap();
+    shift.set_pos_x(12.0);
     shift.set_angle_x(90.0).unwrap();
     shift.set_angle_z(90.0).unwrap();
-    shift.set_shift_force(8).unwrap();
-    shift.set_shift_type(types::shifts::ShiftTypes::OuterDescent);
-    shift.set_main_region(3).unwrap();
-    // params.add_shift(shift);
-
-    let mut shift = Shift3D::new();
-    shift.set_pos_y(200.0);
-    shift.set_angle_y(90.0).unwrap();
-    shift.set_pos_x(50.0);
-    shift.set_angle_x(90.0).unwrap();
-    shift.set_angle_z(30.0).unwrap();
     shift.set_shift_force(10).unwrap();
-    shift.set_shift_type(types::shifts::ShiftTypes::OuterDescent);
+    shift.set_shift_type(types::shifts::ShiftTypes::InnerDescent);
     shift.set_main_region(1).unwrap();
     params.add_shift(shift);
 
@@ -102,11 +61,10 @@ fn main() {
         println!("Elapsed export: {:.2?}", elapsed);
     }
 
+    let model_2d = model.to_model_2d_by_angle(11.0, 90.0, 15).unwrap();
+    println!("2d Model depth is {}", model_2d.model()[0].len());
     let save_state = ["borders", "model", "model_mask"];
     let axis_export = vec![AxisExportType::AsSelf, AxisExportType::AsSelf];
-
-    let model_2d = model.to_model_2d_by_angle(45.0, 135.0, 400).unwrap();
-    println!("2d Model depth is {}", model_2d.model()[0].len());
     model_2d.export_model("my_model2D", &save_state, &axis_export).unwrap()
 }
 

@@ -46,7 +46,7 @@ pub fn add_shift(params: &Params3D, borders: &mut [Vec<Vec<i32>>], now_shift: &S
     trace!("Crossing point for shift -> x: {}, y: {}", crossed_point_x, crossed_point_y);
 
     let mut x_line_x_points: Vec<f32> = Vec::with_capacity(borders[0].len());
-    for y in params.y_axis().get_axis() {
+    for y in params.y_axis().axis() {
         let x_line_x_delt = ((y / new_angle_x_tan) * 10.0).round() / 10.0;
         x_line_x_points.push(if now_shift_angle_x <= 90.0 {
             ((x_line_x_pos - x_line_x_delt) * 10.0).round() / 10.0
@@ -56,7 +56,7 @@ pub fn add_shift(params: &Params3D, borders: &mut [Vec<Vec<i32>>], now_shift: &S
     }
 
     let mut y_line_y_points: Vec<f32> = Vec::with_capacity(borders[0][0].len());
-    for x in params.x_axis().get_axis() {
+    for x in params.x_axis().axis() {
         let y_line_y_delt = ((x / new_angle_y_tan) * 10.0).round() / 10.0;
         y_line_y_points.push(if now_shift_angle_y <= 90.0 {
             ((y_line_y_pos - y_line_y_delt) * 10.0).round() / 10.0
@@ -75,8 +75,8 @@ pub fn add_shift(params: &Params3D, borders: &mut [Vec<Vec<i32>>], now_shift: &S
         ShiftTypes::InnerDescent | ShiftTypes::OuterDescent => false,
     };
 
-    for (y_num, y) in params.y_axis().get_axis().iter().enumerate() {
-        for (x_num, x) in params.x_axis().get_axis().iter().enumerate() {
+    for (y_num, y) in params.y_axis().axis().iter().enumerate() {
+        for (x_num, x) in params.x_axis().axis().iter().enumerate() {
             // State 1 - left lower part
             // State 2 - right lower part
             // State 3 - left upper part

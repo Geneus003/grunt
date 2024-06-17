@@ -12,7 +12,7 @@ impl Model3D {
         let default_ax_type = vec![AxisExportType::AsSelf, AxisExportType::AsSelf, AxisExportType::AsSelf];
 
         let axes_export = if axes_export.len() != 3 {
-            eprintln!("WARNING: Axes export param is ignored, it must contain 3 elements (for x, y, z)");
+            eprintln!("Warning: Axes export param is ignored, it must contain 3 elements (for x, y, z)");
             &default_ax_type
         } else {
             axes_export
@@ -172,7 +172,7 @@ fn export_true_axes(result: &mut String, params: &Params3D, axes_export: &[AxisE
     *result += "],";
 
     *result += "\"z_ax\":[";
-    Axis::generate_axis(1.0, depth_model_size as f32, None).export_axis(&axes_export[2], result);
+    Axis::generate_axis(1.0, depth_model_size as f32, None).unwrap().export_axis(&axes_export[2], result);
     *result += "]}";
 
 }

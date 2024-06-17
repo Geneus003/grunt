@@ -1,6 +1,7 @@
 import numpy as np
 import ujson
 import pyvista as pv
+from matplotlib import colormaps as cm
 
 class ViewerEngine:
     def __init__(self, mesh, model, x_axis, y_axis, z_axis):
@@ -125,8 +126,10 @@ def main():
     # mesh.cell_data["values"] = np.arange(mesh.n_cells)
 
     p = pv.Plotter()
-    p.add_mesh(mesh, opacity=1, show_edges=True)
-    p.show_bounds(axes_ranges=[x_axis[0], x_axis[-1], y_axis[0], y_axis[-1], z_axis[0], z_axis[-1]], color="red", location="all", xtitle="X ax", ytitle="Y ax")
+    colors = cm.get_cmap("Wistia")
+    p.add_mesh(mesh, opacity=1, show_edges=False, cmap=colors)
+    p.show_bounds(axes_ranges=[x_axis[0], x_axis[-1], y_axis[0], y_axis[-1], z_axis[0], z_axis[-1]], color="black", location="all", xtitle="X ax", ytitle="Y ax")
+
 
     engine = ViewerEngine(mesh, model.copy(), x_axis, y_axis, z_axis)
 

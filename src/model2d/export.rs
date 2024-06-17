@@ -12,7 +12,7 @@ impl Model2D {
         let default_ax_type = vec![AxisExportType::AsSelf, AxisExportType::AsSelf];
 
         let axes_export = if axes_export.len() != 2 {
-            eprintln!("WARNING: Axes export param is ignored, it must contain 2 elements (for x, z)");
+            eprintln!("Warning: Axes export param is ignored, it must contain 2 elements (for x, z)");
             &default_ax_type
         } else {
             axes_export
@@ -144,7 +144,7 @@ fn export_true_axes(result: &mut String, params: &Params2D, axes_export: &[AxisE
     *result += "],";
 
     *result += "\"z_ax\":[";
-    Axis::generate_axis(0.0, (depth_model_size-1) as f32, None).export_axis(&axes_export[1], result);
+    Axis::generate_axis(0.0, (depth_model_size-1) as f32, None).unwrap().export_axis(&axes_export[1], result);
     *result += "]}";
 
 }

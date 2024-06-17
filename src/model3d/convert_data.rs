@@ -21,9 +21,9 @@ impl Model3D {
 
         let x_ax_obj = self.params.x_axis();
         let y_ax_obj = self.params.y_axis();
-        let x_ax = self.params.x_axis().get_axis();
-        let pos_y = self.params.y_axis().get_axis()[0];
-        let y_ax_size = self.params.y_axis().get_axis_len() as f32;
+        let x_ax = self.params.x_axis().axis();
+        let pos_y = self.params.y_axis().axis()[0];
+        let y_ax_size = self.params.y_axis().blocks_count() as f32;
 
         let end_x = if is_acute {
             x_ax[0]
@@ -124,7 +124,7 @@ impl Model3D {
         }
 
         let mut params = Params2D::new();
-        params.set_x_axis(Axis::create_from_vec(x_ax).unwrap());
+        params.set_x_axis(Axis::create_from_edges(x_ax).unwrap());
 
         Ok(Model2D::new(
             model,

@@ -15,8 +15,8 @@ pub fn create_layers_borders_3d(params: &Params3D) -> Result<Vec<Vec<Vec<i32>>>,
     let borders_deviation = layers_borders_params.border_deviation();
     let deviation_override = layers_borders_params.deviation_override();
     let layers_count = layers_dist_params.get_layers_count();
-    let x_size = params.x_axis().get_axis_len();
-    let y_size = params.y_axis().get_axis_len();
+    let x_size = params.x_axis().blocks_count();
+    let y_size = params.y_axis().blocks_count();
 
     #[cfg(debug_assertions)]
     trace!("Generating with this params: layers_count-{layers_count}, x_size-{x_size}, y_size-{y_size}");
@@ -61,7 +61,7 @@ pub fn create_layers_borders_3d(params: &Params3D) -> Result<Vec<Vec<Vec<i32>>>,
 
         #[cfg(debug_assertions)]
         if let Err(err) = validate_layer(max_step, upper_limit, lower_limit, layer, i) {
-            error!("Validating for layer {i} FAILED: {err}");
+            error!("Validating for layer {i} Failed: {err}");
             return Err("Model is not valid");
         }
         #[cfg(debug_assertions)]

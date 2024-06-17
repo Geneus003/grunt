@@ -12,7 +12,7 @@ def main():
     model_file = json.load(model_file)
 
     model = []
-    for i, e in enumerate(model_file["model"]):
+    for i, e in enumerate(model_file["model_mask"]):
         model.append([])
         for j in e[f"x{i}"]:
             model[-1].append(int(j))
@@ -29,10 +29,11 @@ def main():
     model = np.array(model).T
 
     fig, ax = plt.subplots(figsize=(10, 10))
-    ax.imshow(model, aspect='auto')
+    ax.imshow(model, aspect='auto', cmap="Wistia")
 
     ax.set_xticks(x_axis)
-    ax.set_yticks(z_axis)
+    ax.set_yticks(z_axis[::10])
+    ax.set_yticklabels(np.array(z_axis[::10]) / 100)
 
     ax.set_title("2D model")
 

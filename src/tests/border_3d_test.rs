@@ -12,8 +12,8 @@ fn random_gen_layers_borders_tests(){
     for _ in 0..gen_count {
         let mut params = Params3D::new();
 
-        params.set_x_axis(Axis::generate_axis(0i16, rng.gen_range(0..25) as i16, None));
-        params.set_y_axis(Axis::generate_axis(0i16, rng.gen_range(0..25) as i16, None));
+        params.set_x_axis(Axis::generate_axis(0i16, rng.gen_range(0..25) as i16, None).unwrap());
+        params.set_y_axis(Axis::generate_axis(0i16, rng.gen_range(0..25) as i16, None).unwrap());
 
         let layer_num: u8 = rng.gen_range(2..20);
         let layer_min: i32 = rng.gen_range(1..20);
@@ -40,8 +40,8 @@ fn check_border_mod_function() {
     }
 
     let mut params = Params3D::new();
-    params.set_x_axis(Axis::generate_axis(0, 1i16, None));
-    params.set_y_axis(Axis::generate_axis(0, 1i16, None));
+    params.set_x_axis(Axis::generate_axis(0, 1i16, None).unwrap());
+    params.set_y_axis(Axis::generate_axis(0, 1i16, None).unwrap());
 
     params.set_layers_dist(LayersDist::create_from_vec(vec![1, 1, 1]).unwrap());
 
